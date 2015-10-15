@@ -2,7 +2,7 @@
 #ifndef EventReader_hpp
 #define EventReader_hpp
 
-#include "ConfigContainer.cpp"
+#include "ConfigContainer.hpp"
 #include "EventContainer.hpp"
 #include "TreeReader.hpp"
 #include "libconfig.h++"

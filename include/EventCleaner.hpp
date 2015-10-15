@@ -5,7 +5,7 @@
 #include <string>
 #include <algorithm>
 #include "EventContainer.hpp"
-#include "VariableContainer.cpp"
+#include "VariableContainer.hpp"
 
 using namespace std;
 

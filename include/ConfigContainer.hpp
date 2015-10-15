@@ -1,10 +1,10 @@
 
-#ifndef ConfigContainer_cpp
-#define ConfigContainer_cpp
+#ifndef ConfigContainer_hpp
+#define ConfigContainer_hpp
 
-#include "VariableContainer.cpp"
-#include "SampleContainer.cpp"
-#include "CutContainer.cpp"
+#include "VariableContainer.hpp"
+#include "SampleContainer.hpp"
+#include "CutContainer.hpp"
 
 #include "string"
 

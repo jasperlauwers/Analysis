@@ -1,6 +1,6 @@
 
-#ifndef SampleContainer_cpp
-#define SampleContainer_cpp
+#ifndef SampleContainer_hpp
+#define SampleContainer_hpp
 
 #include <vector>
 #include <string>

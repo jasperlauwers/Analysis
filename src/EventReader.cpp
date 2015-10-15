@@ -13,7 +13,7 @@ void EventReader::setSample(unsigned int iSample, unsigned int iSubSample)
 {
     // Delete treeReader for previous sample
     if( treeReader ) delete treeReader; 
-    extraBranches.clear();
+//     extraBranches.clear();
     
     // Check arguments
     if( iSample >= configContainer.sampleContainer.reducedNames.size() || iSubSample >= configContainer.sampleContainer.sampleNames[iSample].size() )
@@ -111,10 +111,10 @@ bool EventReader::fillNextEvent()
     eventContainer.setWeight( treeReader->baseW * (treeReader->GEN_weight_SM/abs(treeReader->GEN_weight_SM)) );
         
     // Fill extra variables
-    for( const auto& iPair : extraBranches )
-    {
-        iPair.first = iPair.second;        
-    }
+//     for( const auto& iPair : extraBranches )
+//     {
+//         iPair.first = iPair.second;        
+//     }
     
     // Clear good object vectors
     eventContainer.goodLeptons.clear();

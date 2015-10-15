@@ -5,14 +5,15 @@
 #include <string>
 #include <functional>
 #include "EventContainer.hpp"
-#include "CutContainer.cpp"
+#include "CutContainer.hpp"
+#include "VariableDictionary.hpp"
 
 using namespace std;
 
 typedef function<double ()> eventContainerFunction;
 typedef function<bool ()> comparisonFunction;
 
-enum class ComparisonType { GREATER_THAN, SMALLER_THAN, ABS_GREATER_THAN, ABS_SMALLER_THAN, EQUAL };
+// enum class ComparisonType { GREATER_THAN, SMALLER_THAN, ABS_GREATER_THAN, ABS_SMALLER_THAN, EQUAL }; // defined in VariableDictionary
 
 class EventSelecter {
 public:

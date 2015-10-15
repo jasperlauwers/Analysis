@@ -3,7 +3,8 @@
 #define EventPlotter_hpp
 
 #include "EventContainer.hpp"
-#include "ConfigContainer.cpp"
+#include "ConfigContainer.hpp"
+#include "VariableDictionary.hpp"
 #include "TH1F.h"
 #include "TFile.h"
 #include "TCanvas.h"

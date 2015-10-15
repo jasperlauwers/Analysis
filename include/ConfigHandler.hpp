@@ -7,7 +7,7 @@
 #include "VariableReader.hpp"
 #include "SampleReader.hpp"
 #include "CutReader.hpp"
-#include "ConfigContainer.cpp"
+#include "ConfigContainer.hpp"
 
 using namespace std;
 using namespace libconfig;

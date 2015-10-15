@@ -2,7 +2,7 @@
 #ifndef SampleReader_hpp
 #define SampleReader_hpp
 
-#include "SampleContainer.cpp"
+#include "SampleContainer.hpp"
 #include "ConfigReader.hpp"
 
 #include <vector>

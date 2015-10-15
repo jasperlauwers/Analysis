@@ -1,6 +1,6 @@
 
-#ifndef VariableContainer_cpp
-#define VariableContainer_cpp
+#ifndef VariableContainer_hpp
+#define VariableContainer_hpp
 
 #include <vector>
 #include <string>

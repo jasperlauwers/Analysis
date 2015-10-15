@@ -1,6 +1,6 @@
 
-#ifndef CutContainer_cpp
-#define CutContainer_cpp
+#ifndef CutContainer_hpp
+#define CutContainer_hpp
 
 #include <vector>
 #include <string>

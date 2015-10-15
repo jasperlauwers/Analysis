@@ -2,7 +2,7 @@
 #ifndef CutReader_hpp
 #define CutReader_hpp
 
-#include "CutContainer.cpp"
+#include "CutContainer.hpp"
 #include "ConfigReader.hpp"
 
 #include <vector>
