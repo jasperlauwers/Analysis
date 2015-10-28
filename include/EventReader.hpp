@@ -28,7 +28,7 @@ private:
     bool isData, needJets, needGenJets, needPuppiJets, needGenLeptons, needElectronId;
     vector<setFunction> functionVector;
     vector<string> branches, genBranches;
-    floatZ maxEventsWeight;
+    float maxEventsWeight;
 };
 
 

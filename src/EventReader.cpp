@@ -174,7 +174,7 @@ bool EventReader::fillNextEvent()
     if( needJets )
     {
         for( unsigned int iJet=0; iJet < nJets; ++iJet ) {
-            if( (*treeReader->std_vector_jet_pt)[iJet] > 30 )
+            if( (*treeReader->std_vector_jet_pt)[iJet] > configContainer.minJetPt )
             {
                 eventContainer.jets[iJet].set((*treeReader->std_vector_jet_pt)[iJet],(*treeReader->std_vector_jet_eta)[iJet],(*treeReader->std_vector_jet_phi)[iJet],(*treeReader->std_vector_jet_mass)[iJet]);
                 eventContainer.jets[iJet].setCsv((*treeReader->std_vector_jet_csvv2ivf)[iJet]);
@@ -193,7 +193,7 @@ bool EventReader::fillNextEvent()
             eventContainer.genLeptons[iLepton].set((*treeReader->std_vector_leptonGen_pt)[iLepton],(*treeReader->std_vector_leptonGen_eta)[iLepton],(*treeReader->std_vector_leptonGen_phi)[iLepton],(*treeReader->std_vector_leptonGen_pid)[iLepton] );                
         }
         
-        if( (*treeReader->std_vector_lepton_pt)[iLepton] > 10 )
+        if( (*treeReader->std_vector_lepton_pt)[iLepton] > configContainer.minLeptonPt )
         {
             eventContainer.goodLeptons.push_back(iLepton);
             

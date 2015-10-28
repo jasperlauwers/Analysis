@@ -16,6 +16,6 @@ struct ConfigContainer {
     CutContainer cutContainer;
     
     string treeName, sampleDir, outputDir;
-    float luminosity, maxEvents;
+    float luminosity, maxEvents, minJetPt, minLeptonPt;
 };
 #endif

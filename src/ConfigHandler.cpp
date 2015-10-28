@@ -86,6 +86,28 @@ ConfigHandler::ConfigHandler(const string& fileName, ConfigContainer& cContainer
             cfgContainer.luminosity = 1000.;
         }
         
+        // MinJetPt
+        try
+        {
+            cfgContainer.minJetPt = cfg.lookup("MinJetPt");
+        }
+        catch(const SettingNotFoundException &nfex) 
+        {
+            cout << "MinJetPt setting not found. Using default: 30" << endl;
+            cfgContainer.minJetPt = 30.;
+        }
+        
+        // MinLeptonPt
+        try
+        {
+            cfgContainer.minLeptonPt = cfg.lookup("MinLeptonPt");
+        }
+        catch(const SettingNotFoundException &nfex) 
+        {
+            cout << "MinLeptonPt setting not found. Using default: 10" << endl;
+            cfgContainer.minLeptonPt = 10.;
+        }
+        
         ////////// Plot Settings ////////// 
         // MaxEvents
         try
