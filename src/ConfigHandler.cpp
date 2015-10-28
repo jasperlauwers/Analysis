@@ -11,7 +11,7 @@ ConfigHandler::ConfigHandler(const string& fileName, ConfigContainer& cContainer
     // Read the subconfig file names
     try
     {
-        // Subconfig files
+        ////////// Config files ////////// 
         try
         {
             variablesFile = cfg.lookup("VariablesFile").c_str();
@@ -33,6 +33,7 @@ ConfigHandler::ConfigHandler(const string& fileName, ConfigContainer& cContainer
         }
         catch(const SettingNotFoundException &nfex) { } 
         
+        ////////// General settings ////////// 
         // TreeName
         try
         {
@@ -83,6 +84,18 @@ ConfigHandler::ConfigHandler(const string& fileName, ConfigContainer& cContainer
         {
             cout << "Luminosity setting not found. Using default: 1000" << endl;
             cfgContainer.luminosity = 1000.;
+        }
+        
+        ////////// Plot Settings ////////// 
+        // MaxEvents
+        try
+        {
+            cfgContainer.maxEvents = cfg.lookup("MaxEvents");
+        }
+        catch(const SettingNotFoundException &nfex) 
+        {
+            cout << "MaxEvents setting not found. Using default: -1" << endl;
+            cfgContainer.maxEvents = -1.;
         }
     }
     catch(const SettingTypeException &tex)

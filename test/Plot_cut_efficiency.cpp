@@ -4,7 +4,7 @@
 #include "ConfigHandler.hpp"
 #include "EventCleaner.hpp"
 #include "EventSelecter.hpp"
-#include "EventPlotter.hpp"
+#include "CutPlotter.hpp"
 
 int main (int argc, char ** argv) {
     
@@ -34,12 +34,7 @@ int main (int argc, char ** argv) {
     EventReader reader(eventContainer, cfgContainer);
     EventCleaner cleaner( eventContainer );
     EventSelecter selecter(eventContainer, cfgContainer.cutContainer);
-    
-    TH1F *hCuts = new TH1F("Cut_Efficiency","",cfgContainer.cutContainer.variableNames.size()+1,0,cfgContainer.cutContainer.variableNames.size()+1);
-    for( int iCut = 0; iCut < cfgContainer.cutContainer.variableNames.size(); ++iCut ) 
-    {
-        hCuts->GetXaxis()->SetBinLabel(iCut+2, (cfgContainer.cutContainer.variableNames[iCut]).c_str());
-    }
+    CutPlotter plotter(eventContainer, cfgContainer);
     
     for( unsigned int iSample = 0; iSample < cfgContainer.sampleContainer.reducedNames.size(); ++iSample) 
     {
@@ -50,18 +45,24 @@ int main (int argc, char ** argv) {
             while( reader.fillNextEvent() )
             {
                 cleaner.doCleaning();
-                for( int iCut = 0; iCut < cfgContainer.cutContainer.variableNames.size(); ++iCut ) 
+                                
+                // Put total number of events in overflowbin if you want efficiencies FIXME make seperate function
+                plotter.fill(iSample, iSubSample, cfgContainer.cutContainer.variableNames.size()); // total # of events 
+                
+                for( unsigned int iCut = 0; iCut < cfgContainer.cutContainer.variableNames.size(); ++iCut ) 
                 {
-                    if( selecter.passCut(iCut) ) 
-                        hCuts->Fill(iCut+1.5);
-                }
+                    if( selecter.passCut(iCut) ) {
+                        plotter.fill(iSample, iSubSample, iCut);
+                    }
+                    else
+                        break; // accumulate cuts
+                }               
             }
         }
     }
-    system(("mkdir -p " + cfgContainer.outputDir).c_str());   
-    TFile* f = new TFile((cfgContainer.outputDir + "cutEff.root").c_str(),"RECREATE");
-    hCuts->Write();
-    f->Close();
+    plotter.writeHist("Cut_efficiency.root");
+    plotter.writeEfficiency("png");
+    plotter.writeStacked("png");
     
     delete cHandler;
 }

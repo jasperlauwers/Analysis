@@ -1,7 +1,7 @@
 
 #include "EventSelecter.hpp"
 
-EventSelecter::EventSelecter(EventContainer& evContainer, CutContainer& cContainer)
+EventSelecter::EventSelecter(const EventContainer& evContainer, const CutContainer& cContainer)
 : eventContainer(evContainer), cutContainer(cContainer)
 {
     // Set functions to variables and comparison types
@@ -36,7 +36,7 @@ EventSelecter::EventSelecter(EventContainer& evContainer, CutContainer& cContain
 
 EventSelecter::~EventSelecter(){ }
 
-bool EventSelecter::passCuts()
+bool EventSelecter::passCuts() const
 {
     for( const auto& iFunc : fullComparisonVector )
     {
@@ -45,9 +45,9 @@ bool EventSelecter::passCuts()
     return true;
 }
 
-bool EventSelecter::passCut(unsigned int i) // make <=, >, abs<=, abs> functions and bind with cut values
+bool EventSelecter::passCut(unsigned int i) const // make <=, >, abs<=, abs> functions and bind with cut values
 {
-    if( i < fullComparisonVector.size() ) // remove this for speed?
+    if( i < fullComparisonVector.size() )
     {
         return fullComparisonVector[i]();
     }
@@ -79,23 +79,23 @@ unsigned int EventSelecter::getIndex(const string& indexString, const string& fu
     return index;    
 }
 
-bool EventSelecter::greaterThan(int index)
+bool EventSelecter::greaterThan(int index) const
 {
     return (functionVector[index]() > cutContainer.cutValues[index]);
 }
-bool EventSelecter::smallerThan(int index)
+bool EventSelecter::smallerThan(int index) const
 {
     return (functionVector[index]() <= cutContainer.cutValues[index]);
 }
-bool EventSelecter::absGreaterThan(int index)
+bool EventSelecter::absGreaterThan(int index) const
 {
     return (abs(functionVector[index]()) > cutContainer.cutValues[index]);
 }
-bool EventSelecter::absSmallerThan(int index)
+bool EventSelecter::absSmallerThan(int index) const
 {
     return (abs(functionVector[index]()) <= cutContainer.cutValues[index]);
 }
-bool EventSelecter::equal(int index)
+bool EventSelecter::equal(int index) const
 {
-    return (functionVector[index]() == cutContainer.cutValues[index]);
+    return ( abs(functionVector[index]() - cutContainer.cutValues[index]) < 1e-5 );
 }

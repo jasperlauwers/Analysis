@@ -16,8 +16,6 @@ public:
     void doCleaning();
     
 private:
-    EventContainer& eventContainer;
-    unsigned int nLeptons, nJets;
-    
+    EventContainer& eventContainer;    
 };
 #endif

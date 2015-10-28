@@ -23,3 +23,12 @@ void Jet::set(double pt, double eta, double phi, double mass)
 {
     Particle::set(pt, eta, phi, mass);
 }
+
+void Jet::setCsv( float csv )
+{
+    CSV = csv;
+}
+float Jet::csv() const
+{
+    return CSV;
+}

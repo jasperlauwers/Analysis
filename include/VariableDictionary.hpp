@@ -16,12 +16,12 @@ class VariableDictionary {
 public:
     VariableDictionary(const EventContainer&);
     ~VariableDictionary();
-    void stringToFunction(const vector<string>&, vector<eventContainerFunction>&);
-    void stringToFunction(const vector<string>&, vector<eventContainerFunction>&, vector<ComparisonType>&);
+    void stringToFunction(const vector<string>&, vector<eventContainerFunction>&) const;
+    void stringToFunction(const vector<string>&, vector<eventContainerFunction>&, vector<ComparisonType>&) const;
     
 private:
-    unsigned int getIndex(const string& indexString, const string& fullString, bool isJet);
-    
+    unsigned int getIndex(const string& indexString, const string& fullString, bool isJet) const;   
+    float getFloat(const string& indexString, const string& fullString) const; 
     const EventContainer& eventContainer;    
 };
 #endif

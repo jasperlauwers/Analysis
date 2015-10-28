@@ -2,34 +2,38 @@
 #include "EventCleaner.hpp"
 
 EventCleaner::EventCleaner(EventContainer& evContainer)
-: eventContainer(evContainer), nLeptons( eventContainer.leptons.size() ), nJets( eventContainer.jets.size() ) { }
+: eventContainer(evContainer) { }
 
 EventCleaner::~EventCleaner() { }
 
 void EventCleaner::doCleaning() 
 {
-    for( unsigned int iLepton=0; iLepton < nLeptons; ++iLepton ) {
-        if( eventContainer.leptons[iLepton].pt() <= 0 ) 
-            break;
-        if( eventContainer.leptons[iLepton].passesMedium() )
+    unsigned int nGoodLeptons = eventContainer.goodLeptons.size();
+    for( unsigned int iLepton=0; iLepton < nGoodLeptons; ++iLepton ) {
+        if( ! eventContainer.leptons[eventContainer.goodLeptons[iLepton]].passesMedium() )
         {    
-            eventContainer.goodLeptons.push_back(iLepton);
+            eventContainer.goodLeptons.erase(eventContainer.goodLeptons.begin()+iLepton);
+            iLepton--;
+            nGoodLeptons--;
         }
     }
     
-    unsigned int nGoodLeptons = eventContainer.goodLeptons.size();
-    for( unsigned int iJet=0; iJet < nJets; ++iJet ) {
-        if( eventContainer.jets[iJet].pt() <= 0 ) 
-            break;
+    nGoodLeptons = eventContainer.goodLeptons.size();
+    unsigned int nGoodJets = eventContainer.goodJets.size();
+    for( unsigned int iJet=0; iJet < nGoodJets; ++iJet ) {
         
         bool goodJet = true;
-        for( unsigned int iLepton=0; iLepton < nGoodLeptons; ++iLepton ) {
-            if( eventContainer.leptons[eventContainer.goodLeptons[iLepton]].pt() < 10. )
+        for( auto iLepton : eventContainer.goodLeptons ) {
+            if( eventContainer.leptons[iLepton].pt() < 10. )
                 break;
-            if( eventContainer.jets[iJet].dR(eventContainer.leptons[eventContainer.goodLeptons[iLepton]]) < 0.3 ) 
+            if( eventContainer.jets[eventContainer.goodJets[iJet]].dR(eventContainer.leptons[iLepton]) < 0.3 ) 
                 goodJet = false;
         }
-        if( goodJet )
-            eventContainer.goodJets.push_back(iJet); 
+        if( ! goodJet )
+        {
+            eventContainer.goodJets.erase(eventContainer.goodJets.begin()+iJet); 
+            iJet--;
+            nGoodJets--;
+        }
     }
 }

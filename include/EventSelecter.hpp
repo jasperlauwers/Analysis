@@ -17,20 +17,20 @@ typedef function<bool ()> comparisonFunction;
 
 class EventSelecter {
 public:
-    EventSelecter(EventContainer&, CutContainer&);
+    EventSelecter(const EventContainer&, const CutContainer&);
     ~EventSelecter();
-    bool passCuts();
-    bool passCut(unsigned int);
+    bool passCuts() const;
+    bool passCut(unsigned int) const;
     
 private:
     unsigned int getIndex(const string& indexString, const string& fullString, bool isJet);
-    bool greaterThan(int index);
-    bool smallerThan(int index);
-    bool absGreaterThan(int index);
-    bool absSmallerThan(int index);
-    bool equal(int index);
+    bool greaterThan(int index) const;
+    bool smallerThan(int index) const;
+    bool absGreaterThan(int index) const;
+    bool absSmallerThan(int index) const;
+    bool equal(int index) const;
     
-    EventContainer& eventContainer;
+    const EventContainer& eventContainer;
     const CutContainer& cutContainer;
     vector<eventContainerFunction> functionVector;
     vector<ComparisonType> comparisonTypeVector;

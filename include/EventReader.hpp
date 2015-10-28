@@ -10,6 +10,8 @@
 using namespace libconfig;
 using namespace std;
 
+typedef function<void ()> setFunction;
+
 class EventReader {
 
 public:
@@ -23,8 +25,10 @@ private:
     const ConfigContainer& configContainer;
     TreeReader *treeReader;
     unsigned int nLeptons, nJets;  
-    bool isData;
-    vector<pair<float&,float&>> extraBranches;
+    bool isData, needJets, needGenJets, needPuppiJets, needGenLeptons, needElectronId;
+    vector<setFunction> functionVector;
+    vector<string> branches, genBranches;
+    double maxEventsWeight;
 };
 
 

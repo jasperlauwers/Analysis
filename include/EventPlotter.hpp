@@ -5,36 +5,44 @@
 #include "EventContainer.hpp"
 #include "ConfigContainer.hpp"
 #include "VariableDictionary.hpp"
+#include "HistogramContainer.hpp"
+#include "BasePlotter.hpp"
+#include "LatinoStyle2.h"
 #include "TH1F.h"
 #include "TFile.h"
 #include "TCanvas.h"
 #include "TLegend.h"
-#include "THStack.h"
+#include "TLatex.h"
 #include <iostream>
+#include <algorithm>
 
 using namespace std;
 
 typedef function<double ()> eventContainerFunction;
 
-class EventPlotter {
+class EventPlotter : BasePlotter {
 
 public:
-    EventPlotter(const EventContainer&, const ConfigContainer&); // give it config parser object
+    EventPlotter(const EventContainer&, const ConfigContainer&);
     ~EventPlotter();
     void fill(unsigned int iSample, unsigned int iSubSample);
     void writePlots(string extension) const;
     void writeHist(string filename) const;
+    
+    // parallel running
+//     EventPlotter(const ConfigContainer&);
+//     void init(const EventContainer& evContainer, unsigned int iSample);
+//     void parallelFill(unsigned int iSample, unsigned int iSubSample);
         
 private:
-    unsigned int getIndex(const string& indexString, const string& fullString, bool isJet);
-
-    const EventContainer& eventContainer;
-    const ConfigContainer& configContainer;
     vector<eventContainerFunction> functionVector;
-    eventContainerFunction eventWeightFunction;
-    vector<vector<TH1F*>> histograms;
-    vector<vector<float>> globalWeight;
+    vector<HistogramContainer> histogramContainers;
     unsigned int nSamples, nVariables;
+    
+    // parallel running
+//     vector<const EventContainer*> eventContainerParallel;
+//     vector<vector<eventContainerFunction>> functionVectorParallel;
+//     vector<eventContainerFunction> eventWeightFunctionParallel;
 };
 
 

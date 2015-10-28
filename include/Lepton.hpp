@@ -8,19 +8,46 @@ class Lepton : public Particle {
     
 public:
     Lepton();
-    Lepton(double pt, double eta, double phi, double pId);
-    Lepton(const TLorentzVector&, double pId);
+    Lepton(float pt, float eta, float phi, float pId);
+    Lepton(const TLorentzVector&, float pId);
     virtual ~Lepton();
-    void set(double pt, double eta, double phi, double pId);
-    void set(double pt, double eta, double phi, double pId, bool passMedium);
+    void set(float pt, float eta, float phi, float pId);
+    void set(float pt, float eta, float phi, float pId, bool passMedium);
     bool isElectron() const;
     bool isMuon() const;
+    bool isTau() const;
     bool passesMedium() const;
-    double charge() const;
+    float charge() const;
+    
+    // electron id parameters
+    void setd0(float);
+    void setdEtaIn(float); 
+    void setdPhiIn(float); 
+    void setdz(float); 
+    void seteffectiveArea(float); 
+    void setmissingHits(float); 
+    void setsigmaIetaIeta(float); 
+    void sethOverE(float); 
+    void setooEmoop(float); 
+    void setconversionVeto(float); 
+    void setscEta(float); 
+    void setIsolation(float);
+    float d0() const;
+    float dEtaIn() const;
+    float dPhiIn() const;
+    float dz() const;
+    float effectiveArea() const;
+    float missingHits() const;
+    float sigmaIetaIeta() const;
+    float hOverE() const;
+    float ooEmoop() const;
+    float conversionVeto() const;
+    float scEta() const;
+    float isolation() const;
     
 private:
-    double pId, passMedium; 
-    
+    float pId, passMedium; 
+    float _d0, _dEtaIn, _dPhiIn, _dz, _effArea, _missHits, _sIetaIeta, _hOverE, _ooEmoop, _convVeto, _scEta, _isolation;
 };
 
 #endif

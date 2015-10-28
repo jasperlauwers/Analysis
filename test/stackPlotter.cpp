@@ -30,16 +30,12 @@ int main (int argc, char ** argv) {
         return(-1);
     }
     
+
     EventContainer eventContainer;
     EventReader reader(eventContainer, cfgContainer);
-    EventCleaner cleaner( eventContainer );
+    EventCleaner cleaner(eventContainer);
     EventSelecter selecter(eventContainer, cfgContainer.cutContainer);
-    
-    TH1F *hCuts = new TH1F("Cut_Efficiency","",cfgContainer.cutContainer.variableNames.size()+1,0,cfgContainer.cutContainer.variableNames.size()+1);
-    for( int iCut = 0; iCut < cfgContainer.cutContainer.variableNames.size(); ++iCut ) 
-    {
-        hCuts->GetXaxis()->SetBinLabel(iCut+2, (cfgContainer.cutContainer.variableNames[iCut]).c_str());
-    }
+    EventPlotter plotter(eventContainer, cfgContainer);
     
     for( unsigned int iSample = 0; iSample < cfgContainer.sampleContainer.reducedNames.size(); ++iSample) 
     {
@@ -50,18 +46,14 @@ int main (int argc, char ** argv) {
             while( reader.fillNextEvent() )
             {
                 cleaner.doCleaning();
-                for( int iCut = 0; iCut < cfgContainer.cutContainer.variableNames.size(); ++iCut ) 
-                {
-                    if( selecter.passCut(iCut) ) 
-                        hCuts->Fill(iCut+1.5);
-                }
+                if( selecter.passCuts() )
+                    plotter.fill(iSample, iSubSample);
             }
         }
     }
-    system(("mkdir -p " + cfgContainer.outputDir).c_str());   
-    TFile* f = new TFile((cfgContainer.outputDir + "cutEff.root").c_str(),"RECREATE");
-    hCuts->Write();
-    f->Close();
+    string filename = "test.root";
+    plotter.writeHist(filename);
+    plotter.writePlots("png");
     
     delete cHandler;
 }

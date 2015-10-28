@@ -13,6 +13,8 @@ public:
     virtual ~Jet();
     void set(double pt, double eta, double phi, double mass, double puId, double qgLikelihood, double CSV);
     void set(double pt, double eta, double phi, double mass = 0);
+    void setCsv( float csv );
+    float csv() const;
     
 private:
     double puId, qgLikelihood, CSV; 
