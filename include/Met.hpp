@@ -8,10 +8,10 @@ class Met : public Particle {
     
 public:
     Met();
-    Met(double pt, double phi);
+    Met(float pt, float phi);
     Met(const TLorentzVector&);
     virtual ~Met();
-    void set(double pt, double phi);    
+    void set(float pt, float phi);    
 };
 
 #endif

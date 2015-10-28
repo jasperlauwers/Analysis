@@ -20,43 +20,43 @@ public:
     void reset(); 
     
     // Jets
-    double jetpt(unsigned int) const;
-    double jeteta(unsigned int) const;
-    double jetphi(unsigned int) const;
-    double jetmass(unsigned int) const;
-    double jetcsv(unsigned int) const;
+    float jetpt(unsigned int) const;
+    float jeteta(unsigned int) const;
+    float jetphi(unsigned int) const;
+    float jetmass(unsigned int) const;
+    float jetcsv(unsigned int) const;
     unsigned int nJets( float minPt ) const;
     
     // Gen jets
-    double genjetpt(unsigned int) const;
-    double genjeteta(unsigned int) const;
-    double genjetphi(unsigned int) const;
-    double genjetmass(unsigned int) const;
+    float genjetpt(unsigned int) const;
+    float genjeteta(unsigned int) const;
+    float genjetphi(unsigned int) const;
+    float genjetmass(unsigned int) const;
     
     // Puppi jets
     
     // Leptons
-    double leptonpt(unsigned int) const;
-    double leptoneta(unsigned int) const;
-    double leptonphi(unsigned int) const;
+    float leptonpt(unsigned int) const;
+    float leptoneta(unsigned int) const;
+    float leptonphi(unsigned int) const;
     
     // Gen leptons
-    double genleptonpt(unsigned int) const;
-    double genleptoneta(unsigned int) const;
-    double genleptonphi(unsigned int) const;
+    float genleptonpt(unsigned int) const;
+    float genleptoneta(unsigned int) const;
+    float genleptonphi(unsigned int) const;
     
     // Di-particle varibles
-    double mll() const;
-    double mjj() const;
-    double ptll() const;
-    double ptjj() const;
-    double detall() const;
-    double detajj() const;
-    double dphill() const;
-    double dphijj() const;
-    double channel() const;
-    double genmll() const;
-    double genchannel() const;
+    float mll() const;
+    float mjj() const;
+    float ptll() const;
+    float ptjj() const;
+    float detall() const;
+    float detajj() const;
+    float dphill() const;
+    float dphijj() const;
+    float channel() const;
+    float genmll() const;
+    float genchannel() const;
     
     // Weight
     float weight() const;

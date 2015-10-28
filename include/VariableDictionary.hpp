@@ -8,7 +8,7 @@
 
 using namespace std;
 
-typedef function<double ()> eventContainerFunction;
+typedef function<float ()> eventContainerFunction;
 
 enum class ComparisonType { GREATER_THAN, SMALLER_THAN, ABS_GREATER_THAN, ABS_SMALLER_THAN, EQUAL };
 

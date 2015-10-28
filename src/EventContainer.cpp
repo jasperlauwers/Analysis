@@ -40,35 +40,35 @@ void EventContainer::reset()
 }
 
 // Jets
-double EventContainer::jetpt(unsigned int i) const
+float EventContainer::jetpt(unsigned int i) const
 {
     if( i < goodJets.size() )
         return jets[goodJets[i]].pt();
     else
         return -9999.9;
 }
-double EventContainer::jeteta(unsigned int i) const
+float EventContainer::jeteta(unsigned int i) const
 {
     if( i < goodJets.size() )
         return jets[goodJets[i]].eta();
     else
         return -9999.9;
 }
-double EventContainer::jetphi(unsigned int i) const
+float EventContainer::jetphi(unsigned int i) const
 {
     if( i < goodJets.size() )
         return jets[goodJets[i]].phi();
     else
         return -9999.9;
 }
-double EventContainer::jetmass(unsigned int i) const
+float EventContainer::jetmass(unsigned int i) const
 {
     if( i < goodJets.size() )
         return jets[goodJets[i]].mass();
     else
         return -9999.9;
 }
-double EventContainer::jetcsv(unsigned int i) const
+float EventContainer::jetcsv(unsigned int i) const
 {
     if( i < goodJets.size() )
         return jets[goodJets[i]].csv();
@@ -86,28 +86,28 @@ unsigned int EventContainer::nJets( float minPt ) const
 }
 
 // Gen jets 
-double EventContainer::genjetpt(unsigned int i) const
+float EventContainer::genjetpt(unsigned int i) const
 {
     if( i < goodGenJets.size() )
         return genJets[goodGenJets[i]].pt();
     else
         return -9999.9;
 }
-double EventContainer::genjeteta(unsigned int i) const
+float EventContainer::genjeteta(unsigned int i) const
 {
     if( i < goodGenJets.size() )
         return genJets[goodGenJets[i]].eta();
     else
         return -9999.9;
 }
-double EventContainer::genjetphi(unsigned int i) const
+float EventContainer::genjetphi(unsigned int i) const
 {
     if( i < goodGenJets.size() )
         return genJets[goodGenJets[i]].phi();
     else
         return -9999.9;
 }
-double EventContainer::genjetmass(unsigned int i) const
+float EventContainer::genjetmass(unsigned int i) const
 {
     if( i < goodGenJets.size() )
         return genJets[goodGenJets[i]].mass();
@@ -116,21 +116,21 @@ double EventContainer::genjetmass(unsigned int i) const
 }
     
 // Leptons
-double EventContainer::leptonpt(unsigned int i) const
+float EventContainer::leptonpt(unsigned int i) const
 {
     if( i < goodLeptons.size() )
         return leptons[goodLeptons[i]].pt();
     else
         return -9999.9;
 }
-double EventContainer::leptoneta(unsigned int i) const
+float EventContainer::leptoneta(unsigned int i) const
 {
     if( i < goodLeptons.size() )
         return leptons[goodLeptons[i]].eta();
     else
         return -9999.9;
 }
-double EventContainer::leptonphi(unsigned int i) const
+float EventContainer::leptonphi(unsigned int i) const
 {
     if( i < goodLeptons.size() )
         return leptons[goodLeptons[i]].phi();
@@ -139,21 +139,21 @@ double EventContainer::leptonphi(unsigned int i) const
 }
 
 // Gen leptons
-double EventContainer::genleptonpt(unsigned int i) const
+float EventContainer::genleptonpt(unsigned int i) const
 {
     if( i < goodGenLeptons.size() )
         return genLeptons[goodGenLeptons[i]].pt();
     else
         return -9999.9;
 }
-double EventContainer::genleptoneta(unsigned int i) const
+float EventContainer::genleptoneta(unsigned int i) const
 {
     if( i < goodGenLeptons.size() )
         return genLeptons[goodGenLeptons[i]].eta();
     else
         return -9999.9;
 }
-double EventContainer::genleptonphi(unsigned int i) const
+float EventContainer::genleptonphi(unsigned int i) const
 {
     if( i < goodGenLeptons.size() )
         return genLeptons[goodGenLeptons[i]].phi();
@@ -161,63 +161,63 @@ double EventContainer::genleptonphi(unsigned int i) const
         return -9999.9;
 }
 
-double EventContainer::mll() const
+float EventContainer::mll() const
 {
     if( goodLeptons.size() > 1 )
         return leptons[goodLeptons[0]].mpp(leptons[goodLeptons[1]]);
     else
         return -9999.9;
 }
-double EventContainer::mjj() const
+float EventContainer::mjj() const
 {
     if( goodJets.size() > 1 )
         return jets[goodJets[0]].mpp(jets[goodJets[1]]);
     else
         return -9999.9;
 }
-double EventContainer::ptll() const
+float EventContainer::ptll() const
 {
     if( goodLeptons.size() > 1 )
         return leptons[goodLeptons[0]].ptpp(leptons[goodLeptons[1]]);
     else
         return -9999.9;
 }
-double EventContainer::ptjj() const
+float EventContainer::ptjj() const
 {
     if( goodJets.size() > 1 )
         return jets[goodJets[0]].ptpp(jets[goodJets[1]]);
     else
         return -9999.9;
 }
-double EventContainer::detall() const
+float EventContainer::detall() const
 {
     if( goodLeptons.size() > 1 )
         return leptons[goodLeptons[0]].dEta(leptons[goodLeptons[1]]);
     else
         return -9999.9;
 }
-double EventContainer::detajj() const
+float EventContainer::detajj() const
 {
     if( goodJets.size() > 1 )
         return jets[goodJets[0]].dEta(jets[goodJets[1]]);
     else
         return -9999.9;  
 }
-double EventContainer::dphill() const
+float EventContainer::dphill() const
 {
     if( goodLeptons.size() > 1 )
         return leptons[goodLeptons[0]].dPhi(leptons[goodLeptons[1]]);
     else
         return -9999.9;
 }
-double EventContainer::dphijj() const
+float EventContainer::dphijj() const
 {
     if( goodJets.size() > 1 )
         return jets[goodJets[0]].dPhi(jets[goodJets[1]]);
     else
         return -9999.9;
 }
-double EventContainer::channel() const
+float EventContainer::channel() const
 {
     if( goodLeptons.size() > 1 )
     {
@@ -239,14 +239,14 @@ double EventContainer::channel() const
     else
         return -9999.9;
 }
-double EventContainer::genmll() const
+float EventContainer::genmll() const
 {
     if( goodGenLeptons.size() > 1 )
         return genLeptons[goodGenLeptons[0]].mpp(genLeptons[goodGenLeptons[1]]);
     else
         return -9999.9;
 }
-double EventContainer::genchannel() const
+float EventContainer::genchannel() const
 {
     if( goodGenLeptons.size() > 1 )
     {

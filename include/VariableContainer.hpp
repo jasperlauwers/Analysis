@@ -10,6 +10,6 @@ using namespace std;
 struct VariableContainer {
     vector<string> variableNames;
     vector<int> nBins;
-    vector<vector<double> > binning; // either (min,max) or all bins
+    vector<vector<float> > binning; // either (min,max) or all bins
 };
 #endif

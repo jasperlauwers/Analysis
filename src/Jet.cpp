@@ -3,15 +3,15 @@
 
 Jet::Jet() { }
 
-Jet::Jet(double pt, double eta, double phi, double mass, double puId, double qgLikelihood, double CSV) 
+Jet::Jet(float pt, float eta, float phi, float mass, float puId, float qgLikelihood, float CSV) 
     : Particle( pt, eta, phi, mass), puId(puId), qgLikelihood(qgLikelihood), CSV(CSV) { }
 
-Jet::Jet(const TLorentzVector& p4, double puId, double qgLikelihood, double CSV) 
+Jet::Jet(const TLorentzVector& p4, float puId, float qgLikelihood, float CSV) 
 : Particle( p4 ), puId(puId), qgLikelihood(qgLikelihood), CSV(CSV) { }
 
 Jet::~Jet() { }
 
-void Jet::set(double pt, double eta, double phi, double mass, double puId, double qgLikelihood, double CSV) 
+void Jet::set(float pt, float eta, float phi, float mass, float puId, float qgLikelihood, float CSV) 
 {
     Particle::set( pt, eta, phi, mass);
     this->puId = puId;
@@ -19,7 +19,7 @@ void Jet::set(double pt, double eta, double phi, double mass, double puId, doubl
     this->CSV = CSV;
 }
 
-void Jet::set(double pt, double eta, double phi, double mass) 
+void Jet::set(float pt, float eta, float phi, float mass) 
 {
     Particle::set(pt, eta, phi, mass);
 }

@@ -9,6 +9,6 @@ using namespace std;
 
 struct CutContainer {
     vector<string> variableNames;
-    vector<double> cutValues;
+    vector<float> cutValues;
 };
 #endif

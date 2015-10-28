@@ -40,10 +40,10 @@ VariableReader::VariableReader(const string& fileName, VariableContainer& varCon
                 throw 1;
             }
             
-            vector<double> binVector(binLength);
+            vector<float> binVector(binLength);
             for( unsigned int iBin=0; iBin < binLength; ++iBin ) 
             {
-                binVector[iBin] = (double) binSetting[iBin];  
+                binVector[iBin] = (float) binSetting[iBin];  
             }
             variableContainer.binning.push_back( binVector );
         }

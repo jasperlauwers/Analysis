@@ -17,7 +17,7 @@
 
 using namespace std;
 
-typedef function<double ()> eventContainerFunction;
+typedef function<float ()> eventContainerFunction;
 
 class BasePlotter {
 

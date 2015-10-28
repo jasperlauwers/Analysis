@@ -10,8 +10,8 @@ using namespace std;
 struct SampleContainer {
     vector<vector<string>> sampleNames;
     vector<string> reducedNames;
-    vector<vector<double>> luminosity;
-    vector<vector<double>> weight;
+    vector<vector<float>> luminosity;
+    vector<vector<float>> weight;
     vector<int> color;
     vector<bool> isData;
     vector<bool> isMC;

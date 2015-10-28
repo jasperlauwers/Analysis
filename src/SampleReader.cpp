@@ -53,7 +53,7 @@ SampleReader::SampleReader(const string& fileName, SampleContainer& sampleContai
         {
             if( newSuperSample ) 
             {
-                vector<double> temp = { samples[iSample] };
+                vector<float> temp = { samples[iSample] };
                 sampleContainer.luminosity.push_back( temp );
             }
             else
@@ -63,7 +63,7 @@ SampleReader::SampleReader(const string& fileName, SampleContainer& sampleContai
         {
             if( newSuperSample ) 
             {
-                vector<double> temp = { samples[iSample] };
+                vector<float> temp = { samples[iSample] };
                 sampleContainer.weight.push_back( temp );
             }
             else
