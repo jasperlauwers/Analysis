@@ -6,6 +6,7 @@
 #include "EventContainer.hpp"
 #include "TreeReader.hpp"
 #include "libconfig.h++"
+#include "TMath.h"
 
 using namespace libconfig;
 using namespace std;

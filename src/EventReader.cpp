@@ -99,7 +99,7 @@ void EventReader::setSample(unsigned int iSample, unsigned int iSubSample)
     
     // Set Branch statusses
     vector<string> sampleBranches= {"std_vector_lepton_eta","std_vector_lepton_pt","std_vector_lepton_phi","std_vector_lepton_flavour",
-                      "std_vector_lepton_eleIdMedium","std_vector_lepton_isMediumMuon",
+                      "std_vector_lepton_eleIdTight","std_vector_lepton_isMediumMuon","std_vector_lepton_BestTrackdxy","std_vector_lepton_BestTrackdz", "std_vector_lepton_sumPUPt",
                       "std_vector_lepton_chargedHadronIso","std_vector_lepton_neutralHadronIso","std_vector_lepton_photonIso", "trkMet","nvtx"};
     sampleBranches.insert(sampleBranches.end(), branches.begin(), branches.end());
     
@@ -170,6 +170,35 @@ bool EventReader::fillNextEvent()
     }
     while( isData && treeReader->trigger == 0); // Cut on trigger for data
     
+    // Fill gen jets
+    if( needGenJets )
+    {
+        for( unsigned int iJet=0; iJet < nJets; ++iJet ) {
+            if( (*treeReader->std_vector_jetGen_pt)[iJet] > 0 )
+            {
+                eventContainer.genJets[iJet].set((*treeReader->std_vector_jetGen_pt)[iJet],(*treeReader->std_vector_jetGen_eta)[iJet],(*treeReader->std_vector_jetGen_phi)[iJet], 0);
+                eventContainer.goodGenJets.push_back(iJet);
+            }
+            else
+                break; // don't need to clean contents because it won't be used
+        }
+    }
+    
+    // Fill puppi jets
+    if( needPuppiJets )
+    {
+        for( unsigned int iJet=0; iJet < nJets; ++iJet ) {
+            if( (*treeReader->std_vector_puppijet_pt)[iJet] >= configContainer.minJetPt )
+            {
+                eventContainer.puppiJets[iJet].set((*treeReader->std_vector_puppijet_pt)[iJet],(*treeReader->std_vector_puppijet_eta)[iJet],(*treeReader->std_vector_puppijet_phi)[iJet],0);
+//                 eventContainer.jets[iJet].setCsv((*treeReader->std_vector_jet_csvv2ivf)[iJet]);
+                eventContainer.goodPuppiJets.push_back(iJet);
+            }
+            else
+                break; // don't need to clean contents because it won't be used
+        }
+    }
+    
     // Fill jets
     if( needJets )
     {
@@ -189,7 +218,7 @@ bool EventReader::fillNextEvent()
     if( needGenLeptons && !isData )
     {
         for( unsigned int iLepton=0; iLepton < nLeptons; ++iLepton ) {
-            if( (*treeReader->std_vector_leptonGen_status)[iLepton] == 1 )
+            if( (*treeReader->std_vector_leptonGen_status)[iLepton] == 1 && (*treeReader->std_vector_leptonGen_pt)[iLepton] > 0)
             {                
                 eventContainer.goodGenLeptons.push_back(iLepton);
                 eventContainer.genLeptons[iLepton].set((*treeReader->std_vector_leptonGen_pt)[iLepton],(*treeReader->std_vector_leptonGen_eta)[iLepton],(*treeReader->std_vector_leptonGen_phi)[iLepton],(*treeReader->std_vector_leptonGen_pid)[iLepton] );                
@@ -205,7 +234,7 @@ bool EventReader::fillNextEvent()
             
             if( abs((*treeReader->std_vector_lepton_flavour)[iLepton]) == 11 )
             {
-                eventContainer.leptons[iLepton].set((*treeReader->std_vector_lepton_pt)[iLepton],(*treeReader->std_vector_lepton_eta)[iLepton],(*treeReader->std_vector_lepton_phi)[iLepton],(*treeReader->std_vector_lepton_flavour)[iLepton], (*treeReader->std_vector_lepton_eleIdMedium)[iLepton] == 1 );
+                eventContainer.leptons[iLepton].set((*treeReader->std_vector_lepton_pt)[iLepton],(*treeReader->std_vector_lepton_eta)[iLepton],(*treeReader->std_vector_lepton_phi)[iLepton],(*treeReader->std_vector_lepton_flavour)[iLepton], (*treeReader->std_vector_lepton_eleIdTight)[iLepton] == 1 );
                 if( needElectronId )
                 {
                     eventContainer.leptons[iLepton].setd0((*treeReader->std_vector_electron_d0)[iLepton]);
@@ -229,7 +258,7 @@ bool EventReader::fillNextEvent()
                     (*treeReader->std_vector_lepton_eta)[iLepton],
                     (*treeReader->std_vector_lepton_phi)[iLepton],
                     (*treeReader->std_vector_lepton_flavour)[iLepton],
-                    ((*treeReader->std_vector_lepton_isMediumMuon)[iLepton] == 1) && ( (*treeReader->std_vector_lepton_chargedHadronIso)[iLepton] + (*treeReader->std_vector_lepton_neutralHadronIso)[iLepton] + (*treeReader->std_vector_lepton_photonIso)[iLepton] ) / (*treeReader->std_vector_lepton_pt)[iLepton] < 0.20 );
+                    ((*treeReader->std_vector_lepton_isMediumMuon)[iLepton] == 1) && ( (*treeReader->std_vector_lepton_chargedHadronIso)[iLepton] + TMath::Max((*treeReader->std_vector_lepton_neutralHadronIso)[iLepton] + (*treeReader->std_vector_lepton_photonIso)[iLepton] - 0.5 * (*treeReader->std_vector_lepton_sumPUPt)[iLepton], 0.)) / (*treeReader->std_vector_lepton_pt)[iLepton] < 0.15 && (*treeReader->std_vector_lepton_BestTrackdxy)[iLepton] < 0.02 && (*treeReader->std_vector_lepton_BestTrackdz)[iLepton] < 0.1 );
             }
             else
             {

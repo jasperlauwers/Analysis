@@ -81,7 +81,7 @@ void CutPlotter::writeEfficiency(string extension)
         }
         else
         {
-            cerr << "Sample \"" << configContainer.sampleContainer.reducedNames[iSample] << "\" has no events, cannot make efficiency plot";
+            cerr << "Sample \"" << configContainer.sampleContainer.reducedNames[iSample] << "\" has no events, cannot make efficiency plot" << endl;
             throw 1;
         }
     }

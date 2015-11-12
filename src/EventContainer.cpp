@@ -114,7 +114,37 @@ float EventContainer::genjetmass(unsigned int i) const
     else
         return -9999.9;
 }
-    
+
+// Puppi jets
+float EventContainer::puppijetpt(unsigned int i) const
+{
+    if( i < goodPuppiJets.size() )
+        return puppiJets[goodPuppiJets[i]].pt();
+    else
+        return -9999.9;
+}
+float EventContainer::puppijeteta(unsigned int i) const
+{
+    if( i < goodPuppiJets.size() )
+        return puppiJets[goodPuppiJets[i]].eta();
+    else
+        return -9999.9;
+}
+float EventContainer::puppijetphi(unsigned int i) const
+{
+    if( i < goodPuppiJets.size() )
+        return puppiJets[goodPuppiJets[i]].phi();
+    else
+        return -9999.9;
+}
+float EventContainer::puppijetmass(unsigned int i) const
+{
+    if( i < goodPuppiJets.size() )
+        return puppiJets[goodPuppiJets[i]].mass();
+    else
+        return -9999.9;
+}
+
 // Leptons
 float EventContainer::leptonpt(unsigned int i) const
 {

@@ -86,6 +86,47 @@ void VariableDictionary::stringToFunction(const vector<string>& variableNames, v
                 throw 1;
             }
         }
+        else if( iSubString.find("puppijet") != string::npos )
+        {
+            string::size_type jetPosition = iSubString.find("puppijet");
+            iSubString.erase(jetPosition, 7);
+
+            if( iSubString.find("pt") != string::npos ) 
+            {
+                string::size_type varPosition = iSubString.find("pt");
+                iSubString.erase(varPosition, 2);
+                eventFunctions.push_back( bind(&EventContainer::puppijetpt, &eventContainer, getIndex(iSubString, iString, true)) );
+                if( maxFlag )
+                    ComparisonTypes.push_back( ComparisonType::SMALLER_THAN );
+                else
+                    ComparisonTypes.push_back( ComparisonType::GREATER_THAN );
+            }
+            else if( iSubString.find("eta") != string::npos ) 
+            {
+                string::size_type varPosition = iSubString.find("eta");
+                iSubString.erase(varPosition, 3);
+                eventFunctions.push_back( bind(&EventContainer::puppijeteta, &eventContainer, getIndex(iSubString, iString, true)) );
+                if( minFlag )
+                    ComparisonTypes.push_back( ComparisonType::ABS_GREATER_THAN );
+                else
+                    ComparisonTypes.push_back( ComparisonType::ABS_SMALLER_THAN );
+            }
+            else if( iSubString.find("mass") != string::npos ) 
+            {
+                string::size_type varPosition = iSubString.find("mass");
+                iSubString.erase(varPosition, 4);
+                eventFunctions.push_back( bind(&EventContainer::puppijetmass, &eventContainer, getIndex(iSubString, iString, true)) );
+                if( maxFlag )
+                    ComparisonTypes.push_back( ComparisonType::SMALLER_THAN );
+                else
+                    ComparisonTypes.push_back( ComparisonType::GREATER_THAN );
+            }
+            else
+            {
+                cerr << "Variable '" << iString << "' in cuts or variables list not known." << endl;
+                throw 1;
+            }
+        }
         else if( iSubString.find("jet") != string::npos )
         {
             string::size_type jetPosition = iSubString.find("jet");

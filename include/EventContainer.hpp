@@ -34,6 +34,10 @@ public:
     float genjetmass(unsigned int) const;
     
     // Puppi jets
+    float puppijetpt(unsigned int) const;
+    float puppijeteta(unsigned int) const;
+    float puppijetphi(unsigned int) const;
+    float puppijetmass(unsigned int) const;
     
     // Leptons
     float leptonpt(unsigned int) const;
