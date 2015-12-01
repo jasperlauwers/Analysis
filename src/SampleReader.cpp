@@ -26,6 +26,7 @@ SampleReader::SampleReader(const string& fileName, SampleContainer& sampleContai
         if( remainder == 0 ) 
         {
             string reducedName = (samples[iSample+1]).c_str(); // iSample+1 !
+            replace(reducedName.begin(), reducedName.end(), ' ', '_');
             
             if( reducedName != previousReducedName )
             {
@@ -40,6 +41,10 @@ SampleReader::SampleReader(const string& fileName, SampleContainer& sampleContai
         else if( remainder == 1 ) 
         {
             string sampleName = (samples[iSample-1]).c_str(); // iSample-1 !
+            if( sampleName.find(".root") == string::npos )
+            {
+                sampleName += ".root";
+            }
             
             if( newSuperSample ) 
             {

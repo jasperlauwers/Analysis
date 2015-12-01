@@ -91,11 +91,57 @@ void EventReader::setSample(unsigned int iSample, unsigned int iSubSample)
         throw 1;
     }
     
-    // Make new treeReader
-    TFile* f = new TFile((configContainer.sampleDir + configContainer.sampleContainer.sampleNames[iSample][iSubSample] + string(".root") ).c_str(),"READ");
-    TTree *t = (TTree*) f->Get(configContainer.treeName.c_str());                                                                                              
-    treeReader = new TreeReader(t);
+    // Set TTree or TChain
+    TTree *t;
+    if( configContainer.sampleContainer.sampleNames[iSample][iSubSample].find("*") != string::npos )
+    {
+        TChain* tChain = new TChain(configContainer.treeName.c_str());
+        DIR *dpdf;
+        struct dirent *epdf;
+        unsigned int nFiles = 0;
+        
+        string inDir = configContainer.sampleDir;
+        if( configContainer.sampleContainer.sampleNames[iSample][iSubSample].find("/") != string::npos )
+        {
+            inDir+=configContainer.sampleContainer.sampleNames[iSample][iSubSample].substr(0, configContainer.sampleContainer.sampleNames[iSample][iSubSample].find_last_of('/')+1); // +1: add last slash
+        }
+        dpdf = opendir(inDir.c_str());
+        if (dpdf != NULL)
+        {
+            while ((epdf = readdir(dpdf)))
+            {
+                string fname = epdf->d_name;
+                string reString = "("+configContainer.sampleContainer.sampleNames[iSample][iSubSample].substr(configContainer.sampleContainer.sampleNames[iSample][iSubSample].find_last_of('/')+1) + ")";
+                reString.replace(reString.find("*"),1,")(.*)(");
+                regex regexp(reString);
+                
+                if ( regex_match( fname, regexp ) ) {
+                    cout << "File matches Regex: " << fname << endl;
+                    tChain->Add((inDir+fname).c_str());
+                    nFiles++;
+                }
+            }
+            if( nFiles < 1 )
+            {
+                cerr << "Regex did not match any file: " << configContainer.sampleContainer.sampleNames[iSample][iSubSample].substr(configContainer.sampleContainer.sampleNames[iSample][iSubSample].find_last_of('/')+1) << endl;
+                throw 1;
+            }
+        }
+        else
+        {
+            cerr << "Directory not found: " << inDir << endl;
+            throw 1;
+        }
+        t = tChain;
+    }
+    else
+    {
+        TFile* f = new TFile((configContainer.sampleDir + configContainer.sampleContainer.sampleNames[iSample][iSubSample] ).c_str(),"READ");
+        t = (TTree*) f->Get(configContainer.treeName.c_str());                                                                                              
+    }  
     
+    // Make new treeReader
+    treeReader = new TreeReader(t);
     
     // Set Branch statusses
     vector<string> sampleBranches= {"std_vector_lepton_eta","std_vector_lepton_pt","std_vector_lepton_phi","std_vector_lepton_flavour",
@@ -114,6 +160,7 @@ void EventReader::setSample(unsigned int iSample, unsigned int iSubSample)
         isData = false;
         sampleBranches.push_back("baseW");        
         sampleBranches.push_back("GEN_weight_SM");
+        sampleBranches.push_back("puW");
         sampleBranches.insert(sampleBranches.end(), genBranches.begin(), genBranches.end());
     }
         
@@ -142,9 +189,9 @@ void EventReader::setSample(unsigned int iSample, unsigned int iSubSample)
     eventContainer.init(nLeptons, nJets);
     
     // Set maxEventsWeight
-    if( !isData && configContainer.maxEvents > 0 && configContainer.maxEvents < treeReader->fChain->GetEntriesFast() )
+    if( !isData && configContainer.maxEvents > 0 && configContainer.maxEvents < treeReader->fChain->GetEntries() )
     {
-        maxEventsWeight = treeReader->fChain->GetEntriesFast() / configContainer.maxEvents;
+        maxEventsWeight = treeReader->fChain->GetEntries() / configContainer.maxEvents;
     }
     else 
         maxEventsWeight = 1.;
@@ -277,7 +324,7 @@ bool EventReader::fillNextEvent()
     eventContainer.setNvertices( treeReader->nvtx );
     
     // Fill weight
-    eventContainer.setWeight( treeReader->baseW * (treeReader->GEN_weight_SM/abs(treeReader->GEN_weight_SM)) * maxEventsWeight);
+    eventContainer.setWeight( treeReader->baseW * (treeReader->GEN_weight_SM/abs(treeReader->GEN_weight_SM)) * treeReader->puW * maxEventsWeight);
         
     // Fill extra variables
 //     for( const auto& iPair : extraBranches )

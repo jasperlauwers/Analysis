@@ -84,6 +84,18 @@ unsigned int EventContainer::nJets( float minPt ) const
     }
     return goodJets.size();
 }
+float EventContainer::jetmaxcsv( float minPt ) const
+{
+    float maxCSV = 0;
+    for( unsigned int i = 0; i < goodJets.size(); ++i )
+    {
+        if( jets[goodJets[i]].pt() < minPt )
+            break;
+        if( jets[goodJets[i]].csv() > maxCSV )
+            maxCSV = jets[goodJets[i]].csv();
+    }
+    return maxCSV;
+}
 
 // Gen jets 
 float EventContainer::genjetpt(unsigned int i) const
@@ -167,6 +179,13 @@ float EventContainer::leptonphi(unsigned int i) const
     else
         return -9999.9;
 }
+float EventContainer::leptoncharge(unsigned int i) const
+{
+    if( i < goodLeptons.size() )
+        return leptons[goodLeptons[i]].charge();
+    else
+        return -9999.9;
+}
 
 // Gen leptons
 float EventContainer::genleptonpt(unsigned int i) const
@@ -197,6 +216,36 @@ float EventContainer::mll() const
         return leptons[goodLeptons[0]].mpp(leptons[goodLeptons[1]]);
     else
         return -9999.9;
+}
+float EventContainer::dmll(float subtractMass) const
+{    
+    if( goodLeptons.size() > 1 )
+        return leptons[goodLeptons[0]].mpp(leptons[goodLeptons[1]]) - subtractMass;
+    else
+        return -9999.9;
+}
+float EventContainer::dmllminpt(float subtractMass, float minPt) const
+{
+    float dmll = -9999.9;
+    for( auto iLep1 : goodLeptons )
+    {
+        for( auto iLep2 : goodLeptons )
+        {
+            if( iLep1 >= iLep2) 
+                continue;
+            if( leptons[iLep2].pt() < minPt )
+                break;
+            
+            // check opposite charge
+            if( leptons[iLep1].charge() * leptons[iLep2].charge() < 0 )
+            {
+                float dmll_temp = leptons[iLep1].mpp(leptons[iLep2]) - subtractMass;
+                if( abs(dmll_temp) < abs(dmll) )
+                    dmll = dmll_temp;
+            }
+        }
+    }
+    return dmll;
 }
 float EventContainer::mjj() const
 {
@@ -265,6 +314,15 @@ float EventContainer::channel() const
             else 
                 return 0; // mm
         }
+    }
+    else
+        return -9999.9;
+}
+float EventContainer::productleptoncharge() const
+{
+    if( goodLeptons.size() > 1 )
+    {
+        return leptons[goodLeptons[0]].charge() * leptons[goodLeptons[1]].charge();
     }
     else
         return -9999.9;

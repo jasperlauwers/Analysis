@@ -7,6 +7,8 @@
 #include "TreeReader.hpp"
 #include "libconfig.h++"
 #include "TMath.h"
+#include <dirent.h>
+#include <regex>
 
 using namespace libconfig;
 using namespace std;

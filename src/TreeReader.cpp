@@ -8,6 +8,9 @@ TreeReader::TreeReader(TTree *tree)
         std::cerr << "Tree does not exist!" << std::endl; 
         throw 1;
    }
+   
+   // Don't print ROOT errors
+   gROOT->ProcessLine( "gErrorIgnoreLevel = 3001;");
 }
 
 TreeReader::~TreeReader() { } // done in base class

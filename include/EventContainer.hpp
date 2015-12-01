@@ -26,6 +26,7 @@ public:
     float jetmass(unsigned int) const;
     float jetcsv(unsigned int) const;
     unsigned int nJets( float minPt ) const;
+    float jetmaxcsv( float minPt ) const;
     
     // Gen jets
     float genjetpt(unsigned int) const;
@@ -43,6 +44,7 @@ public:
     float leptonpt(unsigned int) const;
     float leptoneta(unsigned int) const;
     float leptonphi(unsigned int) const;
+    float leptoncharge(unsigned int) const;
     
     // Gen leptons
     float genleptonpt(unsigned int) const;
@@ -51,6 +53,8 @@ public:
     
     // Di-particle varibles
     float mll() const;
+    float dmll(float subtractMass) const;
+    float dmllminpt(float subtractMass, float minPt) const;
     float mjj() const;
     float ptll() const;
     float ptjj() const;
@@ -59,6 +63,7 @@ public:
     float dphill() const;
     float dphijj() const;
     float channel() const;
+    float productleptoncharge() const;
     float genmll() const;
     float genchannel() const;
     

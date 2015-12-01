@@ -6,6 +6,7 @@
 #include "ConfigReader.hpp"
 
 #include <vector>
+#include <algorithm>
 #include <iostream>
 
 class SampleReader : public ConfigReader {

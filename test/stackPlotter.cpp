@@ -8,7 +8,7 @@
 
 int main (int argc, char ** argv) {
     
-    // check number of inpt parameters
+    // check number of input parameters
     if(argc < 2){
         cerr<<"Needs the cfg file as agument --> exit "<<endl;
         return -1;
@@ -33,7 +33,7 @@ int main (int argc, char ** argv) {
 
     EventContainer eventContainer;
     EventReader reader(eventContainer, cfgContainer);
-    EventCleaner cleaner(eventContainer);
+//     EventCleaner cleaner(eventContainer);
     EventSelecter selecter(eventContainer, cfgContainer.cutContainer);
     EventPlotter plotter(eventContainer, cfgContainer);
     
@@ -45,7 +45,7 @@ int main (int argc, char ** argv) {
             
             while( reader.fillNextEvent() )
             {
-                cleaner.doCleaning();
+//                 cleaner.doCleaning();
                 if( selecter.passCuts() )
                     plotter.fill(iSample, iSubSample);
             }

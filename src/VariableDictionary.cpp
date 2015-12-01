@@ -172,6 +172,16 @@ void VariableDictionary::stringToFunction(const vector<string>& variableNames, v
                 else
                     ComparisonTypes.push_back( ComparisonType::GREATER_THAN );
             }
+            else if( iSubString.find("bveto") != string::npos ) 
+            {
+                string::size_type varPosition = iSubString.find("bveto");
+                iSubString.erase(varPosition, 5);
+                eventFunctions.push_back( bind(&EventContainer::jetmaxcsv, &eventContainer, getFloat(iSubString, iString)) );
+                if( minFlag )
+                    ComparisonTypes.push_back( ComparisonType::GREATER_THAN );
+                else
+                    ComparisonTypes.push_back( ComparisonType::SMALLER_THAN );
+            }
             else
             {
                 cerr << "Variable '" << iString << "' in cuts or variables list not known." << endl;
@@ -235,6 +245,16 @@ void VariableDictionary::stringToFunction(const vector<string>& variableNames, v
                     ComparisonTypes.push_back( ComparisonType::ABS_GREATER_THAN );
                 else
                     ComparisonTypes.push_back( ComparisonType::ABS_SMALLER_THAN );
+            }
+            else if( iSubString == "productcharge" ) 
+            {
+                eventFunctions.push_back( bind(&EventContainer::productleptoncharge, &eventContainer) );
+                if( maxFlag )
+                    ComparisonTypes.push_back( ComparisonType::SMALLER_THAN );
+                else if( minFlag )
+                    ComparisonTypes.push_back( ComparisonType::GREATER_THAN );
+                else
+                    ComparisonTypes.push_back( ComparisonType::EQUAL );
             }
             else
             {
@@ -409,6 +429,17 @@ void VariableDictionary::stringToFunction(const vector<string>& variableNames, v
             else
                 ComparisonTypes.push_back( ComparisonType::GREATER_THAN );
         }
+        else if( iSubString == "zveto" ) 
+        {
+            string::size_type varPosition = iSubString.find("zveto");
+            iSubString.erase(varPosition, 5);
+            
+            if( iSubString.size() > 0 ) 
+                eventFunctions.push_back( bind(&EventContainer::dmllminpt, &eventContainer, 91, getFloat(iSubString, iString)) );
+            else
+                eventFunctions.push_back( bind(&EventContainer::dmll, &eventContainer, 91) );
+            ComparisonTypes.push_back( ComparisonType::ABS_GREATER_THAN );
+        }
         else if( iSubString == "mjj" ) 
         {
             eventFunctions.push_back( bind(&EventContainer::mjj, &eventContainer) );
@@ -475,8 +506,13 @@ void VariableDictionary::stringToFunction(const vector<string>& variableNames, v
         else if( iSubString == "channel" ) 
         {
             eventFunctions.push_back( bind(&EventContainer::channel, &eventContainer) );
-            ComparisonTypes.push_back( ComparisonType::EQUAL );
-        } 
+            if( maxFlag )
+                ComparisonTypes.push_back( ComparisonType::SMALLER_THAN );
+            else if( minFlag )
+                ComparisonTypes.push_back( ComparisonType::GREATER_THAN );
+            else
+                ComparisonTypes.push_back( ComparisonType::EQUAL );
+        }
         
         else
         {

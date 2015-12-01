@@ -15,9 +15,11 @@ public:
     void set(float pt, float eta, float phi, float mass = 0);
     void setCsv( float csv );
     float csv() const;
+    void setPuId( float puId );
+    float puId() const;
     
 private:
-    float puId, qgLikelihood, CSV; 
+    float _puId, qgLikelihood, CSV; 
     
 };
 

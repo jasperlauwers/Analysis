@@ -93,8 +93,8 @@ ConfigHandler::ConfigHandler(const string& fileName, ConfigContainer& cContainer
         }
         catch(const SettingNotFoundException &nfex) 
         {
-            cout << "MinJetPt setting not found. Using default: 30" << endl;
-            cfgContainer.minJetPt = 30.;
+            cout << "MinJetPt setting not found. Using default: 0" << endl;
+            cfgContainer.minJetPt = 0.;
         }
         
         // MinLeptonPt
@@ -104,8 +104,8 @@ ConfigHandler::ConfigHandler(const string& fileName, ConfigContainer& cContainer
         }
         catch(const SettingNotFoundException &nfex) 
         {
-            cout << "MinLeptonPt setting not found. Using default: 10" << endl;
-            cfgContainer.minLeptonPt = 10.;
+            cout << "MinLeptonPt setting not found. Using default: 0" << endl;
+            cfgContainer.minLeptonPt = 0.;
         }
         
         ////////// Plot Settings ////////// 
@@ -118,6 +118,50 @@ ConfigHandler::ConfigHandler(const string& fileName, ConfigContainer& cContainer
         {
             cout << "MaxEvents setting not found. Using default: -1" << endl;
             cfgContainer.maxEvents = -1.;
+        }
+        
+        // PlotRatio
+        try
+        {
+            cfgContainer.plotRatio = cfg.lookup("PlotRatio");
+        }
+        catch(const SettingNotFoundException &nfex) 
+        {
+            cout << "PlotRatio setting not found. Using default: false" << endl;
+            cfgContainer.plotRatio = false;
+        }
+        
+        // PlotSignificance
+        try
+        {
+            cfgContainer.plotSignificance = cfg.lookup("PlotSignificance");
+        }
+        catch(const SettingNotFoundException &nfex) 
+        {
+            cout << "PlotSignificance setting not found. Using default: false" << endl;
+            cfgContainer.plotSignificance = false;
+        }
+        
+        // LogY
+        try
+        {
+            cfgContainer.logY = cfg.lookup("LogY");
+        }
+        catch(const SettingNotFoundException &nfex) 
+        {
+            cout << "LogY setting not found. Using default: false" << endl;
+            cfgContainer.logY = false;
+        }
+        
+        // SignalStacked
+        try
+        {
+            cfgContainer.signalStacked = cfg.lookup("SignalStacked");
+        }
+        catch(const SettingNotFoundException &nfex) 
+        {
+            cout << "SignalStacked setting not found. Using default: true" << endl;
+            cfgContainer.signalStacked = true;
         }
     }
     catch(const SettingTypeException &tex)
