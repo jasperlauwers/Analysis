@@ -9,7 +9,6 @@ BasePlotter::BasePlotter(const EventContainer& evContainer, const ConfigContaine
     
     // Set Sumw2
     TH1::SetDefaultSumw2();
-    
         
     // Set globalWeight vector
     unsigned int nSamples = configContainer.sampleContainer.reducedNames.size();
@@ -143,27 +142,34 @@ void BasePlotter::writeStacked(const HistogramContainer& histContainer, string e
     for( int iHist = hStack.size()-1; iHist > -1; --iHist )
     {
         if( configContainer.logY ) 
-        {
             hStack[iHist]->GetYaxis()->SetRangeUser( 0.05 , 500*hMax);
-        }
         else
-        {
             hStack[iHist]->GetYaxis()->SetRangeUser(0., 1.55*hMax);
-        }
         hStack[iHist]->Draw("hist same");
+    }
+    
+    // Draw uncertainty
+    TH1F* hErr;
+    if( configContainer.drawUncertainty && hStack.size() > 0 )
+    {
+        hErr = (TH1F*) hStack[hStack.size()-1]->Clone("uncertainty") ;
+        hErr->SetFillColor(15);
+        hErr->SetLineColor( 0);
+        hErr->SetFillStyle(3445);
+        hErr->SetMarkerSize(0);
+//         hErr->SetMarkerColor(kBlack);
+        hErr->Draw("e2 same");
+//         leg->AddEntry( hErr , TString(" stat.#oplussyst.") , "f");
+        leg->AddEntry( hErr , TString("stat. error") , "f");
     }
     
     // Draw signal
     if( hSignal && !configContainer.signalStacked ) 
     {
         if( configContainer.logY ) 
-        {
             hSignal->GetYaxis()->SetRangeUser( 0.05 , 500*hMax);
-        }
         else
-        {
             hSignal->GetYaxis()->SetRangeUser(0., 1.55*hMax);
-        }
         hSignal->Draw("e same");
     }
     
@@ -171,36 +177,58 @@ void BasePlotter::writeStacked(const HistogramContainer& histContainer, string e
     if( hData ) 
     {
         if( configContainer.logY ) 
-        {
             hData->GetYaxis()->SetRangeUser( 0.05 , 500*hMax);
-        }
         else
-        {
             hData->GetYaxis()->SetRangeUser(0., 1.55*hMax);
-        }
         hData->Draw("e same");
     }
-    
+   
+    // Draw legend
     leg->Draw(); 
     for( auto* text : latexVector )
     {
         text->Draw("same");
     }
     
+    // Redraw axis
+    gPad->RedrawAxis();
+    
     // Draw Ratio plot
-    if( configContainer.plotRatio && hStack.size() > 0 && hData) {
+    if( configContainer.plotRatio && hStack.size() > 0 && (hData || (hSignal && !configContainer.signalStacked)) ) {
         ratioPad->cd();
-        TH1F* hRatio = (TH1F*) hData->Clone("ratio");
-        hRatio->Divide(hStack[hStack.size()-1]);
+
+        TH1F* hRatio;
+        if( hData ) 
+        {
+           hRatio = (TH1F*) hData->Clone("ratio");
+           hRatio->GetYaxis()->SetTitle("data / MC"); 
+        }
+        else
+        {
+            hRatio = (TH1F*) hSignal->Clone("ratio");
+            hRatio->GetYaxis()->SetTitle("Signal / Background"); 
+        }
+        
+        if( configContainer.signalStacked || !hData )
+            hRatio->Divide(hStack[hStack.size()-1]);
+        else
+        {
+            TH1F* hAllMC = (TH1F*) hStack[hStack.size()-1]->Clone("allMC");
+            hAllMC->Add( hSignal );
+            hRatio->Divide(hAllMC);
+        }
 
         hRatio->GetYaxis()->SetRangeUser(0, 2); 
         hRatio->Draw("ep");
-        hRatio->GetYaxis()->SetTitle("data / MC"); 
         hRatio->GetXaxis()->SetTitle(""); 
+                        
+        TLine *line = new TLine(hRatio->GetXaxis()->GetXmin(),1,hRatio->GetXaxis()->GetXmax(),1);
+        line->SetLineStyle(3);
+        line->Draw();
     }
     
     //Draw significance plot
-    if( configContainer.plotSignificance && !configContainer.plotRatio && hStack.size() > 0 && hSignal ) {
+    if( configContainer.plotSignificance && !configContainer.plotRatio && hStack.size() > 0 && hSignal && !configContainer.signalStacked ) {
         ratioPad->cd();
         TH1F* hRatio = (TH1F*) hSignal->Clone("ratio");
         hRatio->GetYaxis()->UnZoom();
@@ -209,9 +237,16 @@ void BasePlotter::writeStacked(const HistogramContainer& histContainer, string e
         {
             float denom = sqrt(hRatio->GetBinContent(iBin)+hStack[hStack.size()-1]->GetBinContent(iBin));
             if( denom > 0 ) 
+            {
                 hRatio->SetBinContent(iBin, hRatio->GetBinContent(iBin)/denom);
+                float S = hSignal->GetBinContent(iBin), B = hStack[hStack.size()-1]->GetBinContent(iBin);
+                hRatio->SetBinError(iBin, sqrt( pow(S/2./pow(B+S,1.5),2) * pow(hSignal->GetBinError(iBin),2) + pow((B+S/2.)/pow(B+S,1.5),2) * pow(hStack[hStack.size()-1]->GetBinError(iBin),2)) );
+            }
             else
+            {
                 hRatio->SetBinContent(iBin, 0);
+                hRatio->SetBinError(iBin, 0);
+            }
         }
 
 //         hRatio->GetYaxis()->SetRangeUser(0, 2); 
@@ -219,6 +254,9 @@ void BasePlotter::writeStacked(const HistogramContainer& histContainer, string e
         hRatio->GetYaxis()->SetTitle("S / #sqrt{S+B}"); 
         hRatio->GetXaxis()->SetTitle(""); 
     }
+    
+    // Redraw axis
+    gPad->RedrawAxis();
     
     c->Print((configContainer.outputDir + histContainer.containerName + "." + extension).c_str(), extension.c_str());
 }
@@ -272,7 +310,7 @@ void BasePlotter::writeEfficiency(const HistogramContainer& numeratorContainer, 
     float hMax = 0.;
     for( unsigned int iSample = 0; iSample < nSamples; ++iSample )
     {
-        float tempMax = hEff[iSample]->GetMaximum();
+        float tempMax = hEff[iSample]->GetHistogram()->GetMaximum();
         if (tempMax > hMax)
             hMax = tempMax;
     }        

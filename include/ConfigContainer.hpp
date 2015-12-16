@@ -17,6 +17,6 @@ struct ConfigContainer {
     
     string treeName, sampleDir, outputDir;
     float luminosity, maxEvents, minJetPt, minLeptonPt;
-    bool plotRatio, plotSignificance, logY, signalStacked;
+    bool plotRatio, plotSignificance, logY, signalStacked, addOverflow, drawUncertainty;
 };
 #endif

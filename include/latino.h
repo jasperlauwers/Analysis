@@ -369,8 +369,8 @@ public :
    vector<float>   *std_vector_jet_tche;
    vector<float>   *std_vector_jet_tchp;
    vector<float>   *std_vector_leptonGen_eta;
-   vector<float>   *std_vector_leptonGen_fromHardProcessBeforeFSR;
-   vector<float>   *std_vector_leptonGen_fromHardProcessDecayed;
+   vector<float>   *std_vector_leptonGen_isPrompt;
+   vector<float>   *std_vector_leptonGen_isDirectPromptTauDecayProduct;
    vector<float>   *std_vector_leptonGen_index;
    vector<float>   *std_vector_leptonGen_isHardProcess;
    vector<float>   *std_vector_leptonGen_mpid;
@@ -857,8 +857,8 @@ public :
    TBranch        *b_std_vector_jet_tche;   //!
    TBranch        *b_std_vector_jet_tchp;   //!
    TBranch        *b_std_vector_leptonGen_eta;   //!
-   TBranch        *b_std_vector_leptonGen_fromHardProcessBeforeFSR;   //!
-   TBranch        *b_std_vector_leptonGen_fromHardProcessDecayed;   //!
+   TBranch        *b_std_vector_leptonGen_isPrompt;   //!
+   TBranch        *b_std_vector_leptonGen_isDirectPromptTauDecayProduct;   //!
    TBranch        *b_std_vector_leptonGen_index;   //!
    TBranch        *b_std_vector_leptonGen_isHardProcess;   //!
    TBranch        *b_std_vector_leptonGen_mpid;   //!
@@ -1104,8 +1104,8 @@ void latino::Init(TTree *tree)
    std_vector_jet_tche = 0;
    std_vector_jet_tchp = 0;
    std_vector_leptonGen_eta = 0;
-   std_vector_leptonGen_fromHardProcessBeforeFSR = 0;
-   std_vector_leptonGen_fromHardProcessDecayed = 0;
+   std_vector_leptonGen_isPrompt = 0;
+   std_vector_leptonGen_isDirectPromptTauDecayProduct = 0;
    std_vector_leptonGen_index = 0;
    std_vector_leptonGen_isHardProcess = 0;
    std_vector_leptonGen_mpid = 0;
@@ -1510,8 +1510,8 @@ void latino::Init(TTree *tree)
    fChain->SetBranchAddress("std_vector_jet_tche", &std_vector_jet_tche, &b_std_vector_jet_tche);
    fChain->SetBranchAddress("std_vector_jet_tchp", &std_vector_jet_tchp, &b_std_vector_jet_tchp);
    fChain->SetBranchAddress("std_vector_leptonGen_eta", &std_vector_leptonGen_eta, &b_std_vector_leptonGen_eta);
-   fChain->SetBranchAddress("std_vector_leptonGen_fromHardProcessBeforeFSR", &std_vector_leptonGen_fromHardProcessBeforeFSR, &b_std_vector_leptonGen_fromHardProcessBeforeFSR);
-   fChain->SetBranchAddress("std_vector_leptonGen_fromHardProcessDecayed", &std_vector_leptonGen_fromHardProcessDecayed, &b_std_vector_leptonGen_fromHardProcessDecayed);
+   fChain->SetBranchAddress("std_vector_leptonGen_isPrompt", &std_vector_leptonGen_isPrompt, &b_std_vector_leptonGen_isPrompt);
+   fChain->SetBranchAddress("std_vector_leptonGen_isDirectPromptTauDecayProduct", &std_vector_leptonGen_isDirectPromptTauDecayProduct, &b_std_vector_leptonGen_isDirectPromptTauDecayProduct);
    fChain->SetBranchAddress("std_vector_leptonGen_index", &std_vector_leptonGen_index, &b_std_vector_leptonGen_index);
    fChain->SetBranchAddress("std_vector_leptonGen_isHardProcess", &std_vector_leptonGen_isHardProcess, &b_std_vector_leptonGen_isHardProcess);
    fChain->SetBranchAddress("std_vector_leptonGen_mpid", &std_vector_leptonGen_mpid, &b_std_vector_leptonGen_mpid);

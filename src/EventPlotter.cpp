@@ -60,10 +60,14 @@ void EventPlotter::fill(unsigned int iSample, unsigned int iSubSample)
     }
 }
 
-void EventPlotter::writeHist(string filename) const
+void EventPlotter::writeHist(string filename)
 {    
     for( unsigned int iVar = 0; iVar < nVariables; ++iVar )
-    {
+    {    
+        if( configContainer.addOverflow ) 
+        {
+            histogramContainers[iVar].addOverflow();
+        }
         if( iVar == 0 )
             BasePlotter::writeHist(filename, histogramContainers[iVar].histograms, "RECREATE");
         else
@@ -71,10 +75,14 @@ void EventPlotter::writeHist(string filename) const
     }
 }
 
-void EventPlotter::writePlots(string extension) const
+void EventPlotter::writePlots(string extension)
 {
     for( unsigned int iVar = 0; iVar < nVariables; ++iVar )
     {
+        if( configContainer.addOverflow ) 
+        {
+            histogramContainers[iVar].addOverflow();
+        }
         BasePlotter::writeStacked(histogramContainers[iVar], extension);        
     }
 }

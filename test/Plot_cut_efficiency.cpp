@@ -32,7 +32,7 @@ int main (int argc, char ** argv) {
     
     EventContainer eventContainer;
     EventReader reader(eventContainer, cfgContainer);
-    EventCleaner cleaner( eventContainer );
+//     EventCleaner cleaner( eventContainer );
     EventSelecter selecter(eventContainer, cfgContainer.cutContainer);
     CutPlotter plotter(eventContainer, cfgContainer);
     
@@ -44,10 +44,10 @@ int main (int argc, char ** argv) {
             
             while( reader.fillNextEvent() )
             {
-                cleaner.doCleaning();
+//                 cleaner.doCleaning();
                                 
                 // Put total number of events in overflowbin if you want efficiencies FIXME make seperate function
-                plotter.fill(iSample, iSubSample, cfgContainer.cutContainer.variableNames.size()); // total # of events 
+                plotter.fillTotal(iSample, iSubSample); // total # of events 
                 
                 for( unsigned int iCut = 0; iCut < cfgContainer.cutContainer.variableNames.size(); ++iCut ) 
                 {
@@ -60,6 +60,7 @@ int main (int argc, char ** argv) {
             }
         }
     }
+    plotter.printEvents();
     plotter.writeHist("Cut_efficiency.root");
     plotter.writeEfficiency("png");
     plotter.writeStacked("png");

@@ -3,7 +3,7 @@
 
 
 ConfigHandler::ConfigHandler(const string& fileName, ConfigContainer& cContainer) 
-: ConfigReader(fileName), hasSamples(false), hasVariables(false), hasCuts(false), cfgContainer(cContainer)
+: ConfigReader(fileName), hasSamples(false), hasVariables(false), hasCuts(false), cfgContainer(cContainer), sampleContainer(nullptr), variableContainer(nullptr), cutContainer(nullptr)
 {
     // Allow float -> int and int -> float conversions
     cfg.setAutoConvert(true);
@@ -163,6 +163,28 @@ ConfigHandler::ConfigHandler(const string& fileName, ConfigContainer& cContainer
             cout << "SignalStacked setting not found. Using default: true" << endl;
             cfgContainer.signalStacked = true;
         }
+        
+        // AddOverflow
+        try
+        {
+            cfgContainer.addOverflow = cfg.lookup("AddOverflow");
+        }
+        catch(const SettingNotFoundException &nfex) 
+        {
+            cout << "AddOverflow setting not found. Using default: false" << endl;
+            cfgContainer.addOverflow = false;
+        }
+        
+        // DrawUncertainty
+        try
+        {
+            cfgContainer.drawUncertainty = cfg.lookup("DrawUncertainty");
+        }
+        catch(const SettingNotFoundException &nfex) 
+        {
+            cout << "DrawUncertainty setting not found. Using default: true" << endl;
+            cfgContainer.drawUncertainty = true;
+        }
     }
     catch(const SettingTypeException &tex)
     {
@@ -237,7 +259,6 @@ void ConfigHandler::readConfig()
             VariableReader vReader(variablesFile, *variableContainer);
             cout << "Read out variables file successfully" << endl;
         }
-        
         if( cutContainer )
         {
             CutReader cReader(cutsFile, *cutContainer);

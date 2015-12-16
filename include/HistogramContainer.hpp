@@ -5,6 +5,7 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include <cmath>
 #include "TH1.h"
 
 using namespace std;
@@ -15,6 +16,7 @@ struct HistogramContainer {
     ~HistogramContainer();
     void add(TH1* h, string histName, int color_ = 1, bool isData_ = false, bool isMc_ = true);
     bool check() const;
+    void addOverflow();
 
     string containerName; // plotted variable
     vector<TH1*> histograms;

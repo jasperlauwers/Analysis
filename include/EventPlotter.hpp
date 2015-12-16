@@ -26,8 +26,8 @@ public:
     EventPlotter(const EventContainer&, const ConfigContainer&);
     ~EventPlotter();
     void fill(unsigned int iSample, unsigned int iSubSample);
-    void writePlots(string extension) const;
-    void writeHist(string filename) const;
+    void writePlots(string extension);
+    void writeHist(string filename);
     
     // parallel running
 //     EventPlotter(const ConfigContainer&);

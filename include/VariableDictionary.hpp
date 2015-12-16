@@ -20,7 +20,7 @@ public:
     void stringToFunction(const vector<string>&, vector<eventContainerFunction>&, vector<ComparisonType>&) const;
     
 private:
-    unsigned int getIndex(const string& indexString, const string& fullString, bool isJet) const;   
+    unsigned int getIndex(const string& indexString, const string& fullString) const;   
     float getFloat(const string& indexString, const string& fullString) const; 
     const EventContainer& eventContainer;    
 };

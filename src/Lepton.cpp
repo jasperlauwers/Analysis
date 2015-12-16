@@ -3,40 +3,45 @@
 Lepton::Lepton() { }
 
 Lepton::Lepton(float pt, float eta, float phi, float pId) 
-: Particle( pt, eta, phi, 0), pId(pId) { }
+: Particle( pt, eta, phi, 0), _pId(pId) { }
 
 Lepton::Lepton(const TLorentzVector&  p4, float pId) 
-: Particle( p4 ), pId(pId) { }
+: Particle( p4 ), _pId(pId) { }
 
 Lepton::~Lepton() { }
 
 void Lepton::set(float pt, float eta, float phi, float pId) 
 {
     Particle::set( pt, eta, phi);
-    this->pId = pId;
+    _pId = pId;
 }
 
 void Lepton::set(float pt, float eta, float phi, float pId, bool passMedium) 
 {
     Particle::set( pt, eta, phi);
-    this->pId = pId;
+    _pId = pId;
     this->passMedium = passMedium;
 }
 bool Lepton::isElectron() const 
 {
-    if( abs(abs(pId) - 11.) < 0.001  ) return true;
+    if( abs(abs(_pId) - 11.) < 0.001  ) return true;
     else return false;
 }
 bool Lepton::isMuon() const 
 {
-    if( abs(abs(pId) - 13.) < 0.001 ) return true;
+    if( abs(abs(_pId) - 13.) < 0.001 ) return true;
     else return false;    
 }
 bool Lepton::isTau() const 
 {
-    if( abs(abs(pId) - 15.) < 0.001 ) return true;
+    if( abs(abs(_pId) - 15.) < 0.001 ) return true;
     else return false;    
 }
+float Lepton::pId() const 
+{
+    return _pId;    
+}
+
 
 bool Lepton::passesMedium() const 
 {
@@ -45,7 +50,21 @@ bool Lepton::passesMedium() const
 
 float Lepton::charge() const 
 {
-    return (pId < 0) - (pId > 0);
+    return (_pId < 0) - (_pId > 0);
+}
+
+void Lepton::setGenFlags(bool isPrompt, bool fromTau)
+{
+    _isPrompt = isPrompt;
+    _fromTau = fromTau;    
+}
+bool Lepton::isPrompt() const
+{
+    return _isPrompt;    
+}
+bool Lepton::fromTau() const
+{
+    return _fromTau;    
 }
 
 void Lepton::setd0( float d0 ) 

@@ -17,6 +17,7 @@ void EventContainer::init(const unsigned int leptonSize, const unsigned int jetS
 {
     leptons.resize(leptonSize);
     genLeptons.resize(leptonSize);
+    looseLeptons.resize(leptonSize);
     jets.resize(jetSize);
     genJets.resize(jetSize);
     puppiJets.resize(jetSize);
@@ -33,6 +34,7 @@ void EventContainer::reset()
     goodJets.clear();
     genLeptons.clear();
     goodGenLeptons.clear();
+    looseLeptons.clear();
     genJets.clear();
     goodGenJets.clear();
     puppiJets.clear();
@@ -186,6 +188,47 @@ float EventContainer::leptoncharge(unsigned int i) const
     else
         return -9999.9;
 }
+unsigned int EventContainer::nLeptons( float minPt ) const
+{
+    for( unsigned int i = 0; i < goodLeptons.size(); ++i )
+    {
+        if( leptons[goodLeptons[i]].pt() < minPt )
+            return i;
+    }
+    return goodLeptons.size();
+}
+
+// Loose leptons
+float EventContainer::loosedmllminpt(float subtractMass, float minPt) const
+{
+    float dmll = -9999.9;
+    for( unsigned int iLep1=0; iLep1 < looseLeptons.size(); ++iLep1 )
+    {
+        for( unsigned int iLep2=iLep1+1; iLep2 < looseLeptons.size(); ++iLep2 )
+        {
+            if( looseLeptons[iLep2].pt() < minPt )
+                break;
+            
+            // check opposite charge and same flavour
+            if( looseLeptons[iLep1].charge() * looseLeptons[iLep2].charge() < 0 && abs(looseLeptons[iLep1].pId()) == abs(looseLeptons[iLep2].pId()) )
+            {
+                float dmll_temp = looseLeptons[iLep1].mpp(looseLeptons[iLep2]) - subtractMass;
+                if( abs(dmll_temp) < abs(dmll) )
+                    dmll = dmll_temp;
+            }
+        }
+    }
+    return dmll;
+}
+float EventContainer::nlooseleptons(float minPt) const
+{
+    for( unsigned int i = 0; i < looseLeptons.size(); ++i )
+    {
+        if( looseLeptons[i].pt() < minPt )
+            return i;
+    }
+    return looseLeptons.size();
+}
 
 // Gen leptons
 float EventContainer::genleptonpt(unsigned int i) const
@@ -236,8 +279,8 @@ float EventContainer::dmllminpt(float subtractMass, float minPt) const
             if( leptons[iLep2].pt() < minPt )
                 break;
             
-            // check opposite charge
-            if( leptons[iLep1].charge() * leptons[iLep2].charge() < 0 )
+            // check opposite charge and same flavour
+            if( leptons[iLep1].charge() * leptons[iLep2].charge() < 0 && abs(leptons[iLep1].pId()) == abs(leptons[iLep2].pId()) )
             {
                 float dmll_temp = leptons[iLep1].mpp(leptons[iLep2]) - subtractMass;
                 if( abs(dmll_temp) < abs(dmll) )
@@ -272,6 +315,13 @@ float EventContainer::detall() const
 {
     if( goodLeptons.size() > 1 )
         return leptons[goodLeptons[0]].dEta(leptons[goodLeptons[1]]);
+    else
+        return -9999.9;
+}
+float EventContainer::drll() const
+{
+    if( goodLeptons.size() > 1 )
+        return leptons[goodLeptons[0]].dR(leptons[goodLeptons[1]]);
     else
         return -9999.9;
 }
@@ -329,29 +379,74 @@ float EventContainer::productleptoncharge() const
 }
 float EventContainer::genmll() const
 {
-    if( goodGenLeptons.size() > 1 )
-        return genLeptons[goodGenLeptons[0]].mpp(genLeptons[goodGenLeptons[1]]);
-    else
-        return -9999.9;
+//     if( goodGenLeptons.size() > 1 )
+//         return genLeptons[goodGenLeptons[0]].mpp(genLeptons[goodGenLeptons[1]]);
+//     else
+//         return -9999.9;
+    for( auto iLep1 : goodGenLeptons )
+    {
+        for( auto iLep2 : goodGenLeptons )
+        {
+            if( iLep1 >= iLep2) 
+                continue;
+            
+            if( /*( abs(genLeptons[iLep1].pId()) == abs(genLeptons[iLep2].pId()) ) && (genLeptons[iLep1].charge()*genLeptons[iLep2].charge() == -1 ) &&*/ genLeptons[iLep1].isPrompt() && genLeptons[iLep2].isPrompt() )
+            { 
+                return genLeptons[iLep1].mpp(genLeptons[iLep2]);
+                break;
+            }           
+        }
+    }
+    return -9999.9;
 }
 float EventContainer::genchannel() const
 {
-    if( goodGenLeptons.size() > 1 )
+    for( auto iLep1 : goodGenLeptons )
     {
-        if( genLeptons[goodGenLeptons[0]].isElectron() )
+        for( auto iLep2 : goodGenLeptons )
         {
-            if( genLeptons[goodGenLeptons[1]].isElectron() ) 
-                return 1.; // ee
-            else 
-                return 2; // em
+            if( iLep1 >= iLep2) 
+                continue;
+            
+            if( /*( abs(genLeptons[iLep1].pId()) == abs(genLeptons[iLep2].pId()) ) && (genLeptons[iLep1].charge() != genLeptons[iLep2].charge() ) &&*/ genLeptons[iLep1].isPrompt() && genLeptons[iLep2].isPrompt() )
+            { 
+                cout << genLeptons[iLep1].pId() << genLeptons[iLep2].pId() << endl;
+                if( genLeptons[iLep1].isElectron() )
+                {
+                    if( genLeptons[iLep2].isElectron() ) 
+                        return 1.; // ee
+                    else 
+                        return 2; // em
+                }
+                else
+                {
+                    if( genLeptons[iLep2].isElectron() ) 
+                        return 3.; // me
+                    else 
+                        return 0; // mm
+                }
+            }
         }
-        else
-        {
-            if( genLeptons[goodGenLeptons[1]].isElectron() ) 
-                return 3.; // me
-            else 
-                return 0; // mm
-        }
+    }
+    return -9999.9;
+}
+float EventContainer::drjjll() const
+{
+    if( goodLeptons.size() > 1 && goodJets.size() > 1 )
+    {
+        TLorentzVector jetV = jets[goodJets[0]].getLorentzVector() + jets[goodJets[1]].getLorentzVector();
+        TLorentzVector leptonV = leptons[goodLeptons[0]].getLorentzVector() + leptons[goodLeptons[0]].getLorentzVector();
+        return jetV.DeltaR( leptonV );
+    }
+    else
+        return -9999.9;
+}
+
+float EventContainer::zeppenfeldlep(unsigned int index) const
+{
+    if( goodLeptons.size() > index && goodJets.size() > 1 )
+    {
+        return ( leptons[goodLeptons[index]].eta()-(jets[goodJets[0]].eta()+jets[goodJets[1]].eta())/2 ) / abs(jets[goodJets[0]].dEta(jets[goodJets[1]]));       
     }
     else
         return -9999.9;

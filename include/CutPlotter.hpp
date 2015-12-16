@@ -15,6 +15,7 @@
 #include "TGraphAsymmErrors.h"
 #include <iostream>
 #include <string>
+#include <iomanip>
 
 using namespace std;
 
@@ -25,14 +26,17 @@ class CutPlotter : BasePlotter {
 public:
     CutPlotter(const EventContainer&, const ConfigContainer&);
     ~CutPlotter();
-    void fill(unsigned int iSample, unsigned int iSubSample, unsigned int iCut);
+    void fill(unsigned int iSample, unsigned int iSubSample, int iCut);
+    void fillTotal(unsigned int iSample, unsigned int iSubSample);
     void writeStacked(string extension);
     void writeEfficiency(string extension);
-    void writeHist(string filename) const;
+    void writeHist(string filename);
+    void printEvents() const;
         
 private:
     unsigned int nSamples, nCuts;
     HistogramContainer histogramContainer;
+    vector<vector<unsigned int>> numberOfEntriesVector;
 };
 
 

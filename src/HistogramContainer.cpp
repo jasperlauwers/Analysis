@@ -36,3 +36,13 @@ bool HistogramContainer::check() const
     }
 }
 
+void HistogramContainer::addOverflow()
+{
+    for( unsigned int iHist = 0; iHist < histograms.size(); ++iHist )
+    {
+        histograms[iHist]->SetBinContent(histograms[iHist]->GetNbinsX(),histograms[iHist]->GetBinContent(histograms[iHist]->GetNbinsX())+histograms[iHist]->GetBinContent(histograms[iHist]->GetNbinsX()+1)); 
+        histograms[iHist]->SetBinError(histograms[iHist]->GetNbinsX(),sqrt(pow(histograms[iHist]->GetBinError(histograms[iHist]->GetNbinsX()),2)+pow(histograms[iHist]->GetBinError(histograms[iHist]->GetNbinsX()+1),2))); 
+        histograms[iHist]->SetBinContent(histograms[iHist]->GetNbinsX()+1,0);
+        histograms[iHist]->SetBinError(histograms[iHist]->GetNbinsX()+1,0);
+    }
+}

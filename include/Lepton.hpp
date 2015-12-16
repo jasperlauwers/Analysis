@@ -16,8 +16,14 @@ public:
     bool isElectron() const;
     bool isMuon() const;
     bool isTau() const;
+    float pId() const; 
     bool passesMedium() const;
     float charge() const;
+    
+    // gen parameters
+    void setGenFlags(bool isPrompt, bool fromTau);
+    bool isPrompt() const;
+    bool fromTau() const;
     
     // electron id parameters
     void setd0(float);
@@ -46,7 +52,8 @@ public:
     float isolation() const;
     
 private:
-    float pId, passMedium; 
+    float _pId;
+    bool passMedium, _isPrompt, _fromTau; 
     float _d0, _dEtaIn, _dPhiIn, _dz, _effArea, _missHits, _sIetaIeta, _hOverE, _ooEmoop, _convVeto, _scEta, _isolation;
 };
 

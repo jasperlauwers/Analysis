@@ -7,6 +7,7 @@
 #include "Met.hpp"
 
 #include <vector>
+#include <iostream>
 
 using namespace std;
 
@@ -45,6 +46,11 @@ public:
     float leptoneta(unsigned int) const;
     float leptonphi(unsigned int) const;
     float leptoncharge(unsigned int) const;
+    unsigned int nLeptons( float minPt ) const;
+
+    // Loose leptons
+    float loosedmllminpt(float subtractMass, float minPt) const;
+    float nlooseleptons(float minPt) const;
     
     // Gen leptons
     float genleptonpt(unsigned int) const;
@@ -59,6 +65,7 @@ public:
     float ptll() const;
     float ptjj() const;
     float detall() const;
+    float drll() const;
     float detajj() const;
     float dphill() const;
     float dphijj() const;
@@ -66,6 +73,8 @@ public:
     float productleptoncharge() const;
     float genmll() const;
     float genchannel() const;
+    float drjjll() const;
+    float zeppenfeldlep(unsigned int index) const;
     
     // Weight
     float weight() const;
@@ -91,7 +100,7 @@ public:
     
     // Data members
     unsigned int iEvent;
-    vector<Lepton> leptons, genLeptons;
+    vector<Lepton> leptons, genLeptons, looseLeptons;
     vector<unsigned int> goodLeptons, goodGenLeptons;
     vector<Jet> jets, genJets, puppiJets;
     vector<unsigned int> goodJets, goodGenJets, goodPuppiJets;

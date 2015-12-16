@@ -28,7 +28,7 @@ private:
     const ConfigContainer& configContainer;
     TreeReader *treeReader;
     unsigned int nLeptons, nJets;  
-    bool isData, needJets, needGenJets, needPuppiJets, needGenLeptons, needElectronId;
+    bool isData, needJets, needGenJets, needPuppiJets, needGenLeptons, needElectronId, firstLooseLepton, needLooseLeptons;
     vector<setFunction> functionVector;
     vector<string> branches, genBranches;
     float maxEventsWeight;
