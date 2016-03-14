@@ -55,6 +55,7 @@ void BasePlotter::writeStacked(const HistogramContainer& histContainer, string e
     
     system(("mkdir -p " + configContainer.outputDir).c_str());  
     
+    cout << "Test1" << endl;
     unsigned int nSamples = histContainer.reducedNames.size();
     TCanvas *c = new TCanvas(("Canv_stacked_" + histContainer.containerName).c_str(), "", 600, 600 + (120 * configContainer.plotRatio));
     TPad *histPad=nullptr, *ratioPad=nullptr;
@@ -67,6 +68,7 @@ void BasePlotter::writeStacked(const HistogramContainer& histContainer, string e
         histPad->cd();
     }    
     
+    cout << "Test2" << endl;
     TLegend* leg = nullptr;
     vector<TLatex*> latexVector;
     setCanvasAttributes( nSamples, leg, latexVector);
@@ -76,7 +78,7 @@ void BasePlotter::writeStacked(const HistogramContainer& histContainer, string e
     // Add backgrounds to stack
     for( int iSample = nSamples-1; iSample > -1; --iSample )
     {
-        if( histContainer.isMC[iSample] )
+        if( histContainer.sampleType[iSample] == SampleType::MC || histContainer.sampleType[iSample] == SampleType::FAKELEPTON )
         {
             TH1F *temp = (TH1F*) histContainer.histograms[iSample]->Clone(("stack_hist_"+histContainer.reducedNames[iSample]).c_str());
             if( hStack.size() > 0 ) temp->Add(hStack[hStack.size()-1]);
@@ -84,17 +86,22 @@ void BasePlotter::writeStacked(const HistogramContainer& histContainer, string e
             temp->SetFillColor(histContainer.color[iSample]);
             temp->SetFillStyle(1001);
             hStack.push_back(temp);
-            leg->AddEntry(temp,histContainer.reducedNames[iSample].c_str(),"f");
+            string legendEntry = histContainer.reducedNames[iSample];
+            replace(legendEntry.begin(), legendEntry.end(), '_', ' ');
+            leg->AddEntry(temp,legendEntry.c_str(),"f");
         }
     }
+    cout << "Test3" << endl;
     
     // Add signal to stack
     for( unsigned int iSample = 0; iSample < nSamples; ++iSample )
     {
-        if( ! histContainer.isMC[iSample] && ! histContainer.isData[iSample] )
+        if( histContainer.sampleType[iSample] == SampleType::SIGNAL )
         {
             hSignal = histContainer.histograms[iSample];
             hSignal->SetLineColor(histContainer.color[iSample]);
+            string legendEntry = histContainer.reducedNames[iSample];
+            replace(legendEntry.begin(), legendEntry.end(), '_', ' ');
             if( configContainer.signalStacked )
             {
                 TH1F *temp = (TH1F*) histContainer.histograms[iSample]->Clone(("stack_hist_"+histContainer.reducedNames[iSample]).c_str());
@@ -102,30 +109,34 @@ void BasePlotter::writeStacked(const HistogramContainer& histContainer, string e
                 temp->SetFillColor(histContainer.color[iSample]);
                 temp->SetFillStyle(1001);
                 hStack.push_back(temp);
-                leg->AddEntry(temp,histContainer.reducedNames[iSample].c_str(),"f");
+                leg->AddEntry(temp,legendEntry.c_str(),"f");
             }
             else
             {
                 hSignal->SetLineWidth(2);
-                leg->AddEntry(hSignal,histContainer.reducedNames[iSample].c_str(),"l");
+                leg->AddEntry(hSignal,legendEntry.c_str(),"l");
             }
         }
     }
+    cout << "Test4" << endl;
     
     // Add data
     for( unsigned int iSample = 0; iSample < nSamples; ++iSample )
     {
-        if( histContainer.isData[iSample] )
+        if( histContainer.sampleType[iSample] == SampleType::DATA && configContainer.unblind )
         {
             histContainer.histograms[iSample]->SetLineColor(histContainer.color[iSample]);
             histContainer.histograms[iSample]->SetMarkerColor(histContainer.color[iSample]);
             histContainer.histograms[iSample]->SetMarkerSize(1);
             histContainer.histograms[iSample]->SetMarkerStyle(20);
             histContainer.histograms[iSample]->SetLineWidth(2);
-            leg->AddEntry(histContainer.histograms[iSample],histContainer.reducedNames[iSample].c_str(),"lp");
+            string legendEntry = histContainer.reducedNames[iSample];
+            replace(legendEntry.begin(), legendEntry.end(), '_', ' ');
+            leg->AddEntry(histContainer.histograms[iSample],legendEntry.c_str(),"lp");
             hData = histContainer.histograms[iSample];
         }
     }
+    cout << "Test5" << endl;
 
     // Set y-range
     float hMax = 0.;
@@ -201,7 +212,7 @@ void BasePlotter::writeStacked(const HistogramContainer& histContainer, string e
         if( hData ) 
         {
            hRatio = (TH1F*) hData->Clone("ratio");
-           hRatio->GetYaxis()->SetTitle("data / MC"); 
+           hRatio->GetYaxis()->SetTitle("Data / MC"); 
         }
         else
         {
@@ -214,7 +225,7 @@ void BasePlotter::writeStacked(const HistogramContainer& histContainer, string e
         else
         {
             TH1F* hAllMC = (TH1F*) hStack[hStack.size()-1]->Clone("allMC");
-            hAllMC->Add( hSignal );
+//             hAllMC->Add( hSignal );
             hRatio->Divide(hAllMC);
         }
 
@@ -225,6 +236,12 @@ void BasePlotter::writeStacked(const HistogramContainer& histContainer, string e
         TLine *line = new TLine(hRatio->GetXaxis()->GetXmin(),1,hRatio->GetXaxis()->GetXmax(),1);
         line->SetLineStyle(3);
         line->Draw();
+        
+        // Print global ratio
+        if( hData )
+            cout << "Data / MC: " << hData->Integral()/hStack[hStack.size()-1]->Integral() << endl;
+        else
+            cout << "Signal / Background: " << hSignal->Integral()/hStack[hStack.size()-1]->Integral() << endl;
     }
     
     //Draw significance plot
@@ -259,6 +276,7 @@ void BasePlotter::writeStacked(const HistogramContainer& histContainer, string e
     gPad->RedrawAxis();
     
     c->Print((configContainer.outputDir + histContainer.containerName + "." + extension).c_str(), extension.c_str());
+    cout << "Wrote plot " << (histContainer.containerName + "." + extension) << endl;
 }
 
 void BasePlotter::writeEfficiency(const HistogramContainer& numeratorContainer, const vector<TH1*>& denominatorHistograms, string extension) const
@@ -317,19 +335,24 @@ void BasePlotter::writeEfficiency(const HistogramContainer& numeratorContainer, 
     
     for( unsigned int iSample = 0; iSample < nSamples; ++iSample )
     {
+        if( numeratorContainer.sampleType[iSample] == SampleType::DATA && ! configContainer.unblind ) continue;
+        
         hEff[iSample]->SetLineColor(numeratorContainer.color[iSample]);
         hEff[iSample]->SetFillColor(numeratorContainer.color[iSample]);
-        if( numeratorContainer.isData[iSample] ) 
+        string legendEntry = numeratorContainer.reducedNames[iSample];
+        replace(legendEntry.begin(), legendEntry.end(), '_', ' ');
+            
+        if( numeratorContainer.sampleType[iSample] == SampleType::DATA ) 
         {
             hEff[iSample]->SetMarkerSize(1);
             hEff[iSample]->SetMarkerStyle(20);
             hEff[iSample]->SetLineWidth(2);
-            leg->AddEntry(hEff[iSample],numeratorContainer.reducedNames[iSample].c_str(),"lp");
+            leg->AddEntry(hEff[iSample],legendEntry.c_str(),"lp");
         }
         else
         {
             hEff[iSample]->SetFillStyle(1001);
-            leg->AddEntry(hEff[iSample],numeratorContainer.reducedNames[iSample].c_str(),"f");
+            leg->AddEntry(hEff[iSample],legendEntry.c_str(),"f");
         }
     }
     
@@ -357,6 +380,7 @@ void BasePlotter::writeEfficiency(const HistogramContainer& numeratorContainer, 
     }
     
     c->Print((configContainer.outputDir + numeratorContainer.containerName + "." + extension).c_str(), extension.c_str());
+    cout << "Wrote plot " << (numeratorContainer.containerName + "." + extension) << endl;
 }
 
 void BasePlotter::setCanvasAttributes( unsigned int nSamples, TLegend*& leg, vector<TLatex*>& latexVector) const
@@ -386,6 +410,16 @@ void BasePlotter::setCanvasAttributes( unsigned int nSamples, TLegend*& leg, vec
     Lumi->SetNDC(1);
     Lumi->SetTextFont(42);    
     latexVector.push_back(Lumi);
+    
+    if( configContainer.plotString != "" )
+    {
+        TLatex* PlotStringLatex  = new TLatex(.92,.76,configContainer.plotString.c_str());
+        PlotStringLatex->SetTextSize(.03);
+        PlotStringLatex->SetTextAlign(32);
+        PlotStringLatex->SetNDC(1);
+        PlotStringLatex->SetTextFont(42);    
+        latexVector.push_back(PlotStringLatex);
+    }
 }
 
 float BasePlotter::getMaximumIncludingErrors(const TH1* h) const

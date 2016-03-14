@@ -9,6 +9,7 @@
 #include "BasePlotter.hpp"
 #include "LatinoStyle2.h"
 #include "TH1F.h"
+#include "TH2F.h"
 #include "TFile.h"
 #include "TCanvas.h"
 #include "TLegend.h"
@@ -30,9 +31,9 @@ public:
     void writeHist(string filename);
     
     // parallel running
-//     EventPlotter(const ConfigContainer&);
-//     void init(const EventContainer& evContainer, unsigned int iSample);
-//     void parallelFill(unsigned int iSample, unsigned int iSubSample);
+    EventPlotter(const ConfigContainer&);
+    void init(const EventContainer& evContainer, unsigned int iSample);
+    void parallelFill(unsigned int iSample, unsigned int iSubSample);
         
 private:
     vector<eventContainerFunction> functionVector;
@@ -43,6 +44,7 @@ private:
 //     vector<const EventContainer*> eventContainerParallel;
 //     vector<vector<eventContainerFunction>> functionVectorParallel;
 //     vector<eventContainerFunction> eventWeightFunctionParallel;
+//     vector<vector<TH1F*>> histograms;
 };
 
 

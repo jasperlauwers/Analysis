@@ -9,7 +9,7 @@ VariableReader::VariableReader(const string& fileName, VariableContainer& varCon
     
     const Setting& variables = cfg.lookup("variables");
     const unsigned int nVar = variables.getLength();
-    
+         
     // Check # arguments
     if( (nVar%3) != 0 ) 
     {
@@ -17,6 +17,7 @@ VariableReader::VariableReader(const string& fileName, VariableContainer& varCon
         throw 1;
     }
     
+    bool is2D = false;
     for( unsigned int iVar=0; iVar < nVar; ++iVar ) 
     {
         int remainder = iVar%3;
@@ -24,12 +25,31 @@ VariableReader::VariableReader(const string& fileName, VariableContainer& varCon
         {
             string varName = (variables[iVar]).c_str();
             transform(varName.begin(), varName.end(), varName.begin(), ::tolower); // convert to lower case
-            variableContainer.variableNames.push_back( varName );
+            
+            if( varName.find(":") != string::npos )
+            {
+                if( is2D )
+                    is2D = false;
+                else
+                {
+                    string::size_type splitPosition = varName.find(":");
+                    variableContainer.variableNames.push_back( varName.substr(0,splitPosition) );
+                    variableContainer.variableNames.push_back( varName.substr(splitPosition+1) );
+                    variableContainer.is2D.push_back(true);
+                    variableContainer.is2D.push_back(true);
+                    is2D = true;
+                }
+            }
+            else 
+            {
+                variableContainer.variableNames.push_back( varName );
+                variableContainer.is2D.push_back(false);
+            }
         }
         else if( remainder == 1 ) 
         {
             variableContainer.nBins.push_back( variables[iVar] );
-        }
+        } 
         else
         {
             const Setting& binSetting = variables[iVar];
@@ -40,10 +60,10 @@ VariableReader::VariableReader(const string& fileName, VariableContainer& varCon
                 throw 1;
             }
             
-            vector<float> binVector(binLength);
+            vector<double> binVector(binLength);
             for( unsigned int iBin=0; iBin < binLength; ++iBin ) 
             {
-                binVector[iBin] = (float) binSetting[iBin];  
+                binVector[iBin] = (double) binSetting[iBin];  
             }
             variableContainer.binning.push_back( binVector );
         }

@@ -10,5 +10,8 @@ using namespace std;
 struct CutContainer {
     vector<string> variableNames;
     vector<float> cutValues;
+    bool triggerSelection;
+    vector<unsigned int> triggerVector;
+    vector<float> triggerPtVector;
 };
 #endif

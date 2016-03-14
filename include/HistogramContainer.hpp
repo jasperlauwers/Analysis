@@ -7,6 +7,7 @@
 #include <iostream>
 #include <cmath>
 #include "TH1.h"
+#include "SampleContainer.hpp"
 
 using namespace std;
 
@@ -14,15 +15,15 @@ struct HistogramContainer {
     HistogramContainer(string name);
     HistogramContainer(string name, unsigned int nTotal);
     ~HistogramContainer();
-    void add(TH1* h, string histName, int color_ = 1, bool isData_ = false, bool isMc_ = true);
+    void add(TH1* h, string histName, int color_ = 1, SampleType sampleType = SampleType::MC);
     bool check() const;
     void addOverflow();
+    void addUnderflow();
 
     string containerName; // plotted variable
     vector<TH1*> histograms;
     vector<string> reducedNames; // sample name
     vector<int> color;
-    vector<bool> isData;
-    vector<bool> isMC;
+    vector<SampleType> sampleType;
 };
 #endif

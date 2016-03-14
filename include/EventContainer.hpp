@@ -41,6 +41,15 @@ public:
     float puppijetphi(unsigned int) const;
     float puppijetmass(unsigned int) const;
     
+    // Track jets
+    float trackjetht() const;
+    float trackjethtdensity() const;
+    unsigned int trackjetn() const;
+    float trackjetndensity() const;
+    
+    // Isolated jets
+    float isolatedjetpt() const;
+    
     // Leptons
     float leptonpt(unsigned int) const;
     float leptoneta(unsigned int) const;
@@ -49,7 +58,7 @@ public:
     unsigned int nLeptons( float minPt ) const;
 
     // Loose leptons
-    float loosedmllminpt(float subtractMass, float minPt) const;
+    float loosemllminpt(float subtractMass, float minPt) const;
     float nlooseleptons(float minPt) const;
     
     // Gen leptons
@@ -75,10 +84,16 @@ public:
     float genchannel() const;
     float drjjll() const;
     float zeppenfeldlep(unsigned int index) const;
+    float mt() const; //  Transversal Mass ( loose lepton, MET) 
     
     // Weight
     float weight() const;
+    float reweight() const;
     void setWeight(float);
+    void setReweight(float);
+    void setFakeWeights(float, float);
+    float getUpWeight(float) const;
+    float getDownWeight(float) const;
     
     // Number of vertices
     float nvertices() const;
@@ -102,12 +117,12 @@ public:
     unsigned int iEvent;
     vector<Lepton> leptons, genLeptons, looseLeptons;
     vector<unsigned int> goodLeptons, goodGenLeptons;
-    vector<Jet> jets, genJets, puppiJets;
-    vector<unsigned int> goodJets, goodGenJets, goodPuppiJets;
+    vector<Jet> jets, genJets, puppiJets, trackJets;
+    vector<unsigned int> goodJets, goodGenJets, goodPuppiJets, goodTrackJets;
     Met met;
     
 private:
-    float _weight;
+    float _weight, _reweight, _upWeight, _downWeight;
     float _nVertices;
 };
 

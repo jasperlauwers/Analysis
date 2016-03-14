@@ -17,6 +17,7 @@ CutReader::CutReader(const string& fileName, CutContainer& cutContainer)
         throw 1;
     }
     
+    bool skipForTrigger = false;
     for( unsigned int iCut=0; iCut < nCut; ++iCut ) 
     {
         int remainder = iCut%2;
@@ -24,11 +25,35 @@ CutReader::CutReader(const string& fileName, CutContainer& cutContainer)
         {
             string cutVariable = (cuts[iCut]).c_str();
             transform(cutVariable.begin(), cutVariable.end(), cutVariable.begin(), ::tolower); // convert to lower case
-            cutContainer.variableNames.push_back( cutVariable );
+            if( cutVariable == "trigger" )
+            {
+                const Setting& triggerSetting =  cuts[iCut+1];
+                const Setting& indexSetting =  triggerSetting[0];
+                const Setting& ptSetting =  triggerSetting[1];
+                const unsigned int nTriggers = indexSetting.getLength();
+                if( nTriggers != (unsigned) ptSetting.getLength() ) 
+                {
+                    cerr << "Number of elements in trigger cut list is not consistent." << endl;
+                    throw 1;
+                }
+                
+                for( unsigned int iBin=0; iBin < nTriggers; ++iBin ) 
+                {
+                    cutContainer.triggerVector.push_back( indexSetting[iBin] );  
+                    cutContainer.triggerPtVector.push_back( ptSetting[iBin] );  
+                }
+                skipForTrigger = true;
+            }
+            else
+            {
+                cutContainer.variableNames.push_back( cutVariable );
+                skipForTrigger = false;
+            }
         }
         else 
         {
-            cutContainer.cutValues.push_back( cuts[iCut] );
+            if( ! skipForTrigger )
+                cutContainer.cutValues.push_back( cuts[iCut] );
         }
     }
 }

@@ -3,9 +3,9 @@
 #include "TChain.h"
 
 EventReader::EventReader(EventContainer& eventCont, const ConfigContainer& cfgContainer)
-: eventContainer(eventCont), configContainer(cfgContainer), treeReader(nullptr), nLeptons(0), nJets(0), isData(false), needJets(false), needGenJets(false), needPuppiJets(false), needGenLeptons(false), needElectronId(false), maxEventsWeight(1.) 
+: eventContainer(eventCont), configContainer(cfgContainer), treeReader(nullptr), nLeptons(0), nJets(0), needJets(false), needGenJets(false), needPuppiJets(false), needGenLeptons(false), needElectronId(false), needTrackJets(false), triggerSelection(false), sampleType(SampleType::DATA), maxEventsWeight(1.) 
 { 
-    bool firstGenJet = true, firstPuppiJet = true, firstJet = true, firstgenLepton = true, firstElectronID = true;
+    bool firstGenJet = true, firstPuppiJet = true, firstJet = true, firstgenLepton = true, firstElectronID = true, firstTrackJet = true, firstLooseLepton=true;
     vector<const vector<string>*> variableNames = {&configContainer.variableContainer.variableNames, &configContainer.cutContainer.variableNames};
     
     for( const auto* varNames : variableNames ) 
@@ -29,6 +29,14 @@ EventReader::EventReader(EventContainer& eventCont, const ConfigContainer& cfgCo
                 branches.push_back("std_vector_puppijet_pt");
                 branches.push_back("std_vector_puppijet_phi");
                 firstPuppiJet = false; 
+            }
+            else if( iString.find("trackjet") != string::npos && firstTrackJet )
+            {
+                needTrackJets = true;
+                branches.push_back("std_vector_trackjet_eta");
+                branches.push_back("std_vector_trackjet_pt");
+                branches.push_back("std_vector_trackjet_phi");
+                firstTrackJet = false; 
             }
             else if( iString.find("jet") != string::npos && firstJet )
             {
@@ -59,10 +67,8 @@ EventReader::EventReader(EventContainer& eventCont, const ConfigContainer& cfgCo
             if( iString.find("electron") != string::npos && firstElectronID )
             {
                 needElectronId = true;
-                branches.push_back("std_vector_electron_d0");
                 branches.push_back("std_vector_electron_dEtaIn");
                 branches.push_back("std_vector_electron_dPhiIn");
-                branches.push_back("std_vector_electron_dz");
                 branches.push_back("std_vector_electron_effectiveArea");
                 branches.push_back("std_vector_electron_expectedMissingInnerHits");
                 branches.push_back("std_vector_electron_full5x5_sigmaIetaIeta");
@@ -77,13 +83,24 @@ EventReader::EventReader(EventContainer& eventCont, const ConfigContainer& cfgCo
             if( iString.find("loose") != string::npos && firstLooseLepton )
             {
                 needLooseLeptons = true;
-                genBranches.push_back("std_vector_looseLepton_eta");
-                genBranches.push_back("std_vector_looseLepton_pt");
-                genBranches.push_back("std_vector_looseLepton_phi");
-                genBranches.push_back("std_vector_looseLepton_flavour");
+//                 genBranches.push_back("std_vector_looseLepton_eta");
+//                 genBranches.push_back("std_vector_looseLepton_pt");
+//                 genBranches.push_back("std_vector_looseLepton_phi");
+//                 genBranches.push_back("std_vector_looseLepton_flavour");
                 firstLooseLepton = false;
             }
+            
+            // Trigger
+            if( iString.find("trigger") != string::npos )
+            {
+                triggerSelection = true;
+            }
         }
+    }
+    // Trigger
+    if( configContainer.cutContainer.triggerVector.size() > 0 )
+    {
+        triggerSelection = true;
     }
 }
 
@@ -91,13 +108,14 @@ EventReader::~EventReader() {
     if( treeReader ) delete treeReader;    
 }
 
-void EventReader::setSample(unsigned int iSample, unsigned int iSubSample)
+void EventReader::addReadBranches(const vector<string>& readBranches)
+{
+    branches.insert(end(branches), begin(readBranches), end(readBranches));
+}
+
+bool EventReader::setSample(unsigned int iSample, unsigned int iSubSample)
 {
     cout << endl << "Reading sample: " << configContainer.sampleContainer.sampleNames[iSample][iSubSample] << endl;
-        
-    // Delete treeReader for previous sample
-    if( treeReader ) delete treeReader; 
-//     extraBranches.clear();
     
     // Check arguments
     if( iSample >= configContainer.sampleContainer.reducedNames.size() || iSubSample >= configContainer.sampleContainer.sampleNames[iSample].size() )
@@ -105,6 +123,19 @@ void EventReader::setSample(unsigned int iSample, unsigned int iSubSample)
         cerr << "Indices for sample or subsample out of range in the Plotter::fill function." << endl;
         throw 1;
     }
+    
+    // Check if data should be blinded
+    if( configContainer.sampleContainer.sampleType[iSample] == SampleType::DATA && ! configContainer.unblind )
+    {
+        cout << "Skipping sample, for unblinding set Unblind = true" << endl;
+        return false;
+    }
+        
+    // Delete treeReader for previous sample
+    if( treeReader ) delete treeReader; 
+//     extraBranches.clear();
+    
+
     
     // Set TTree or TChain
     TTree *t;
@@ -160,35 +191,33 @@ void EventReader::setSample(unsigned int iSample, unsigned int iSubSample)
     
     // Set Branch statusses
     vector<string> sampleBranches= {"std_vector_lepton_eta","std_vector_lepton_pt","std_vector_lepton_phi","std_vector_lepton_flavour",
-                      "std_vector_lepton_eleIdTight","std_vector_lepton_isMediumMuon","std_vector_lepton_BestTrackdxy","std_vector_lepton_BestTrackdz", "std_vector_lepton_sumPUPt",
-                      "std_vector_lepton_chargedHadronIso","std_vector_lepton_neutralHadronIso","std_vector_lepton_photonIso", "pfType1Met","nvtx"};
+                      "std_vector_lepton_eleIdTight","std_vector_lepton_isMediumMuon","std_vector_lepton_d0","std_vector_lepton_dz", "std_vector_lepton_sumPUPt",
+                      "std_vector_lepton_chargedHadronIso","std_vector_lepton_neutralHadronIso","std_vector_lepton_photonIso", "jetRho", "metPfType1","metPfType1Phi","nvtx"};
     sampleBranches.insert(sampleBranches.end(), branches.begin(), branches.end());
     
     // Set data/MC weight branches       
-    if( configContainer.sampleContainer.isData[iSample] )
+    sampleType = configContainer.sampleContainer.sampleType[iSample];
+    if( sampleType == SampleType::DATA || sampleType == SampleType::FAKELEPTON )
     {
-        isData = true;
-        sampleBranches.push_back("trigger");        
+        sampleBranches.push_back("trigger"); 
+        
+        if( sampleType == SampleType::FAKELEPTON )
+        {
+            sampleBranches.push_back("fakeW2l2j"); 
+            sampleBranches.push_back("fakeW2l2jstatUp");
+            sampleBranches.push_back("fakeW2l2jstatDown");
+        }
+        
+        if( triggerSelection )
+            sampleBranches.push_back("std_vector_trigger");
     }
     else
     {
-        isData = false;
         sampleBranches.push_back("baseW");        
         sampleBranches.push_back("GEN_weight_SM");
         sampleBranches.push_back("puW");
         sampleBranches.insert(sampleBranches.end(), genBranches.begin(), genBranches.end());
     }
-        
-
-    // FIXME
-    // check cuts and variables for keywords and add to branches
-    // bind functions to call them
-//    fChain->SetBranchStatus("std_vector_jet_puid",1);
-//    fChain->SetBranchStatus("std_vector_jet_QGlikelihood",1);
-   
-//    fChain->SetBranchStatus("std_vector_puppijet_eta",1);
-//    fChain->SetBranchStatus("std_vector_puppijet_pt",1);
-//    fChain->SetBranchStatus("std_vector_puppijet_phi",1);
 
     cout << "Reading out branches: \n";
     for( const string& branch : sampleBranches )
@@ -198,18 +227,27 @@ void EventReader::setSample(unsigned int iSample, unsigned int iSubSample)
     
     // Reset eventContainer
     treeReader->GetEntry(0);
-    nJets = treeReader->std_vector_jet_pt->size();
-    nLeptons = treeReader->std_vector_lepton_pt->size();
+    if( treeReader->fChain->GetBranchStatus("std_vector_jet_pt") )
+        nJets = treeReader->std_vector_jet_pt->size();
+    else 
+        nJets = 0;
+    if( treeReader->fChain->GetBranchStatus("std_vector_lepton_pt") )
+        nLeptons = treeReader->std_vector_lepton_pt->size();
+    else 
+        nLeptons = 0;
     eventContainer.reset();
     eventContainer.init(nLeptons, nJets);
     
     // Set maxEventsWeight
-    if( !isData && configContainer.maxEvents > 0 && configContainer.maxEvents < treeReader->fChain->GetEntries() )
+//     TThread::Lock();
+    if( (sampleType != SampleType::DATA && sampleType != SampleType::FAKELEPTON) && configContainer.maxEvents > 0 && configContainer.maxEvents < treeReader->fChain->GetEntries() )
     {
         maxEventsWeight = treeReader->fChain->GetEntries() / configContainer.maxEvents;
     }
     else 
         maxEventsWeight = 1.;
+//     TThread::UnLock();
+    return true;
 }
 
 bool EventReader::fillNextEvent()
@@ -220,15 +258,37 @@ bool EventReader::fillNextEvent()
     eventContainer.goodGenLeptons.clear();
     eventContainer.goodGenJets.clear();
     eventContainer.goodPuppiJets.clear();
+    eventContainer.goodTrackJets.clear();
     
     // Read event (trigger == 1 for data)
+    bool skipEvent = false;
     do
     {
-        if( (!isData && eventContainer.iEvent == configContainer.maxEvents) || ! treeReader->GetEntry(eventContainer.iEvent) )
+//         TThread::Lock();
+        if( ((sampleType != SampleType::DATA && sampleType != SampleType::FAKELEPTON) && eventContainer.iEvent == configContainer.maxEvents) || ! treeReader->GetEntry(eventContainer.iEvent) ) {
+//             TThread::UnLock();
             return false;
+        }
+//         TThread::UnLock();
         eventContainer.iEvent++;
+        
+        if( sampleType == SampleType::DATA || sampleType == SampleType::FAKELEPTON)
+        {
+            skipEvent = ( treeReader->trigger == 0 );
+            if( triggerSelection && ! skipEvent ) 
+            {
+                skipEvent = true;
+                unsigned int nTriggers = configContainer.cutContainer.triggerVector.size();
+                for( unsigned int iTrig=0; iTrig < nTriggers; ++iTrig )
+                {
+                    bool passTrigger = ( (*treeReader->std_vector_trigger)[configContainer.cutContainer.triggerVector[iTrig]] && (*treeReader->std_vector_lepton_pt)[0] > configContainer.cutContainer.triggerPtVector[iTrig] );
+                    if( passTrigger && ( iTrig+1 == nTriggers || (*treeReader->std_vector_lepton_pt)[0] < configContainer.cutContainer.triggerPtVector[iTrig+1] ) )
+                        skipEvent = false;
+                }
+            }
+        }
     }
-    while( isData && treeReader->trigger == 0); // Cut on trigger for data
+    while( skipEvent ); // Cut on trigger for data
     
     // Fill gen jets
     if( needGenJets )
@@ -274,15 +334,27 @@ bool EventReader::fillNextEvent()
         }
     }
     
+    // Fill track jets
+    if( needTrackJets )
+    {
+        for( unsigned int iJet=0; iJet < 50; ++iJet ) {
+            if( (*treeReader->std_vector_trackjet_pt)[iJet] >= 0. )
+            {
+                eventContainer.trackJets[iJet].set((*treeReader->std_vector_jet_pt)[iJet],(*treeReader->std_vector_jet_eta)[iJet],(*treeReader->std_vector_jet_phi)[iJet],0);
+                eventContainer.goodTrackJets.push_back(iJet);
+            }
+        }
+    }
+    
     // Fill gen leptons
-    if( needGenLeptons && !isData )
+    if( needGenLeptons && (sampleType != SampleType::DATA && sampleType != SampleType::FAKELEPTON) )
     {
         for( unsigned int iLepton=0; iLepton < nLeptons; ++iLepton ) {
             if( /*(*treeReader->std_vector_leptonGen_status)[iLepton] == 1 &&*/ (*treeReader->std_vector_leptonGen_pt)[iLepton] > 0)
             {                
                 eventContainer.goodGenLeptons.push_back(iLepton);
                 eventContainer.genLeptons[iLepton].set((*treeReader->std_vector_leptonGen_pt)[iLepton],(*treeReader->std_vector_leptonGen_eta)[iLepton],(*treeReader->std_vector_leptonGen_phi)[iLepton],(*treeReader->std_vector_leptonGen_pid)[iLepton] );
-                eventContainer.genLeptons[iLepton].setGenFlags( (*treeReader->std_vector_leptonGen_isPrompt)[iLepton]>0., (*treeReader->std_vector_leptonGen_isDirectPromptTauDecayProduct)[iLepton]>0. );
+//                 eventContainer.genLeptons[iLepton].setGenFlags( (*treeReader->std_vector_leptonGen_isPrompt)[iLepton]>0., (*treeReader->std_vector_leptonGen_isDirectPromptTauDecayProduct)[iLepton]>0. );
             }
         }
     }
@@ -298,10 +370,10 @@ bool EventReader::fillNextEvent()
                 eventContainer.leptons[iLepton].set((*treeReader->std_vector_lepton_pt)[iLepton],(*treeReader->std_vector_lepton_eta)[iLepton],(*treeReader->std_vector_lepton_phi)[iLepton],(*treeReader->std_vector_lepton_flavour)[iLepton], (*treeReader->std_vector_lepton_eleIdTight)[iLepton] == 1 );
                 if( needElectronId )
                 {
-                    eventContainer.leptons[iLepton].setd0((*treeReader->std_vector_electron_d0)[iLepton]);
+                    eventContainer.leptons[iLepton].setd0((*treeReader->std_vector_lepton_d0)[iLepton]);
                     eventContainer.leptons[iLepton].setdEtaIn((*treeReader->std_vector_electron_dEtaIn)[iLepton]);
                     eventContainer.leptons[iLepton].setdPhiIn((*treeReader->std_vector_electron_dPhiIn)[iLepton]);
-                    eventContainer.leptons[iLepton].setdz((*treeReader->std_vector_electron_dz)[iLepton]);
+                    eventContainer.leptons[iLepton].setdz((*treeReader->std_vector_lepton_dz)[iLepton]);
                     eventContainer.leptons[iLepton].seteffectiveArea((*treeReader->std_vector_electron_effectiveArea)[iLepton]);
                     eventContainer.leptons[iLepton].setmissingHits((*treeReader->std_vector_electron_expectedMissingInnerHits)[iLepton]);
                     eventContainer.leptons[iLepton].setsigmaIetaIeta((*treeReader->std_vector_electron_full5x5_sigmaIetaIeta)[iLepton]);
@@ -309,7 +381,7 @@ bool EventReader::fillNextEvent()
                     eventContainer.leptons[iLepton].setooEmoop((*treeReader->std_vector_electron_full5x5_sigmaIetaIeta)[iLepton]);
                     eventContainer.leptons[iLepton].setconversionVeto((*treeReader->std_vector_electron_passConversionVeto)[iLepton]);
                     eventContainer.leptons[iLepton].setscEta((*treeReader->std_vector_electron_scEta)[iLepton]);
-                    eventContainer.leptons[iLepton].setIsolation( ((*treeReader->std_vector_lepton_chargedHadronIso)[iLepton] + (*treeReader->std_vector_lepton_neutralHadronIso)[iLepton] + (*treeReader->std_vector_lepton_photonIso)[iLepton] ) / (*treeReader->std_vector_lepton_pt)[iLepton] );
+//                     eventContainer.leptons[iLepton].setIsolation( ((*treeReader->std_vector_lepton_chargedHadronIso)[iLepton] + TMath::Max((*treeReader->std_vector_lepton_neutralHadronIso)[iLepton] + (*treeReader->std_vector_lepton_photonIso)[iLepton] - (*treeReader->jetRho)*(*treeReader->std_vector_electron_effectiveArea)[iLepton])) / (*treeReader->std_vector_lepton_pt)[iLepton] );
                 }
             }
             else if( abs((*treeReader->std_vector_lepton_flavour)[iLepton]) == 13 )
@@ -319,7 +391,10 @@ bool EventReader::fillNextEvent()
                     (*treeReader->std_vector_lepton_eta)[iLepton],
                     (*treeReader->std_vector_lepton_phi)[iLepton],
                     (*treeReader->std_vector_lepton_flavour)[iLepton],
-                    ((*treeReader->std_vector_lepton_isMediumMuon)[iLepton] == 1) && ( (*treeReader->std_vector_lepton_chargedHadronIso)[iLepton] + TMath::Max((*treeReader->std_vector_lepton_neutralHadronIso)[iLepton] + (*treeReader->std_vector_lepton_photonIso)[iLepton] - 0.5 * (*treeReader->std_vector_lepton_sumPUPt)[iLepton], 0.)) / (*treeReader->std_vector_lepton_pt)[iLepton] < 0.15 && (*treeReader->std_vector_lepton_BestTrackdxy)[iLepton] < 0.02 && (*treeReader->std_vector_lepton_BestTrackdz)[iLepton] < 0.1 );
+                    ((*treeReader->std_vector_lepton_isMediumMuon)[iLepton] == 1) );
+                eventContainer.leptons[iLepton].setd0((*treeReader->std_vector_lepton_d0)[iLepton]);
+                eventContainer.leptons[iLepton].setdz((*treeReader->std_vector_lepton_dz)[iLepton]);
+                eventContainer.leptons[iLepton].setIsolation( ((*treeReader->std_vector_lepton_chargedHadronIso)[iLepton] + TMath::Max((*treeReader->std_vector_lepton_neutralHadronIso)[iLepton] + (*treeReader->std_vector_lepton_photonIso)[iLepton] - 0.5 * (*treeReader->std_vector_lepton_sumPUPt)[iLepton], 0.)) / (*treeReader->std_vector_lepton_pt)[iLepton] );
             }
             else
             {
@@ -334,31 +409,48 @@ bool EventReader::fillNextEvent()
     // Fill loose leptons
     if( needLooseLeptons )
     {
-//         for( unsigned int iLepton=0; iLepton < nLeptons; ++iLepton ) {
-//             if( (*treeReader->std_vector_looseLepton_pt)[iLepton] > 0 )
-//             {
-//                 eventContainer.looseLeptons[iLepton].set((*treeReader->std_vector_looseLepton_pt)[iLepton],(*treeReader->std_vector_looseLepton_eta)[iLepton],(*treeReader->std_vector_looseLepton_phi)[iLepton],(*treeReader->std_vector_looseLepton_flavour)[iLepton]);
-//             }
-//             else
-//                 eventContainer.looseLeptons[iLepton].set(0,0,0,0);
-//         }
-    }
+        for( unsigned int iLepton=0; iLepton < nLeptons; ++iLepton ) {
+            if( (*treeReader->std_vector_lepton_pt)[iLepton] > 0 )
+            {
+                eventContainer.looseLeptons[iLepton].set((*treeReader->std_vector_lepton_pt)[iLepton],(*treeReader->std_vector_lepton_eta)[iLepton],(*treeReader->std_vector_lepton_phi)[iLepton],(*treeReader->std_vector_lepton_flavour)[iLepton]);
+            }
+            else
+                eventContainer.looseLeptons[iLepton].set(0,0,0,0);
+        }
+    }      
     
     // Fill MET 
-    eventContainer.met.set( treeReader->pfType1Met, 0);
+    eventContainer.met.set( treeReader->metPfType1, treeReader->metPfType1Phi);
     
     // Fill number of vertices
     eventContainer.setNvertices( treeReader->nvtx );
     
     // Fill weight
-    eventContainer.setWeight( treeReader->baseW * (treeReader->GEN_weight_SM/abs(treeReader->GEN_weight_SM)) * treeReader->puW * maxEventsWeight);
-        
-    // Fill extra variables
-//     for( const auto& iPair : extraBranches )
+    if( sampleType == SampleType::FAKELEPTON )
+    {
+        eventContainer.setWeight( treeReader->fakeW2l2j );
+        eventContainer.setFakeWeights( treeReader->fakeW2l2jstatUp, treeReader->fakeW2l2jstatDown );
+    }
+    // For pu reweighting plot
+//     if( sampleType == SampleType::SIGNAL )
 //     {
-//         iPair.first = iPair.second;        
+//         eventContainer.setWeight( treeReader->baseW * (treeReader->GEN_weight_SM/abs(treeReader->GEN_weight_SM)) * maxEventsWeight);
 //     }
-
-
+    else if( sampleType != SampleType::DATA )
+        eventContainer.setWeight( treeReader->baseW * (treeReader->GEN_weight_SM/abs(treeReader->GEN_weight_SM)) * treeReader->puW * maxEventsWeight);
+    
     return true;
+}
+
+void EventReader::reweigh(unsigned int index)
+{
+    if( index < treeReader->std_vector_LHE_weight->size() )
+    {
+        eventContainer.setReweight( (*treeReader->std_vector_LHE_weight)[index] / (*treeReader->std_vector_LHE_weight)[0] );
+    }
+    else
+    {
+        cerr << "Reweigh index out of bounds: " << index << " while maximum index is " <<  treeReader->std_vector_LHE_weight->size()-1 << endl;
+        throw 1;
+    }
 }

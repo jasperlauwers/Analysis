@@ -175,6 +175,17 @@ ConfigHandler::ConfigHandler(const string& fileName, ConfigContainer& cContainer
             cfgContainer.addOverflow = false;
         }
         
+        // AddUnderflow
+        try
+        {
+            cfgContainer.addUnderflow = cfg.lookup("AddUnderflow");
+        }
+        catch(const SettingNotFoundException &nfex) 
+        {
+            cout << "AddUnderflow setting not found. Using default: false" << endl;
+            cfgContainer.addUnderflow = false;
+        }
+        
         // DrawUncertainty
         try
         {
@@ -184,6 +195,28 @@ ConfigHandler::ConfigHandler(const string& fileName, ConfigContainer& cContainer
         {
             cout << "DrawUncertainty setting not found. Using default: true" << endl;
             cfgContainer.drawUncertainty = true;
+        }
+        
+        // PlotString
+        try
+        {
+            cfgContainer.plotString = cfg.lookup("PlotString").c_str();
+        }
+        catch(const SettingNotFoundException &nfex) 
+        {
+            cout << "PlotString setting not found. Using default: \"\"" << endl;
+            cfgContainer.plotString = "";
+        }
+        
+        // Unblind
+        try
+        {
+            cfgContainer.unblind = cfg.lookup("Unblind");
+        }
+        catch(const SettingNotFoundException &nfex) 
+        {
+            cout << "Unblind setting not found. Using default: false" << endl;
+            cfgContainer.unblind = false;
         }
     }
     catch(const SettingTypeException &tex)

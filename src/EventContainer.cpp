@@ -3,10 +3,10 @@
 #include "TChain.h"
 
 EventContainer::EventContainer()
-: iEvent(0), _weight(1.) { }
+: iEvent(0), _weight(1.), _reweight(1), _upWeight(1), _downWeight(1) { }
 
 EventContainer::EventContainer(const unsigned int leptonSize, const unsigned int jetSize)
-: iEvent(0), _weight(1.) 
+: iEvent(0), _weight(1.), _reweight(1), _upWeight(1), _downWeight(1)
 {
     init( leptonSize, jetSize );
 }
@@ -21,12 +21,16 @@ void EventContainer::init(const unsigned int leptonSize, const unsigned int jetS
     jets.resize(jetSize);
     genJets.resize(jetSize);
     puppiJets.resize(jetSize);
+    trackJets.resize(50);
 }
 
 void EventContainer::reset() 
 {
     iEvent = 0;
     _weight = 1.;
+    _reweight = 1;
+    _upWeight = 1;
+    _downWeight = 1;
     met.set(0,0);
     leptons.clear();
     goodLeptons.clear();
@@ -39,6 +43,8 @@ void EventContainer::reset()
     goodGenJets.clear();
     puppiJets.clear();
     goodPuppiJets.clear();
+    trackJets.clear();
+    goodTrackJets.clear();
 }
 
 // Jets
@@ -159,6 +165,88 @@ float EventContainer::puppijetmass(unsigned int i) const
         return -9999.9;
 }
 
+// Track jets
+float EventContainer::trackjetht() const
+{
+    float ht=0;
+    vector<float> etaBounds = {trackJets[goodTrackJets[0]].eta(), trackJets[goodTrackJets[1]].eta()};
+    sort(etaBounds.begin(), etaBounds.end());
+    
+    for(size_t i=0;i<goodTrackJets.size();++i) {
+        if( trackJets[goodTrackJets[i]].eta() < (etaBounds[1]-0.4) && trackJets[goodTrackJets[i]].eta() > (etaBounds[0]+0.4) )
+            ht += trackJets[goodTrackJets[i]].pt();
+    }
+//     ht -= (leptons[goodLeptons[0]].pt() + leptons[goodLeptons[1]].pt());
+    return ht;
+}
+float EventContainer::trackjethtdensity() const
+{
+    vector<float> etaBounds = {trackJets[goodTrackJets[0]].eta(), trackJets[goodTrackJets[1]].eta()};
+    sort(etaBounds.begin(), etaBounds.end());
+    
+    // Calculate eta range within tracker
+    if( etaBounds[0] >= 2.1 || etaBounds[1] <= -2.1 ) return 0;
+    if( etaBounds[0] < -2.9 ) etaBounds[0] = -2.9;
+    if( etaBounds[1] > 2.9 ) etaBounds[1] = 2.9;
+    float etaRange = abs(trackJets[goodTrackJets[0]].eta() - trackJets[goodTrackJets[1]].eta()) -0.8;
+    if( etaRange > 0 )
+        return (trackjetht()/etaRange);
+    else
+        return 0;
+}
+unsigned int EventContainer::trackjetn() const
+{
+    unsigned int n=0;
+    vector<float> etaBounds = {trackJets[goodTrackJets[0]].eta(), trackJets[goodTrackJets[1]].eta()};
+    sort(etaBounds.begin(), etaBounds.end());
+    
+    for(size_t i=0;i<goodTrackJets.size();++i) {
+        if( trackJets[goodTrackJets[i]].eta() < (etaBounds[1]-0.4) && trackJets[goodTrackJets[i]].eta() > (etaBounds[0]+0.4) )
+            n++;
+    }
+    return n;
+}
+float EventContainer::trackjetndensity() const
+{
+    vector<float> etaBounds = {trackJets[goodTrackJets[0]].eta(), trackJets[goodTrackJets[1]].eta()};
+    sort(etaBounds.begin(), etaBounds.end());
+    
+    // Calculate eta range within tracker
+    if( etaBounds[0] >= 2.1 || etaBounds[1] <= -2.1 ) return 0;
+    if( etaBounds[0] < -2.9 ) etaBounds[0] = -2.9;
+    if( etaBounds[1] > 2.9 ) etaBounds[1] = 2.9;
+    float etaRange = abs(trackJets[goodTrackJets[0]].eta() - trackJets[goodTrackJets[1]].eta()) -0.8;
+    if( etaRange > 0 )
+        return (trackjetn()/etaRange);
+    else
+        return 0;
+}
+
+// Isolated jets
+float EventContainer::isolatedjetpt() const
+{
+    for( auto iJet : goodJets )
+    {
+        bool farFromLepton = true;
+        for( unsigned int iLepton=0; iLepton < looseLeptons.size(); ++iLepton )
+        {
+            if( looseLeptons[iLepton].pt() > 0. )
+            {
+                if( jets[iJet].dR(looseLeptons[iLepton]) < 1. )
+                {
+                    farFromLepton = false;
+                    break;
+                }
+            }
+            else
+                break;
+        }
+        if( farFromLepton ) 
+            return jets[iJet].pt();
+    }
+        return -9999.9;    
+}
+
 // Leptons
 float EventContainer::leptonpt(unsigned int i) const
 {
@@ -199,7 +287,7 @@ unsigned int EventContainer::nLeptons( float minPt ) const
 }
 
 // Loose leptons
-float EventContainer::loosedmllminpt(float subtractMass, float minPt) const
+float EventContainer::loosemllminpt(float subtractMass, float minPt) const
 {
     float dmll = -9999.9;
     for( unsigned int iLep1=0; iLep1 < looseLeptons.size(); ++iLep1 )
@@ -224,7 +312,7 @@ float EventContainer::nlooseleptons(float minPt) const
 {
     for( unsigned int i = 0; i < looseLeptons.size(); ++i )
     {
-        if( looseLeptons[i].pt() < minPt )
+        if( looseLeptons[i].pt() <= minPt )
             return i;
     }
     return looseLeptons.size();
@@ -314,7 +402,7 @@ float EventContainer::ptjj() const
 float EventContainer::detall() const
 {
     if( goodLeptons.size() > 1 )
-        return leptons[goodLeptons[0]].dEta(leptons[goodLeptons[1]]);
+        return abs(leptons[goodLeptons[0]].dEta(leptons[goodLeptons[1]]));
     else
         return -9999.9;
 }
@@ -328,7 +416,7 @@ float EventContainer::drll() const
 float EventContainer::detajj() const
 {
     if( goodJets.size() > 1 )
-        return jets[goodJets[0]].dEta(jets[goodJets[1]]);
+        return abs(jets[goodJets[0]].dEta(jets[goodJets[1]]));
     else
         return -9999.9;  
 }
@@ -410,7 +498,6 @@ float EventContainer::genchannel() const
             
             if( /*( abs(genLeptons[iLep1].pId()) == abs(genLeptons[iLep2].pId()) ) && (genLeptons[iLep1].charge() != genLeptons[iLep2].charge() ) &&*/ genLeptons[iLep1].isPrompt() && genLeptons[iLep2].isPrompt() )
             { 
-                cout << genLeptons[iLep1].pId() << genLeptons[iLep2].pId() << endl;
                 if( genLeptons[iLep1].isElectron() )
                 {
                     if( genLeptons[iLep2].isElectron() ) 
@@ -452,13 +539,39 @@ float EventContainer::zeppenfeldlep(unsigned int index) const
         return -9999.9;
 }
 
+float EventContainer::mt() const
+{
+    return looseLeptons[0].mpp(met); 
+}
+
 float EventContainer::weight() const
 {
-    return _weight;
+    return _weight*_reweight;
 }
 void EventContainer::setWeight(float weight)
 {
     _weight = weight;    
+}
+float EventContainer::reweight() const
+{
+    return _reweight;
+}
+void EventContainer::setReweight(float weight)
+{
+    _reweight = weight;    
+}
+void EventContainer::setFakeWeights(float upWeight, float downWeight)
+{
+    _upWeight = upWeight;  
+    _downWeight = downWeight;  
+}
+float EventContainer::getUpWeight(float) const
+{
+    return _upWeight;
+}
+float EventContainer::getDownWeight(float) const
+{
+    return _downWeight;
 }
 
 float EventContainer::nvertices() const

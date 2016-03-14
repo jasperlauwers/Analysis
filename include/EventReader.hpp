@@ -9,6 +9,7 @@
 #include "TMath.h"
 #include <dirent.h>
 #include <regex>
+// #include "TThread.h"
 
 using namespace libconfig;
 using namespace std;
@@ -20,15 +21,18 @@ class EventReader {
 public:
     EventReader(EventContainer&, const ConfigContainer&); 
     ~EventReader();
-    void setSample(unsigned int iSample, unsigned int iSubSample);
+    void addReadBranches(const vector<string>&);
+    bool setSample(unsigned int iSample, unsigned int iSubSample);
     bool fillNextEvent();
+    void reweigh(unsigned int index);
         
 private:
     EventContainer& eventContainer;
     const ConfigContainer& configContainer;
     TreeReader *treeReader;
     unsigned int nLeptons, nJets;  
-    bool isData, needJets, needGenJets, needPuppiJets, needGenLeptons, needElectronId, firstLooseLepton, needLooseLeptons;
+    bool needJets, needGenJets, needPuppiJets, needGenLeptons, needElectronId, firstLooseLepton, needLooseLeptons, needTrackJets, triggerSelection;
+    SampleType sampleType;
     vector<setFunction> functionVector;
     vector<string> branches, genBranches;
     float maxEventsWeight;

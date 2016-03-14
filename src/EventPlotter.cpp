@@ -11,25 +11,56 @@ EventPlotter::EventPlotter(const EventContainer& evContainer, const ConfigContai
     // Initialize histogramContainers
     for( unsigned int iVar = 0; iVar < nVariables; ++iVar )
     {
-        histogramContainers.push_back( HistogramContainer((configContainer.variableContainer.variableNames[iVar]).c_str(), nSamples) );
+        string histContName = configContainer.variableContainer.variableNames[iVar];
+        if( configContainer.variableContainer.is2D[iVar] ) histContName += ("_" +  configContainer.variableContainer.variableNames[iVar+1]);
+            
+        if( configContainer.plotString != "" )
+        {
+            histContName.append("_");
+            histContName.append(configContainer.plotString);
+        }
+        
+        histogramContainers.push_back( HistogramContainer(histContName, nSamples) );
         for( unsigned int iSample = 0; iSample < nSamples; ++iSample )
         {
-            if( configContainer.variableContainer.binning[iVar].size() == 2 )
+            if( configContainer.variableContainer.is2D[iVar] )
             {
-                histogramContainers[iVar].histograms.push_back( new TH1F((configContainer.sampleContainer.reducedNames[iSample] + "_" + configContainer.variableContainer.variableNames[iVar]).c_str(), "", configContainer.variableContainer.nBins[iVar], configContainer.variableContainer.binning[iVar][0], configContainer.variableContainer.binning[iVar][1]) ) ;
+                if( configContainer.variableContainer.binning[iVar].size() == 2 && configContainer.variableContainer.binning[iVar+1].size() == 2 )
+                    histogramContainers.back().histograms.push_back( new TH2F((configContainer.sampleContainer.reducedNames[iSample] + "_" + histogramContainers.back().containerName).c_str(), "", configContainer.variableContainer.nBins[iVar], configContainer.variableContainer.binning[iVar][0], configContainer.variableContainer.binning[iVar][1],
+                    configContainer.variableContainer.nBins[iVar+1], configContainer.variableContainer.binning[iVar+1][0], configContainer.variableContainer.binning[iVar+1][1]) ) ;
+                else if( configContainer.variableContainer.binning[iVar].size() == 2 && configContainer.variableContainer.binning[iVar+1].size() != 2 )
+                    histogramContainers.back().histograms.push_back( new TH2F((configContainer.sampleContainer.reducedNames[iSample] + "_" + histogramContainers.back().containerName).c_str(), "", configContainer.variableContainer.nBins[iVar], configContainer.variableContainer.binning[iVar][0], configContainer.variableContainer.binning[iVar][1],
+                    configContainer.variableContainer.nBins[iVar+1], &configContainer.variableContainer.binning[iVar+1][0]) ) ;
+                else if( configContainer.variableContainer.binning[iVar+1].size() == 2 )
+                    histogramContainers.back().histograms.push_back( new TH2F((configContainer.sampleContainer.reducedNames[iSample] + "_" + histogramContainers.back().containerName).c_str(), "", configContainer.variableContainer.nBins[iVar], &configContainer.variableContainer.binning[iVar][0],
+                    configContainer.variableContainer.nBins[iVar+1], configContainer.variableContainer.binning[iVar+1][0], configContainer.variableContainer.binning[iVar+1][1]) ) ;
+                else
+                    histogramContainers.back().histograms.push_back( new TH2F((configContainer.sampleContainer.reducedNames[iSample] + "_" + histogramContainers.back().containerName).c_str(), "", configContainer.variableContainer.nBins[iVar], &configContainer.variableContainer.binning[iVar][0],
+                    configContainer.variableContainer.nBins[iVar+1], &configContainer.variableContainer.binning[iVar+1][0]) ) ;
+                
+                histogramContainers.back().histograms[iSample]->GetYaxis()->SetTitle(configContainer.variableContainer.variableNames[iVar+1].c_str());
             }
             else
             {
-                histogramContainers[iVar].histograms.push_back( new TH1F((configContainer.sampleContainer.reducedNames[iSample] + "_" + configContainer.variableContainer.variableNames[iVar]).c_str(), "", configContainer.variableContainer.nBins[iVar], &configContainer.variableContainer.binning[iVar][0]) );
+                if( configContainer.variableContainer.binning[iVar].size() == 2 )
+                {
+                    histogramContainers.back().histograms.push_back( new TH1F((configContainer.sampleContainer.reducedNames[iSample] + "_" + histogramContainers.back().containerName).c_str(), "", configContainer.variableContainer.nBins[iVar], configContainer.variableContainer.binning[iVar][0], configContainer.variableContainer.binning[iVar][1]) ) ;
+                }
+                else
+                {
+                    histogramContainers.back().histograms.push_back( new TH1F((configContainer.sampleContainer.reducedNames[iSample] + "_" + histogramContainers.back().containerName).c_str(), "", configContainer.variableContainer.nBins[iVar], &configContainer.variableContainer.binning[iVar][0]) );
+                }
             }
-            histogramContainers[iVar].histograms[iSample]->GetXaxis()->SetTitle(configContainer.variableContainer.variableNames[iVar].c_str());
+            histogramContainers.back().histograms[iSample]->GetXaxis()->SetTitle(configContainer.variableContainer.variableNames[iVar].c_str());
 //             histVector[iVar].StatOverflows(1); // use under and overflow for mean, rms ...
-            histogramContainers[iVar].reducedNames.push_back(configContainer.sampleContainer.reducedNames[iSample]);
-            histogramContainers[iVar].color.push_back(configContainer.sampleContainer.color[iSample]);
-            histogramContainers[iVar].isData.push_back(configContainer.sampleContainer.isData[iSample]);
-            histogramContainers[iVar].isMC.push_back(configContainer.sampleContainer.isMC[iSample]);
+            histogramContainers.back().reducedNames.push_back(configContainer.sampleContainer.reducedNames[iSample]);
+            histogramContainers.back().color.push_back(configContainer.sampleContainer.color[iSample]);
+            histogramContainers.back().sampleType.push_back(configContainer.sampleContainer.sampleType[iSample]);
+            if( configContainer.variableContainer.is2D[iVar] )
+                iVar++;
         }
     }
+    nVariables = histogramContainers.size();
 }
 
 EventPlotter::~EventPlotter(){ }
@@ -38,18 +69,46 @@ void EventPlotter::fill(unsigned int iSample, unsigned int iSubSample)
 {
     if( iSample < nSamples && iSubSample < configContainer.sampleContainer.sampleNames[iSample].size() )
     {
-        if( configContainer.sampleContainer.isData[iSample] )
+        if( configContainer.sampleContainer.sampleType[iSample] == SampleType::DATA )
         {
             for( unsigned int iVar = 0; iVar < nVariables; ++iVar )
             {
-                histogramContainers[iVar].histograms[iSample]->Fill( functionVector[iVar]() );
+                if( configContainer.variableContainer.is2D[iVar] )
+                {
+                    TH2F* h = (TH2F*) histogramContainers[iVar].histograms[iSample];
+                    h->Fill( functionVector[iVar](), functionVector[iVar+1]() );
+                    iVar++;
+                }
+                else
+                    histogramContainers[iVar].histograms[iSample]->Fill( functionVector[iVar]() );
+            }
+        }
+        else if( configContainer.sampleContainer.sampleType[iSample] == SampleType::FAKELEPTON )
+        {
+            for( unsigned int iVar = 0; iVar < nVariables; ++iVar )
+            {
+                if( configContainer.variableContainer.is2D[iVar] )
+                {
+                    TH2F* h = (TH2F*) histogramContainers[iVar].histograms[iSample];
+                    h->Fill( functionVector[iVar](), functionVector[iVar+1](), eventWeightFunction() );
+                    iVar++;
+                }
+                else
+                    histogramContainers[iVar].histograms[iSample]->Fill( functionVector[iVar](), eventWeightFunction() );
             }
         }
         else
         {
             for( unsigned int iVar = 0; iVar < nVariables; ++iVar )
             {
-                histogramContainers[iVar].histograms[iSample]->Fill( functionVector[iVar](), globalWeight[iSample][iSubSample]*eventWeightFunction() );
+                if( configContainer.variableContainer.is2D[iVar] )
+                {
+                    TH2F* h = (TH2F*) histogramContainers[iVar].histograms[iSample];
+                    h->Fill( functionVector[iVar](), functionVector[iVar+1](), globalWeight[iSample][iSubSample]*eventWeightFunction() );
+                    iVar++;
+                }
+                else
+                    histogramContainers[iVar].histograms[iSample]->Fill( functionVector[iVar](), globalWeight[iSample][iSubSample]*eventWeightFunction() );
             }
         }
     }
@@ -68,6 +127,10 @@ void EventPlotter::writeHist(string filename)
         {
             histogramContainers[iVar].addOverflow();
         }
+        if( configContainer.addUnderflow ) 
+        {
+            histogramContainers[iVar].addUnderflow();
+        }
         if( iVar == 0 )
             BasePlotter::writeHist(filename, histogramContainers[iVar].histograms, "RECREATE");
         else
@@ -83,13 +146,17 @@ void EventPlotter::writePlots(string extension)
         {
             histogramContainers[iVar].addOverflow();
         }
+        if( configContainer.addUnderflow ) 
+        {
+            histogramContainers[iVar].addUnderflow();
+        }
         BasePlotter::writeStacked(histogramContainers[iVar], extension);        
     }
 }
 
 // parallel running
 // EventPlotter::EventPlotter(const ConfigContainer& cfgContainer)
-// : eventContainer( EventContainer() ), configContainer(cfgContainer), nSamples(configContainer.sampleContainer.reducedNames.size()), nVariables(configContainer.variableContainer.variableNames.size())
+// : BasePlotter(EventContainer(), cfgContainer), nSamples(configContainer.sampleContainer.reducedNames.size()), nVariables(configContainer.variableContainer.variableNames.size())
 // {
 //     // Set style
 //     LatinoStyle2();
@@ -107,7 +174,6 @@ void EventPlotter::writePlots(string extension)
 //         {
 //             if( configContainer.variableContainer.binning[iVar].size() == 2 )
 //             {
-//                 cout << configContainer.variableContainer.binning[iVar][0] << " " << configContainer.variableContainer.binning[iVar][1] << endl;
 //                 histVector.push_back(new TH1F((configContainer.sampleContainer.reducedNames[iSample] + "_" + configContainer.variableContainer.variableNames[iVar]).c_str(), "", configContainer.variableContainer.nBins[iVar], configContainer.variableContainer.binning[iVar][0], configContainer.variableContainer.binning[iVar][1]));
 //             }
 //             else
@@ -150,7 +216,7 @@ void EventPlotter::writePlots(string extension)
 // {
 //     if( iSample < nSamples && iSubSample < configContainer.sampleContainer.sampleNames[iSample].size() )
 //     {
-//         if( configContainer.sampleContainer.isData[iSample] )
+//         if( configContainer.sampleContainer.sampleType[iSample] == SampleType::DATA )
 //         {
 //             for( unsigned int iVar = 0; iVar < nVariables; ++iVar )
 //             {

@@ -81,7 +81,7 @@ unsigned int EventSelecter::getIndex(const string& indexString, const string& fu
 
 bool EventSelecter::greaterThan(int index) const
 {
-    return (functionVector[index]() > cutContainer.cutValues[index]);
+    return (functionVector[index]() >= cutContainer.cutValues[index]);
 }
 bool EventSelecter::smallerThan(int index) const
 {

@@ -33,7 +33,7 @@ int main (int argc, char ** argv) {
 
     EventContainer eventContainer;
     EventReader reader(eventContainer, cfgContainer);
-//     EventCleaner cleaner(eventContainer);
+    EventCleaner cleaner(eventContainer);
     EventSelecter selecter(eventContainer, cfgContainer.cutContainer);
     EventPlotter plotter(eventContainer, cfgContainer);
     
@@ -41,13 +41,15 @@ int main (int argc, char ** argv) {
     {
         for( unsigned int iSubSample = 0; iSubSample < cfgContainer.sampleContainer.sampleNames[iSample].size(); ++iSubSample) 
         {
-            reader.setSample(iSample, iSubSample);
-            
-            while( reader.fillNextEvent() )
-            {
-//                 cleaner.doCleaning();
-                if( selecter.passCuts() )
-                    plotter.fill(iSample, iSubSample);
+            if( reader.setSample(iSample, iSubSample) )
+            {   
+                while( reader.fillNextEvent() )
+                {
+//                     cleaner.doCleaning();
+                    cleaner.doTrackJetsCleaning();
+                    if( selecter.passCuts() )
+                        plotter.fill(iSample, iSubSample);
+                }
             }
         }
     }

@@ -127,12 +127,63 @@ void VariableDictionary::stringToFunction(const vector<string>& variableNames, v
                 throw 1;
             }
         }
+        else if( iSubString.find("trackjet") != string::npos )
+        {
+            string::size_type jetPosition = iSubString.find("trackjet");
+            iSubString.erase(jetPosition, 8);
+
+            if( iSubString.find("htdensity") != string::npos ) 
+            {
+                eventFunctions.push_back( bind(&EventContainer::trackjethtdensity, &eventContainer) );
+                if( minFlag )
+                    ComparisonTypes.push_back( ComparisonType::GREATER_THAN );
+                else
+                    ComparisonTypes.push_back( ComparisonType::SMALLER_THAN );
+            }
+            else if( iSubString.find("ndensity") != string::npos ) 
+            {
+                eventFunctions.push_back( bind(&EventContainer::trackjetndensity, &eventContainer) );
+                if( minFlag )
+                    ComparisonTypes.push_back( ComparisonType::GREATER_THAN );
+                else
+                    ComparisonTypes.push_back( ComparisonType::SMALLER_THAN );
+            }
+            else if( iSubString.find("ht") != string::npos ) 
+            {
+                eventFunctions.push_back( bind(&EventContainer::trackjetht, &eventContainer) );
+                if( minFlag )
+                    ComparisonTypes.push_back( ComparisonType::GREATER_THAN );
+                else
+                    ComparisonTypes.push_back( ComparisonType::SMALLER_THAN );
+            }
+            else if( iSubString.find("n") != string::npos && iSubString.size() < 2 ) 
+            {
+                eventFunctions.push_back( bind(&EventContainer::trackjetn, &eventContainer) );
+                if( minFlag )
+                    ComparisonTypes.push_back( ComparisonType::GREATER_THAN );
+                else
+                    ComparisonTypes.push_back( ComparisonType::SMALLER_THAN );
+            }
+            else
+            {
+                cerr << "Variable '" << iString << "' in cuts or variables list not known." << endl;
+                throw 1;
+            }
+        }
         else if( iSubString.find("jet") != string::npos )
         {
             string::size_type jetPosition = iSubString.find("jet");
             iSubString.erase(jetPosition, 3);
 
-            if( iSubString.find("pt") != string::npos ) 
+            if( iSubString.find("isolatedpt") != string::npos ) 
+            {
+                eventFunctions.push_back( bind(&EventContainer::isolatedjetpt, &eventContainer) );
+                if( maxFlag )
+                    ComparisonTypes.push_back( ComparisonType::SMALLER_THAN );
+                else
+                    ComparisonTypes.push_back( ComparisonType::GREATER_THAN );
+            }
+            else if( iSubString.find("pt") != string::npos ) 
             {
                 string::size_type varPosition = iSubString.find("pt");
                 iSubString.erase(varPosition, 2);
@@ -182,6 +233,16 @@ void VariableDictionary::stringToFunction(const vector<string>& variableNames, v
                 else
                     ComparisonTypes.push_back( ComparisonType::SMALLER_THAN );
             }
+            else if( iSubString.find("btag") != string::npos ) 
+            {
+                string::size_type varPosition = iSubString.find("btag");
+                iSubString.erase(varPosition, 4);
+                eventFunctions.push_back( bind(&EventContainer::jetmaxcsv, &eventContainer, getFloat(iSubString, iString)) );
+                if( maxFlag )
+                    ComparisonTypes.push_back( ComparisonType::SMALLER_THAN );
+                else
+                    ComparisonTypes.push_back( ComparisonType::GREATER_THAN );
+            }
             else
             {
                 cerr << "Variable '" << iString << "' in cuts or variables list not known." << endl;
@@ -220,6 +281,16 @@ void VariableDictionary::stringToFunction(const vector<string>& variableNames, v
                 cerr << "Variable '" << iString << "' in cuts or variables list not known." << endl;
                 throw 1;
             }
+        }
+        else if( iSubString.find("nlooseleptons") != string::npos ) 
+        {
+            string::size_type varPosition = iSubString.find("nlooseleptons");
+            iSubString.erase(varPosition, 13);
+            eventFunctions.push_back( bind(&EventContainer::nlooseleptons, &eventContainer, getFloat(iSubString, iString)) );
+            if( maxFlag )
+                ComparisonTypes.push_back( ComparisonType::SMALLER_THAN );
+            else
+                ComparisonTypes.push_back( ComparisonType::GREATER_THAN );
         }
         else if( iSubString.find("nleptons") != string::npos ) 
         {
@@ -548,7 +619,15 @@ void VariableDictionary::stringToFunction(const vector<string>& variableNames, v
                 ComparisonTypes.push_back( ComparisonType::ABS_GREATER_THAN );
             else
                 ComparisonTypes.push_back( ComparisonType::ABS_SMALLER_THAN );
-        }  
+        }
+        else if( iSubString.find("mt") != string::npos ) 
+        {
+            eventFunctions.push_back( bind(&EventContainer::mt, &eventContainer) );
+            if( maxFlag )
+                ComparisonTypes.push_back( ComparisonType::SMALLER_THAN );
+            else
+                ComparisonTypes.push_back( ComparisonType::GREATER_THAN );
+        }
         
         else
         {

@@ -85,22 +85,23 @@ SampleReader::SampleReader(const string& fileName, SampleContainer& sampleContai
                 
                 if( type == "data" )
                 {
-                    sampleContainer.isData.push_back(true);
-                    sampleContainer.isMC.push_back(false);
+                    sampleContainer.sampleType.push_back(SampleType::DATA);
                 }
                 else if( type == "signal" )
                 {
-                    sampleContainer.isData.push_back(false);
-                    sampleContainer.isMC.push_back(false);
+                    sampleContainer.sampleType.push_back(SampleType::SIGNAL);
                 }
                 else if( type == "mc" )
                 {
-                    sampleContainer.isData.push_back(false);
-                    sampleContainer.isMC.push_back(true);
+                    sampleContainer.sampleType.push_back(SampleType::MC);
+                }
+                else if( type == "fakelepton" )
+                {
+                    sampleContainer.sampleType.push_back(SampleType::FAKELEPTON);
                 }
                 else
                 {
-                    cerr << "Type unknown in samples configuration file, options: \"data\"/\"signal\"/\"mc\"" << endl;
+                    cerr << "Type unknown in samples configuration file, options: \"data\"/\"signal\"/\"mc\"/\"fakelepton\"" << endl;
                     throw 1;
                 }
             }

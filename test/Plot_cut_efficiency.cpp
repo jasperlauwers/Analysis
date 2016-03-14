@@ -40,23 +40,23 @@ int main (int argc, char ** argv) {
     {
         for( unsigned int iSubSample = 0; iSubSample < cfgContainer.sampleContainer.sampleNames[iSample].size(); ++iSubSample) 
         {
-            reader.setSample(iSample, iSubSample);
-            
-            while( reader.fillNextEvent() )
-            {
-//                 cleaner.doCleaning();
-                                
-                // Put total number of events in overflowbin if you want efficiencies FIXME make seperate function
-                plotter.fillTotal(iSample, iSubSample); // total # of events 
-                
-                for( unsigned int iCut = 0; iCut < cfgContainer.cutContainer.variableNames.size(); ++iCut ) 
+            if( reader.setSample(iSample, iSubSample) )
+            { 
+                while( reader.fillNextEvent() )
                 {
-                    if( selecter.passCut(iCut) ) {
-                        plotter.fill(iSample, iSubSample, iCut);
-                    }
-                    else
-                        break; // accumulate cuts
-                }               
+    //                 cleaner.doCleaning();
+                                    
+                    plotter.fillTotal(iSample, iSubSample); // total # of events 
+                    
+                    for( unsigned int iCut = 0; iCut < cfgContainer.cutContainer.variableNames.size(); ++iCut ) 
+                    {
+                        if( selecter.passCut(iCut) ) {
+                            plotter.fill(iSample, iSubSample, iCut);
+                        }
+                        else
+                            break; // accumulate cuts
+                    }               
+                }
             }
         }
     }
