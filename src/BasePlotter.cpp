@@ -55,7 +55,6 @@ void BasePlotter::writeStacked(const HistogramContainer& histContainer, string e
     
     system(("mkdir -p " + configContainer.outputDir).c_str());  
     
-    cout << "Test1" << endl;
     unsigned int nSamples = histContainer.reducedNames.size();
     TCanvas *c = new TCanvas(("Canv_stacked_" + histContainer.containerName).c_str(), "", 600, 600 + (120 * configContainer.plotRatio));
     TPad *histPad=nullptr, *ratioPad=nullptr;
@@ -68,7 +67,6 @@ void BasePlotter::writeStacked(const HistogramContainer& histContainer, string e
         histPad->cd();
     }    
     
-    cout << "Test2" << endl;
     TLegend* leg = nullptr;
     vector<TLatex*> latexVector;
     setCanvasAttributes( nSamples, leg, latexVector);
@@ -91,7 +89,6 @@ void BasePlotter::writeStacked(const HistogramContainer& histContainer, string e
             leg->AddEntry(temp,legendEntry.c_str(),"f");
         }
     }
-    cout << "Test3" << endl;
     
     // Add signal to stack
     for( unsigned int iSample = 0; iSample < nSamples; ++iSample )
@@ -118,7 +115,6 @@ void BasePlotter::writeStacked(const HistogramContainer& histContainer, string e
             }
         }
     }
-    cout << "Test4" << endl;
     
     // Add data
     for( unsigned int iSample = 0; iSample < nSamples; ++iSample )
@@ -136,7 +132,6 @@ void BasePlotter::writeStacked(const HistogramContainer& histContainer, string e
             hData = histContainer.histograms[iSample];
         }
     }
-    cout << "Test5" << endl;
 
     // Set y-range
     float hMax = 0.;
