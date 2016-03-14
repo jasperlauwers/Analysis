@@ -287,6 +287,34 @@ unsigned int EventContainer::nLeptons( float minPt ) const
 }
 
 // Loose leptons
+float EventContainer::looseleptonpt(unsigned int i) const
+{
+    if( looseLeptons[i].pt() > 0 )
+        return looseLeptons[i].pt();
+    else
+        return -9999.9;
+}
+float EventContainer::looseleptoneta(unsigned int i) const
+{
+    if( looseLeptons[i].pt() > 0 )
+        return looseLeptons[i].eta();
+    else
+        return -9999.9;
+}
+float EventContainer::looseleptonphi(unsigned int i) const
+{
+    if( looseLeptons[i].pt() > 0 )
+        return looseLeptons[i].phi();
+    else
+        return -9999.9;
+}
+float EventContainer::looseleptoncharge(unsigned int i) const
+{
+    if( looseLeptons[i].pt() > 0 )
+        return looseLeptons[i].charge();
+    else
+        return -9999.9;
+}
 float EventContainer::loosemllminpt(float subtractMass, float minPt) const
 {
     float dmll = -9999.9;
