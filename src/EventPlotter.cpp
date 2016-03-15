@@ -2,7 +2,7 @@
 #include "EventPlotter.hpp"
 
 EventPlotter::EventPlotter(const EventContainer& evContainer, const ConfigContainer& cfgContainer)
-: BasePlotter(evContainer, cfgContainer), nSamples(configContainer.sampleContainer.reducedNames.size()), nVariables(configContainer.variableContainer.variableNames.size())
+: BasePlotter(evContainer, cfgContainer), nSamples(configContainer.sampleContainer.reducedNames.size()), nVariables(configContainer.variableContainer.variableNames.size()), nHistograms(0)
 {    
     // Set functions to variables
     VariableDictionary varDictionary(eventContainer);
@@ -60,7 +60,7 @@ EventPlotter::EventPlotter(const EventContainer& evContainer, const ConfigContai
                 iVar++;
         }
     }
-    nVariables = histogramContainers.size();
+    nHistograms = histogramContainers.size();
 }
 
 EventPlotter::~EventPlotter(){ }
@@ -71,44 +71,44 @@ void EventPlotter::fill(unsigned int iSample, unsigned int iSubSample)
     {
         if( configContainer.sampleContainer.sampleType[iSample] == SampleType::DATA )
         {
-            for( unsigned int iVar = 0; iVar < nVariables; ++iVar )
+            for( unsigned int iVar = 0, iHist = 0; iVar < nVariables; ++iVar, ++iHist )
             {
                 if( configContainer.variableContainer.is2D[iVar] )
                 {
-                    TH2F* h = (TH2F*) histogramContainers[iVar].histograms[iSample];
+                    TH2F* h = (TH2F*) histogramContainers[iHist].histograms[iSample];
                     h->Fill( functionVector[iVar](), functionVector[iVar+1]() );
                     iVar++;
                 }
                 else
-                    histogramContainers[iVar].histograms[iSample]->Fill( functionVector[iVar]() );
+                    histogramContainers[iHist].histograms[iSample]->Fill( functionVector[iVar]() );
             }
         }
         else if( configContainer.sampleContainer.sampleType[iSample] == SampleType::FAKELEPTON )
         {
-            for( unsigned int iVar = 0; iVar < nVariables; ++iVar )
+            for( unsigned int iVar = 0, iHist = 0; iVar < nVariables; ++iVar, ++iHist )
             {
                 if( configContainer.variableContainer.is2D[iVar] )
                 {
-                    TH2F* h = (TH2F*) histogramContainers[iVar].histograms[iSample];
+                    TH2F* h = (TH2F*) histogramContainers[iHist].histograms[iSample];
                     h->Fill( functionVector[iVar](), functionVector[iVar+1](), eventWeightFunction() );
                     iVar++;
                 }
                 else
-                    histogramContainers[iVar].histograms[iSample]->Fill( functionVector[iVar](), eventWeightFunction() );
+                    histogramContainers[iHist].histograms[iSample]->Fill( functionVector[iVar](), eventWeightFunction() );
             }
         }
         else
         {
-            for( unsigned int iVar = 0; iVar < nVariables; ++iVar )
+            for( unsigned int iVar = 0, iHist = 0; iVar < nVariables; ++iVar, ++iHist )
             {
                 if( configContainer.variableContainer.is2D[iVar] )
                 {
-                    TH2F* h = (TH2F*) histogramContainers[iVar].histograms[iSample];
+                    TH2F* h = (TH2F*) histogramContainers[iHist].histograms[iSample];
                     h->Fill( functionVector[iVar](), functionVector[iVar+1](), globalWeight[iSample][iSubSample]*eventWeightFunction() );
                     iVar++;
                 }
                 else
-                    histogramContainers[iVar].histograms[iSample]->Fill( functionVector[iVar](), globalWeight[iSample][iSubSample]*eventWeightFunction() );
+                    histogramContainers[iHist].histograms[iSample]->Fill( functionVector[iVar](), globalWeight[iSample][iSubSample]*eventWeightFunction() );
             }
         }
     }
@@ -121,7 +121,7 @@ void EventPlotter::fill(unsigned int iSample, unsigned int iSubSample)
 
 void EventPlotter::writeHist(string filename)
 {    
-    for( unsigned int iVar = 0; iVar < nVariables; ++iVar )
+    for( unsigned int iVar = 0; iVar < nHistograms; ++iVar )
     {    
         if( configContainer.addOverflow ) 
         {
@@ -140,7 +140,7 @@ void EventPlotter::writeHist(string filename)
 
 void EventPlotter::writePlots(string extension)
 {
-    for( unsigned int iVar = 0; iVar < nVariables; ++iVar )
+    for( unsigned int iVar = 0; iVar < nHistograms; ++iVar )
     {
         if( configContainer.addOverflow ) 
         {

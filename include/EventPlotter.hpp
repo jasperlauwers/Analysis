@@ -38,7 +38,7 @@ public:
 private:
     vector<eventContainerFunction> functionVector;
     vector<HistogramContainer> histogramContainers;
-    unsigned int nSamples, nVariables;
+    unsigned int nSamples, nVariables, nHistograms;
     
     // parallel running
 //     vector<const EventContainer*> eventContainerParallel;

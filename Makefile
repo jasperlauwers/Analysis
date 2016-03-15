@@ -8,7 +8,7 @@ CFLAGS_libconfig = -I. -I/home/jlauwers/VBS/Run2/Analysis/libconfig-1.5/lib
 LIBS   = $(shell root-config --libs) -lPhysics -lThread -lMinuit -lHtml -lVMC -lEG -lGeom 
 LIBS_libconfig =  -L/home/jlauwers/VBS/Run2/Analysis/libconfig-1.5/lib/.libs/ -lconfig++
 
-all: testAnalysis Plot_cut_efficiency stackPlotter qcdScalePlotter
+all: testAnalysis Plot_cut_efficiency stackPlotter qcdScalePlotter fakeLepton
 
 obj/%.o: %.cpp
 	$(CC) -c -o $@ $< $(CFLAGS) $(CFLAGS_libconfig)
@@ -65,7 +65,7 @@ obj/stackPlotter.o: stackPlotter.cpp EventReader.hpp TreeReader.hpp latino.h Eve
 
 stackPlotter : $(OBJ_FILES) obj/stackPlotter.o obj/latino.o obj/LatinoStyle2.o
 	$(CC) -o $@ $^ $(CFLAGS) $(CFLAGS_libconfig) $(LIBS) $(LIBS_libconfig)
-	
+
 obj/qcdScalePlotter.o: qcdScalePlotter.cpp EventReader.hpp TreeReader.hpp latino.h EventContainer.hpp Lepton.hpp Jet.hpp Met.hpp Particle.hpp VariableReader.hpp VariableContainer.hpp ConfigReader.hpp SampleReader.hpp SampleContainer.hpp CutReader.hpp CutContainer.hpp CutReader.hpp EventCleaner.hpp ConfigHandler.hpp  EventSelecter.hpp VariableDictionary.hpp ConfigContainer.hpp EventPlotter.hpp BasePlotter.hpp HistogramContainer.hpp LatinoStyle2.h
 
 qcdScalePlotter : $(OBJ_FILES) obj/qcdScalePlotter.o obj/latino.o obj/LatinoStyle2.o
@@ -79,6 +79,11 @@ parallelStackPlots : $(OBJ_FILES) obj/parallelStackPlots.o obj/latino.o obj/Lati
 obj/Plot_cut_efficiency.o: Plot_cut_efficiency.cpp EventReader.hpp TreeReader.hpp latino.h EventContainer.hpp Lepton.hpp Jet.hpp Met.hpp Particle.hpp VariableReader.hpp VariableContainer.hpp ConfigReader.hpp SampleReader.hpp SampleContainer.hpp CutReader.hpp CutContainer.hpp CutReader.hpp EventCleaner.hpp ConfigHandler.hpp  EventSelecter.hpp ConfigContainer.hpp CutPlotter.hpp LatinoStyle2.h
 
 Plot_cut_efficiency : $(OBJ_FILES) obj/Plot_cut_efficiency.o obj/latino.o obj/LatinoStyle2.o
+	$(CC) -o $@ $^ $(CFLAGS) $(CFLAGS_libconfig) $(LIBS) $(LIBS_libconfig)
+
+obj/fakeLepton.o: stackPlotter.cpp EventReader.hpp TreeReader.hpp latino.h EventContainer.hpp Lepton.hpp Jet.hpp Met.hpp Particle.hpp VariableReader.hpp VariableContainer.hpp ConfigReader.hpp SampleReader.hpp SampleContainer.hpp CutReader.hpp CutContainer.hpp CutReader.hpp EventCleaner.hpp ConfigHandler.hpp  EventSelecter.hpp VariableDictionary.hpp ConfigContainer.hpp EventPlotter.hpp BasePlotter.hpp HistogramContainer.hpp LatinoStyle2.h
+
+fakeLepton : $(OBJ_FILES) obj/fakeLepton.o obj/latino.o obj/LatinoStyle2.o
 	$(CC) -o $@ $^ $(CFLAGS) $(CFLAGS_libconfig) $(LIBS) $(LIBS_libconfig)
 
 clean:

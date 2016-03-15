@@ -410,7 +410,7 @@ bool EventReader::fillNextEvent()
     if( needLooseLeptons )
     {
         for( unsigned int iLepton=0; iLepton < nLeptons; ++iLepton ) {
-            if( (*treeReader->std_vector_lepton_pt)[iLepton] > 0 )
+            if( (*treeReader->std_vector_lepton_pt)[iLepton] > 0. )
             {
                 eventContainer.looseLeptons[iLepton].set((*treeReader->std_vector_lepton_pt)[iLepton],(*treeReader->std_vector_lepton_eta)[iLepton],(*treeReader->std_vector_lepton_phi)[iLepton],(*treeReader->std_vector_lepton_flavour)[iLepton]);
             }
