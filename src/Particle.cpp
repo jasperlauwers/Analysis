@@ -26,6 +26,14 @@ const TLorentzVector& Particle::getLorentzVector() const
     return p4;
 }
 
+float Particle::px() const
+{
+    return p4.Px();
+}
+float Particle::py() const
+{
+    return p4.Py();
+}
 float Particle::pt() const
 {
     return p4.Pt();

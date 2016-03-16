@@ -275,7 +275,7 @@ bool EventReader::fillNextEvent()
         if( sampleType == SampleType::DATA || sampleType == SampleType::FAKELEPTON)
         {
             skipEvent = ( treeReader->trigger == 0 );
-            if( triggerSelection && ! skipEvent ) 
+            if( triggerSelection ) 
             {
                 skipEvent = true;
                 unsigned int nTriggers = configContainer.cutContainer.triggerVector.size();

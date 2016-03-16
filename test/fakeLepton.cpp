@@ -60,11 +60,11 @@ int main (int argc, char ** argv) {
     
     
     TFile *f = new TFile((cfgContainer.outputDir + filename).c_str(),"UPDATE");
-    TH1F *hPtNum = (TH1F*) f->Get("data_leptonpt1_mm");
-    TH1F *hPtDen = (TH1F*) f->Get("data_looseleptonpt1_mm");
+    TH1F *hPtNum = (TH1F*) f->Get(("data_leptonpt1_" + cfgContainer.plotString).c_str());
+    TH1F *hPtDen = (TH1F*) f->Get(("data_looseleptonpt1_" + cfgContainer.plotString).c_str());
     TH1F *hFRpt = (TH1F*) hPtNum->Clone("Fake_rate_pt");
-    TH1F *hEtaNum = (TH1F*) f->Get("data_leptoneta1_mm");
-    TH1F *hEtaDen = (TH1F*) f->Get("data_looseleptoneta1_mm");
+    TH1F *hEtaNum = (TH1F*) f->Get(("data_leptoneta1_" + cfgContainer.plotString).c_str());
+    TH1F *hEtaDen = (TH1F*) f->Get(("data_looseleptoneta1_" + cfgContainer.plotString).c_str());
     TH1F *hFReta = (TH1F*) hEtaNum->Clone("Fake_rate_eta");
     
     hFRpt->Divide(hPtDen);

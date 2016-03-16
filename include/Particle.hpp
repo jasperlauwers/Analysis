@@ -17,6 +17,8 @@ public:
     virtual ~Particle();
     void set(float pt, float eta, float phi, float mass = 0);
     const TLorentzVector& getLorentzVector() const;
+    float px() const;
+    float py() const;
     float pt() const;
     float eta() const;
     float phi() const;

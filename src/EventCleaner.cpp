@@ -83,10 +83,10 @@ void EventCleaner::doLeptonCleaning()
         }
         else if( eventContainer.leptons[eventContainer.goodLeptons[iLepton]].isMuon() ) 
         {
-            if( eventContainer.leptons[eventContainer.goodLeptons[iLepton]].passesMedium() 
+            if( /*eventContainer.leptons[eventContainer.goodLeptons[iLepton]].passesMedium() 
                 && abs(eventContainer.leptons[eventContainer.goodLeptons[iLepton]].dz()) < 0.1 
-                && abs(eventContainer.leptons[eventContainer.goodLeptons[iLepton]].d0()) < (eventContainer.leptons[eventContainer.goodLeptons[eventContainer.goodLeptons[iLepton]]].pt()<20? 0.01:0.02 )
-                && abs(eventContainer.leptons[eventContainer.goodLeptons[iLepton]].isolation()) < 0.15 )
+                && abs(eventContainer.leptons[eventContainer.goodLeptons[iLepton]].d0()) < (eventContainer.leptons[eventContainer.goodLeptons[iLepton]].pt()<20? 0.01:0.02 )
+                && */abs(eventContainer.leptons[eventContainer.goodLeptons[iLepton]].isolation()) < 0.15 )
                 tightLepton = true;
         }           
         if( ! tightLepton )

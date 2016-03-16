@@ -61,7 +61,7 @@ public:
     float looseleptonpt(unsigned int) const;
     float looseleptoneta(unsigned int) const;
     float looseleptonphi(unsigned int) const;
-    float looseleptoncharge(unsigned int) const;
+    float looseleptonflavour(unsigned int) const;
     float loosemllminpt(float subtractMass, float minPt) const;
     float nlooseleptons(float minPt) const;
     

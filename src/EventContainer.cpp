@@ -244,7 +244,7 @@ float EventContainer::isolatedjetpt() const
         if( farFromLepton ) 
             return jets[iJet].pt();
     }
-        return -9999.9;    
+    return -9999.9;    
 }
 
 // Leptons
@@ -308,10 +308,10 @@ float EventContainer::looseleptonphi(unsigned int i) const
     else
         return -9999.9;
 }
-float EventContainer::looseleptoncharge(unsigned int i) const
+float EventContainer::looseleptonflavour(unsigned int i) const
 {
     if( looseLeptons[i].pt() > 0 )
-        return looseLeptons[i].charge();
+        return abs(looseLeptons[i].pId());
     else
         return -9999.9;
 }
@@ -569,7 +569,7 @@ float EventContainer::zeppenfeldlep(unsigned int index) const
 
 float EventContainer::mt() const
 {
-    return looseLeptons[0].mpp(met); 
+    return sqrt( pow(looseLeptons[0].pt()+met.pt(),2) - pow(looseLeptons[0].px()+met.px(),2) - pow(looseLeptons[0].py()+met.py(),2) );
 }
 
 float EventContainer::weight() const

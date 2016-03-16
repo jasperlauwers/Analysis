@@ -317,6 +317,13 @@ void VariableDictionary::stringToFunction(const vector<string>& variableNames, v
                 else
                     ComparisonTypes.push_back( ComparisonType::ABS_SMALLER_THAN );
             }
+            else if( iSubString.find("flavour") != string::npos ) 
+            {
+                string::size_type varPosition = iSubString.find("flavour");
+                iSubString.erase(varPosition, 7);
+                eventFunctions.push_back( bind(&EventContainer::looseleptonflavour, &eventContainer, getIndex(iSubString, iString)) );
+                ComparisonTypes.push_back( ComparisonType::EQUAL );
+            }
             else
             {
                 cerr << "Variable '" << iString << "' in cuts or variables list not known." << endl;
