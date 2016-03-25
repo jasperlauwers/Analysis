@@ -4,7 +4,7 @@
 #include "ConfigHandler.hpp"
 #include "EventCleaner.hpp"
 #include "EventSelecter.hpp"
-#include "EventPlotter.hpp"
+#include "FakeLeptonPlotter.hpp"
 
 int main (int argc, char ** argv) {
     
@@ -35,7 +35,7 @@ int main (int argc, char ** argv) {
     EventReader reader(eventContainer, cfgContainer);
     EventCleaner cleaner(eventContainer);
     EventSelecter selecter(eventContainer, cfgContainer.cutContainer);
-    EventPlotter plotter(eventContainer, cfgContainer);
+    FakeLeptonPlotter plotter(eventContainer, cfgContainer);
     
     for( unsigned int iSample = 0; iSample < cfgContainer.sampleContainer.reducedNames.size(); ++iSample) 
     {
@@ -46,7 +46,7 @@ int main (int argc, char ** argv) {
                 while( reader.fillNextEvent() )
                 {
 //                     cleaner.doCleaning();
-                    cleaner.doLeptonCleaning();
+                    cleaner.doFakeLeptonCleaning();
                     if( selecter.passCuts() )
                         plotter.fill(iSample, iSubSample);
                 }
@@ -57,6 +57,7 @@ int main (int argc, char ** argv) {
     string filename = "Histograms.root";
     plotter.writeHist(filename);
     plotter.writePlots("png");
+    plotter.writeFakeRate("png");
     
     
     TFile *f = new TFile((cfgContainer.outputDir + filename).c_str(),"UPDATE");

@@ -9,7 +9,7 @@ EventCleaner::~EventCleaner() { }
 void EventCleaner::doCleaning() 
 {
     // Lepton 
-    doLeptonCleaning();
+//     doLeptonCleaning();
     
     // CHS
     unsigned int nGoodJets = eventContainer.goodJets.size();
@@ -69,28 +69,13 @@ void EventCleaner::doCleaning()
     }
 }
 
-void EventCleaner::doLeptonCleaning() 
+void EventCleaner::doFakeLeptonCleaning() 
 {
     // Lepton cleaning
     unsigned int nGoodLeptons = eventContainer.goodLeptons.size();
-    for( unsigned int iLepton=0; iLepton < nGoodLeptons; ++iLepton ) {
-        bool tightLepton = false;
-        
-        if( eventContainer.leptons[eventContainer.goodLeptons[iLepton]].isElectron() )
+    for( unsigned int iLepton=0; iLepton < nGoodLeptons; ++iLepton ) {        
+        if( ! eventContainer.leptons[eventContainer.goodLeptons[iLepton]].passesMedium() )
         {
-            if( eventContainer.leptons[eventContainer.goodLeptons[iLepton]].passesMedium() )
-                tightLepton = true;
-        }
-        else if( eventContainer.leptons[eventContainer.goodLeptons[iLepton]].isMuon() ) 
-        {
-            if( /*eventContainer.leptons[eventContainer.goodLeptons[iLepton]].passesMedium() 
-                && abs(eventContainer.leptons[eventContainer.goodLeptons[iLepton]].dz()) < 0.1 
-                && abs(eventContainer.leptons[eventContainer.goodLeptons[iLepton]].d0()) < (eventContainer.leptons[eventContainer.goodLeptons[iLepton]].pt()<20? 0.01:0.02 )
-                && */abs(eventContainer.leptons[eventContainer.goodLeptons[iLepton]].isolation()) < 0.15 )
-                tightLepton = true;
-        }           
-        if( ! tightLepton )
-        {    
             eventContainer.goodLeptons.erase(eventContainer.goodLeptons.begin()+iLepton);
             iLepton--;
             nGoodLeptons--;

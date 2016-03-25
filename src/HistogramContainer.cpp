@@ -22,6 +22,22 @@ void HistogramContainer::add(TH1* h, string histName, int color_, SampleType sam
     sampleType.push_back(sampleType_);
 }
 
+void HistogramContainer::add(const HistogramContainer& histContainer, int index)
+{
+    histograms.push_back(histContainer.histograms[index]);
+    reducedNames.push_back(histContainer.reducedNames[index]);
+    color.push_back(histContainer.color[index]);
+    sampleType.push_back(histContainer.sampleType[index]);
+}
+
+void HistogramContainer::pop_back()
+{
+    histograms.pop_back();
+    reducedNames.pop_back();
+    color.pop_back();
+    sampleType.pop_back();    
+}
+
 bool HistogramContainer::check() const
 {
     unsigned int size = histograms.size();
@@ -42,6 +58,15 @@ void HistogramContainer::addOverflow()
         histograms[iHist]->SetBinError(histograms[iHist]->GetNbinsX(),sqrt(pow(histograms[iHist]->GetBinError(histograms[iHist]->GetNbinsX()),2)+pow(histograms[iHist]->GetBinError(histograms[iHist]->GetNbinsX()+1),2))); 
         histograms[iHist]->SetBinContent(histograms[iHist]->GetNbinsX()+1,0);
         histograms[iHist]->SetBinError(histograms[iHist]->GetNbinsX()+1,0);
+        
+        // need to do this for every row in 2D histogram
+//         if( histograms[iHist]->GetDimension() == 2 )
+//         {
+//             histograms[iHist]->SetBinContent(histograms[iHist]->GetNbinsY(),histograms[iHist]->GetBinContent(histograms[iHist]->GetNbinsY())+histograms[iHist]->GetBinContent(histograms[iHist]->GetNbinsY()+1)); 
+//             histograms[iHist]->SetBinError(histograms[iHist]->GetNbinsY(),sqrt(pow(histograms[iHist]->GetBinError(histograms[iHist]->GetNbinsY()),2)+pow(histograms[iHist]->GetBinError(histograms[iHist]->GetNbinsY()+1),2))); 
+//             histograms[iHist]->SetBinContent(histograms[iHist]->GetNbinsY()+1,0);
+//             histograms[iHist]->SetBinError(histograms[iHist]->GetNbinsY()+1,0); 
+//         }
     }
 }
 

@@ -306,6 +306,13 @@ void BasePlotter::writeEfficiency(const HistogramContainer& numeratorContainer, 
     TGraphAsymmErrors* hEff[nSamples];   
     for( unsigned int iSample = 0; iSample < nSamples; ++iSample )
     {
+//         unsigned int nBins = numeratorContainer.histograms[iSample]->GetNcells();
+//         for( unsigned int i = 0; i <= nBins; ++i )
+//         {
+//             cout << "bin " << i << "\t numerator: " << numeratorContainer.histograms[iSample]->GetBinContent(i) << "\t denominator: " << denominatorHistograms[iSample]->GetBinContent(i) << endl;
+//         }
+        
+        
         hEff[iSample] = new TGraphAsymmErrors(numeratorContainer.histograms[iSample], denominatorHistograms[iSample], "cl=0.683 b(1,1) mode");
         hEff[iSample]->GetYaxis()->SetTitle("Efficiency");
         

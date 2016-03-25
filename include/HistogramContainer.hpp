@@ -16,6 +16,8 @@ struct HistogramContainer {
     HistogramContainer(string name, unsigned int nTotal);
     ~HistogramContainer();
     void add(TH1* h, string histName, int color_ = 1, SampleType sampleType = SampleType::MC);
+    void add(const HistogramContainer& histContainer, int index);
+    void pop_back();
     bool check() const;
     void addOverflow();
     void addUnderflow();

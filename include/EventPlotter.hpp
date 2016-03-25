@@ -21,12 +21,12 @@ using namespace std;
 
 typedef function<float ()> eventContainerFunction;
 
-class EventPlotter : BasePlotter {
+class EventPlotter : protected BasePlotter {
 
 public:
     EventPlotter(const EventContainer&, const ConfigContainer&);
-    ~EventPlotter();
-    void fill(unsigned int iSample, unsigned int iSubSample);
+    virtual ~EventPlotter();
+    virtual void fill(unsigned int iSample, unsigned int iSubSample);
     void writePlots(string extension);
     void writeHist(string filename);
     
@@ -35,7 +35,7 @@ public:
     void init(const EventContainer& evContainer, unsigned int iSample);
     void parallelFill(unsigned int iSample, unsigned int iSubSample);
         
-private:
+protected:
     vector<eventContainerFunction> functionVector;
     vector<HistogramContainer> histogramContainers;
     unsigned int nSamples, nVariables, nHistograms;

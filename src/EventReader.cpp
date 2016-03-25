@@ -83,6 +83,7 @@ EventReader::EventReader(EventContainer& eventCont, const ConfigContainer& cfgCo
             if( iString.find("loose") != string::npos && firstLooseLepton )
             {
                 needLooseLeptons = true;
+                branches.push_back("std_vector_lepton_isTightLepton");
 //                 genBranches.push_back("std_vector_looseLepton_eta");
 //                 genBranches.push_back("std_vector_looseLepton_pt");
 //                 genBranches.push_back("std_vector_looseLepton_phi");
@@ -359,52 +360,6 @@ bool EventReader::fillNextEvent()
         }
     }
     
-    // Fill leptons
-    for( unsigned int iLepton=0; iLepton < nLeptons; ++iLepton ) {
-        if( (*treeReader->std_vector_lepton_pt)[iLepton] >= configContainer.minLeptonPt )
-        {
-            eventContainer.goodLeptons.push_back(iLepton);
-            
-            if( abs((*treeReader->std_vector_lepton_flavour)[iLepton]) == 11 )
-            {
-                eventContainer.leptons[iLepton].set((*treeReader->std_vector_lepton_pt)[iLepton],(*treeReader->std_vector_lepton_eta)[iLepton],(*treeReader->std_vector_lepton_phi)[iLepton],(*treeReader->std_vector_lepton_flavour)[iLepton], (*treeReader->std_vector_lepton_eleIdTight)[iLepton] == 1 );
-                if( needElectronId )
-                {
-                    eventContainer.leptons[iLepton].setd0((*treeReader->std_vector_lepton_d0)[iLepton]);
-                    eventContainer.leptons[iLepton].setdEtaIn((*treeReader->std_vector_electron_dEtaIn)[iLepton]);
-                    eventContainer.leptons[iLepton].setdPhiIn((*treeReader->std_vector_electron_dPhiIn)[iLepton]);
-                    eventContainer.leptons[iLepton].setdz((*treeReader->std_vector_lepton_dz)[iLepton]);
-                    eventContainer.leptons[iLepton].seteffectiveArea((*treeReader->std_vector_electron_effectiveArea)[iLepton]);
-                    eventContainer.leptons[iLepton].setmissingHits((*treeReader->std_vector_electron_expectedMissingInnerHits)[iLepton]);
-                    eventContainer.leptons[iLepton].setsigmaIetaIeta((*treeReader->std_vector_electron_full5x5_sigmaIetaIeta)[iLepton]);
-                    eventContainer.leptons[iLepton].sethOverE((*treeReader->std_vector_electron_full5x5_sigmaIetaIeta)[iLepton]);
-                    eventContainer.leptons[iLepton].setooEmoop((*treeReader->std_vector_electron_full5x5_sigmaIetaIeta)[iLepton]);
-                    eventContainer.leptons[iLepton].setconversionVeto((*treeReader->std_vector_electron_passConversionVeto)[iLepton]);
-                    eventContainer.leptons[iLepton].setscEta((*treeReader->std_vector_electron_scEta)[iLepton]);
-//                     eventContainer.leptons[iLepton].setIsolation( ((*treeReader->std_vector_lepton_chargedHadronIso)[iLepton] + TMath::Max((*treeReader->std_vector_lepton_neutralHadronIso)[iLepton] + (*treeReader->std_vector_lepton_photonIso)[iLepton] - (*treeReader->jetRho)*(*treeReader->std_vector_electron_effectiveArea)[iLepton])) / (*treeReader->std_vector_lepton_pt)[iLepton] );
-                }
-            }
-            else if( abs((*treeReader->std_vector_lepton_flavour)[iLepton]) == 13 )
-            {
-                eventContainer.leptons[iLepton].set(
-                    (*treeReader->std_vector_lepton_pt)[iLepton],
-                    (*treeReader->std_vector_lepton_eta)[iLepton],
-                    (*treeReader->std_vector_lepton_phi)[iLepton],
-                    (*treeReader->std_vector_lepton_flavour)[iLepton],
-                    ((*treeReader->std_vector_lepton_isMediumMuon)[iLepton] == 1) );
-                eventContainer.leptons[iLepton].setd0((*treeReader->std_vector_lepton_d0)[iLepton]);
-                eventContainer.leptons[iLepton].setdz((*treeReader->std_vector_lepton_dz)[iLepton]);
-                eventContainer.leptons[iLepton].setIsolation( ((*treeReader->std_vector_lepton_chargedHadronIso)[iLepton] + TMath::Max((*treeReader->std_vector_lepton_neutralHadronIso)[iLepton] + (*treeReader->std_vector_lepton_photonIso)[iLepton] - 0.5 * (*treeReader->std_vector_lepton_sumPUPt)[iLepton], 0.)) / (*treeReader->std_vector_lepton_pt)[iLepton] );
-            }
-            else
-            {
-                cerr << "Unexpected lepton id: " << (*treeReader->std_vector_lepton_flavour)[iLepton] << endl;
-                throw 1;
-            }
-        }
-        else
-            break;
-    }
     
     // Fill loose leptons
     if( needLooseLeptons )
@@ -413,11 +368,63 @@ bool EventReader::fillNextEvent()
             if( (*treeReader->std_vector_lepton_pt)[iLepton] > 0. )
             {
                 eventContainer.looseLeptons[iLepton].set((*treeReader->std_vector_lepton_pt)[iLepton],(*treeReader->std_vector_lepton_eta)[iLepton],(*treeReader->std_vector_lepton_phi)[iLepton],(*treeReader->std_vector_lepton_flavour)[iLepton]);
+                
+                eventContainer.goodLeptons.push_back(iLepton);
+                eventContainer.leptons[iLepton].set((*treeReader->std_vector_lepton_pt)[iLepton],(*treeReader->std_vector_lepton_eta)[iLepton],(*treeReader->std_vector_lepton_phi)[iLepton],(*treeReader->std_vector_lepton_flavour)[iLepton], (*treeReader->std_vector_lepton_isTightLepton)[iLepton] == 1 );
             }
             else
                 eventContainer.looseLeptons[iLepton].set(0,0,0,0);
         }
-    }      
+    } 
+    else
+    {
+    // Fill leptons
+        for( unsigned int iLepton=0; iLepton < nLeptons; ++iLepton ) {
+            if( (*treeReader->std_vector_lepton_pt)[iLepton] >= configContainer.minLeptonPt )
+            {
+                eventContainer.goodLeptons.push_back(iLepton);
+                
+                if( abs((*treeReader->std_vector_lepton_flavour)[iLepton]) == 11 )
+                {
+                    eventContainer.leptons[iLepton].set((*treeReader->std_vector_lepton_pt)[iLepton],(*treeReader->std_vector_lepton_eta)[iLepton],(*treeReader->std_vector_lepton_phi)[iLepton],(*treeReader->std_vector_lepton_flavour)[iLepton], (*treeReader->std_vector_lepton_eleIdTight)[iLepton] == 1 );
+                    if( needElectronId )
+                    {
+                        eventContainer.leptons[iLepton].setd0((*treeReader->std_vector_lepton_d0)[iLepton]);
+                        eventContainer.leptons[iLepton].setdEtaIn((*treeReader->std_vector_electron_dEtaIn)[iLepton]);
+                        eventContainer.leptons[iLepton].setdPhiIn((*treeReader->std_vector_electron_dPhiIn)[iLepton]);
+                        eventContainer.leptons[iLepton].setdz((*treeReader->std_vector_lepton_dz)[iLepton]);
+                        eventContainer.leptons[iLepton].seteffectiveArea((*treeReader->std_vector_electron_effectiveArea)[iLepton]);
+                        eventContainer.leptons[iLepton].setmissingHits((*treeReader->std_vector_electron_expectedMissingInnerHits)[iLepton]);
+                        eventContainer.leptons[iLepton].setsigmaIetaIeta((*treeReader->std_vector_electron_full5x5_sigmaIetaIeta)[iLepton]);
+                        eventContainer.leptons[iLepton].sethOverE((*treeReader->std_vector_electron_full5x5_sigmaIetaIeta)[iLepton]);
+                        eventContainer.leptons[iLepton].setooEmoop((*treeReader->std_vector_electron_full5x5_sigmaIetaIeta)[iLepton]);
+                        eventContainer.leptons[iLepton].setconversionVeto((*treeReader->std_vector_electron_passConversionVeto)[iLepton]);
+                        eventContainer.leptons[iLepton].setscEta((*treeReader->std_vector_electron_scEta)[iLepton]);
+    //                     eventContainer.leptons[iLepton].setIsolation( ((*treeReader->std_vector_lepton_chargedHadronIso)[iLepton] + TMath::Max((*treeReader->std_vector_lepton_neutralHadronIso)[iLepton] + (*treeReader->std_vector_lepton_photonIso)[iLepton] - (*treeReader->jetRho)*(*treeReader->std_vector_electron_effectiveArea)[iLepton])) / (*treeReader->std_vector_lepton_pt)[iLepton] );
+                    }
+                }
+                else if( abs((*treeReader->std_vector_lepton_flavour)[iLepton]) == 13 )
+                {
+                    eventContainer.leptons[iLepton].set(
+                        (*treeReader->std_vector_lepton_pt)[iLepton],
+                        (*treeReader->std_vector_lepton_eta)[iLepton],
+                        (*treeReader->std_vector_lepton_phi)[iLepton],
+                        (*treeReader->std_vector_lepton_flavour)[iLepton],
+                        ((*treeReader->std_vector_lepton_isMediumMuon)[iLepton] == 1) );
+    //                 eventContainer.leptons[iLepton].setd0((*treeReader->std_vector_lepton_d0)[iLepton]);
+    //                 eventContainer.leptons[iLepton].setdz((*treeReader->std_vector_lepton_dz)[iLepton]);
+                    eventContainer.leptons[iLepton].setIsolation( ((*treeReader->std_vector_lepton_chargedHadronIso)[iLepton] + TMath::Max((*treeReader->std_vector_lepton_neutralHadronIso)[iLepton] + (*treeReader->std_vector_lepton_photonIso)[iLepton] - 0.5 * (*treeReader->std_vector_lepton_sumPUPt)[iLepton], 0.)) / (*treeReader->std_vector_lepton_pt)[iLepton] );
+                }
+                else
+                {
+                    cerr << "Unexpected lepton id: " << (*treeReader->std_vector_lepton_flavour)[iLepton] << endl;
+                    throw 1;
+                }
+            }
+            else
+                break;
+        }  
+    }
     
     // Fill MET 
     eventContainer.met.set( treeReader->metPfType1, treeReader->metPfType1Phi);
