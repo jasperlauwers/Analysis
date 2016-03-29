@@ -76,6 +76,15 @@ void FakeLeptonPlotter::writeFakeRate(string extension)
             }
         }
         
+        // Add QCD signal
+        for( unsigned int iSample = 0; iSample < nSamples; ++iSample )
+        {
+            if( histogramContainers[iVar].sampleType[iSample] == SampleType::SIGNAL )
+            {
+                fakeHistCont.add(histogramContainers[iVar], iSample);
+            }
+        }
+        
         // EKW MC correction
         for( TH1* h : hMC )
         {
@@ -85,18 +94,12 @@ void FakeLeptonPlotter::writeFakeRate(string extension)
         // Get Denominator
         if( histogramContainers[iVar].containerName.find("loose") != string::npos ) 
         {
-//             fakeHistogramContainers.push_back(fakeHistCont);
             hDenom.push_back(fakeHistCont.histograms[0]);
-//             continue;
         }
         else
         {
             fakeHistogramContainers.push_back(fakeHistCont);
-//             hDenom.push_back(fakeHistCont.histograms[0]);
-//             continue;
         }
-
-//         fakeHistogramContainers.push_back(fakeHistCont);
     }
         
     for( unsigned int iFake = 0; iFake < fakeHistogramContainers.size(); ++iFake )
