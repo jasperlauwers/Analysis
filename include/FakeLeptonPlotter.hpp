@@ -31,7 +31,7 @@ public:
         
 private:
     vector<HistogramContainer> fakeHistogramContainers;
-    vector<TH1*> hDenom;
+    vector<vector<TH1*>> hDenomVector;
 };
 
 

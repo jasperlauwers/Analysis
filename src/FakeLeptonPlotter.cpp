@@ -94,7 +94,7 @@ void FakeLeptonPlotter::writeFakeRate(string extension)
         // Get Denominator
         if( histogramContainers[iVar].containerName.find("loose") != string::npos ) 
         {
-            hDenom.push_back(fakeHistCont.histograms[0]);
+            hDenomVector.push_back(fakeHistCont.histograms);
         }
         else
         {
@@ -115,10 +115,10 @@ void FakeLeptonPlotter::writeFakeRate(string extension)
 //         }
         
         // remove underflow in numerator, important for TGraphAsymmErrors to work!
-        fakeHistogramContainers[iFake].histograms[0]->ClearUnderflowAndOverflow();
+        for( unsigned int iHist = 0; iHist < fakeHistogramContainers[iFake].histograms.size(); ++iHist )
+            fakeHistogramContainers[iFake].histograms[iHist]->ClearUnderflowAndOverflow();
             
-        vector<TH1*> temp = {hDenom[iFake]};
-        BasePlotter::writeEfficiency(fakeHistogramContainers[iFake], temp, extension);
+        BasePlotter::writeEfficiency(fakeHistogramContainers[iFake], hDenomVector[iFake], extension);
     }
     
     // verbose output
@@ -128,6 +128,8 @@ void FakeLeptonPlotter::writeFakeRate(string extension)
             BasePlotter::writeHist("fake_lepton_intermediate.root", fakeHistogramContainers[iVar].histograms, "RECREATE");
         else
             BasePlotter::writeHist("fake_lepton_intermediate.root", fakeHistogramContainers[iVar].histograms, "UPDATE");
+        
+        BasePlotter::writeHist("fake_lepton_intermediate.root", hDenomVector[iVar], "UPDATE");
     }
-    BasePlotter::writeHist("fake_lepton_intermediate.root", hDenom, "UPDATE");
+    
 }

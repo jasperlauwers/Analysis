@@ -3,7 +3,7 @@
 #include "TChain.h"
 
 EventReader::EventReader(EventContainer& eventCont, const ConfigContainer& cfgContainer)
-: eventContainer(eventCont), configContainer(cfgContainer), treeReader(nullptr), nLeptons(0), nJets(0), needJets(false), needGenJets(false), needPuppiJets(false), needGenLeptons(false), needElectronId(false), needTrackJets(false), triggerSelection(false), sampleType(SampleType::DATA), maxEventsWeight(1.) 
+: eventContainer(eventCont), configContainer(cfgContainer), treeReader(nullptr), nLeptons(0), nJets(0), needJets(false), needGenJets(false), needPuppiJets(false), needGenLeptons(false), needElectronId(false), needTrackJets(false), triggerSelection(false), hasNegWeight(false), sampleType(SampleType::DATA), maxEventsWeight(1.) 
 { 
     bool firstGenJet = true, firstPuppiJet = true, firstJet = true, firstgenLepton = true, firstElectronID = true, firstTrackJet = true, firstLooseLepton=true;
     vector<const vector<string>*> variableNames = {&configContainer.variableContainer.variableNames, &configContainer.cutContainer.variableNames};
@@ -215,8 +215,15 @@ bool EventReader::setSample(unsigned int iSample, unsigned int iSubSample)
     else
     {
         sampleBranches.push_back("baseW");        
-        sampleBranches.push_back("GEN_weight_SM");
         sampleBranches.push_back("puW");
+        hasNegWeight = false;
+        
+        if(  treeReader->fChain->FindBranch("GEN_weight_SM") )
+        {
+            sampleBranches.push_back("GEN_weight_SM");
+            hasNegWeight = true;
+        }
+        
         sampleBranches.insert(sampleBranches.end(), genBranches.begin(), genBranches.end());
     }
 
@@ -444,7 +451,12 @@ bool EventReader::fillNextEvent()
 //         eventContainer.setWeight( treeReader->baseW * (treeReader->GEN_weight_SM/abs(treeReader->GEN_weight_SM)) * maxEventsWeight);
 //     }
     else if( sampleType != SampleType::DATA )
-        eventContainer.setWeight( treeReader->baseW * (treeReader->GEN_weight_SM/abs(treeReader->GEN_weight_SM)) * treeReader->puW * maxEventsWeight);
+    {
+        if( hasNegWeight )
+            eventContainer.setWeight( treeReader->baseW * (treeReader->GEN_weight_SM/abs(treeReader->GEN_weight_SM)) * treeReader->puW * maxEventsWeight);
+        else
+            eventContainer.setWeight( treeReader->baseW * treeReader->puW * maxEventsWeight);
+    }
     
     return true;
 }
