@@ -56,9 +56,9 @@ EventPlotter::EventPlotter(const EventContainer& evContainer, const ConfigContai
             histogramContainers.back().reducedNames.push_back(configContainer.sampleContainer.reducedNames[iSample]);
             histogramContainers.back().color.push_back(configContainer.sampleContainer.color[iSample]);
             histogramContainers.back().sampleType.push_back(configContainer.sampleContainer.sampleType[iSample]);
-            if( configContainer.variableContainer.is2D[iVar] )
-                iVar++;
         }
+        if( configContainer.variableContainer.is2D[iVar] )
+            iVar++;
     }
     nHistograms = histogramContainers.size();
 }
