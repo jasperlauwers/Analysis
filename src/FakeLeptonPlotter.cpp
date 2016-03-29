@@ -22,7 +22,7 @@ void FakeLeptonPlotter::fill(unsigned int iSample, unsigned int iSubSample)
                     iVar++;
                 }
                 else
-                    histogramContainers[iHist].histograms[iSample]->Fill( functionVector[iVar]() );
+                    histogramContainers[iHist].histograms[iSample]->Fill( functionVector[iVar](), globalWeight[iSample][iSubSample] );
             }
         }
         else
