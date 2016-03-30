@@ -12,6 +12,6 @@ struct CutContainer {
     vector<float> cutValues;
     bool triggerSelection;
     vector<unsigned int> triggerVector;
-    vector<float> triggerPtVector;
+    vector<float> triggerPtVector, triggerLumiVector;
 };
 #endif

@@ -11,22 +11,22 @@ void FakeLeptonPlotter::fill(unsigned int iSample, unsigned int iSubSample)
 {
     if( iSample < nSamples && iSubSample < configContainer.sampleContainer.sampleNames[iSample].size() )
     {
-        if( configContainer.sampleContainer.sampleType[iSample] == SampleType::DATA )
-        {
-            for( unsigned int iVar = 0, iHist = 0; iVar < nVariables; ++iVar, ++iHist )
-            {
-                if( configContainer.variableContainer.is2D[iVar] )
-                {
-                    TH2F* h = (TH2F*) histogramContainers[iHist].histograms[iSample];
-                    h->Fill( functionVector[iVar](), functionVector[iVar+1](), globalWeight[iSample][iSubSample] );  // apply global weight for trigger luminosity
-                    iVar++;
-                }
-                else
-                    histogramContainers[iHist].histograms[iSample]->Fill( functionVector[iVar](), globalWeight[iSample][iSubSample] );
-            }
-        }
-        else
-        {
+//         if( configContainer.sampleContainer.sampleType[iSample] == SampleType::DATA )
+//         {
+//             for( unsigned int iVar = 0, iHist = 0; iVar < nVariables; ++iVar, ++iHist )
+//             {
+//                 if( configContainer.variableContainer.is2D[iVar] )
+//                 {
+//                     TH2F* h = (TH2F*) histogramContainers[iHist].histograms[iSample];
+//                     h->Fill( functionVector[iVar](), functionVector[iVar+1](), globalWeight[iSample][iSubSample] );  // apply global weight for trigger luminosity
+//                     iVar++;
+//                 }
+//                 else
+//                     histogramContainers[iHist].histograms[iSample]->Fill( functionVector[iVar](), globalWeight[iSample][iSubSample] );
+//             }
+//         }
+//         else
+//         {
             for( unsigned int iVar = 0, iHist = 0; iVar < nVariables; ++iVar, ++iHist )
             {
                 if( configContainer.variableContainer.is2D[iVar] )
@@ -38,7 +38,7 @@ void FakeLeptonPlotter::fill(unsigned int iSample, unsigned int iSubSample)
                 else
                     histogramContainers[iHist].histograms[iSample]->Fill( functionVector[iVar](), globalWeight[iSample][iSubSample]*eventWeightFunction() );
             }
-        }
+//         }
     }
     else
     {

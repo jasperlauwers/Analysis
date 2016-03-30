@@ -30,18 +30,29 @@ CutReader::CutReader(const string& fileName, CutContainer& cutContainer)
                 const Setting& triggerSetting =  cuts[iCut+1];
                 const Setting& indexSetting =  triggerSetting[0];
                 const Setting& ptSetting =  triggerSetting[1];
-                const unsigned int nTriggers = indexSetting.getLength();
-                if( nTriggers != (unsigned) ptSetting.getLength() ) 
-                {
-                    cerr << "Number of elements in trigger cut list is not consistent." << endl;
-                    throw 1;
-                }
                 
+                const unsigned int nTriggers = indexSetting.getLength();
                 for( unsigned int iBin=0; iBin < nTriggers; ++iBin ) 
                 {
                     cutContainer.triggerVector.push_back( indexSetting[iBin] );  
                     cutContainer.triggerPtVector.push_back( ptSetting[iBin] );  
                 }
+                
+                if( triggerSetting.getLength() > 2 )
+                {
+                    const Setting& lumiSetting =  triggerSetting[2];
+                    for( unsigned int iBin=0; iBin < nTriggers; ++iBin ) 
+                    {
+                        cutContainer.triggerLumiVector.push_back( lumiSetting[iBin] );  
+                    }
+                }
+                
+                if( nTriggers != (unsigned) ptSetting.getLength() || (triggerSetting.getLength() > 2  && nTriggers != (unsigned) triggerSetting[2].getLength() ) ) 
+                {
+                    cerr << "Number of elements in trigger cut list is not consistent." << endl;
+                    throw 1;
+                }
+                
                 skipForTrigger = true;
             }
             else

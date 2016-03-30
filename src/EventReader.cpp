@@ -291,7 +291,10 @@ bool EventReader::fillNextEvent()
                 {
                     bool passTrigger = ( (*treeReader->std_vector_trigger)[configContainer.cutContainer.triggerVector[iTrig]] && (*treeReader->std_vector_lepton_pt)[0] > configContainer.cutContainer.triggerPtVector[iTrig] );
                     if( passTrigger && ( iTrig+1 == nTriggers || (*treeReader->std_vector_lepton_pt)[0] < configContainer.cutContainer.triggerPtVector[iTrig+1] ) )
+                    {
+                        eventContainer.setWeight(1000. / configContainer.cutContainer.triggerLumiVector[iTrig]);
                         skipEvent = false;
+                    }
                 }
             }
         }
