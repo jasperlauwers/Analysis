@@ -63,6 +63,7 @@ void FakeLeptonPlotter::writeFakeRate(string extension)
         
         HistogramContainer fakeHistCont("fake_rate_" + histogramContainers[iVar].containerName, 1);
         vector<TH1*> hMC;
+        bool hasEwkCorrection = false;
         
         for( unsigned int iSample = 0; iSample < nSamples; ++iSample )
         {
@@ -73,6 +74,7 @@ void FakeLeptonPlotter::writeFakeRate(string extension)
             else if( configContainer.sampleContainer.sampleType[iSample] == SampleType::MC  )
             {
                 hMC.push_back(histogramContainers[iVar].histograms[iSample]);
+                hasEwkCorrection = true;
             }
         }
         
@@ -86,6 +88,13 @@ void FakeLeptonPlotter::writeFakeRate(string extension)
         }
         
         // EKW MC correction
+        if( hasEwkCorrection )
+        {
+            // Add data without ewk correction
+            fakeHistCont.add(fakeHistCont, 0);
+            fakeHistCont.color.back()++;
+            fakeHistCont.reducedNames.back() += "_before_ewk_correction";
+        }
         for( TH1* h : hMC )
         {
             fakeHistCont.histograms[0]->Add(h, -1.);           

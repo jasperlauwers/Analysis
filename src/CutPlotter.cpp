@@ -81,11 +81,6 @@ void CutPlotter::writeStacked(string extension)
 
 void CutPlotter::writeEfficiency(string extension)
 {
-    if( configContainer.addOverflow ) 
-    {
-        histogramContainer.addOverflow();
-    }
-    
     histogramContainer.containerName = "Cut_efficiency";
     vector<string> binNames;
     for( unsigned int iCut = 0; iCut < nCuts; ++iCut ) 
