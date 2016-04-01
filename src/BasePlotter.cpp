@@ -348,6 +348,7 @@ void BasePlotter::writeEfficiency(const HistogramContainer& numeratorContainer, 
         {
             hEff[iSample]->SetMarkerSize(1);
             hEff[iSample]->SetMarkerStyle(20);
+            hEff[iSample]->SetMarkerColor(numeratorContainer.color[iSample]);
             hEff[iSample]->SetLineWidth(2);
             leg->AddEntry(hEff[iSample],legendEntry.c_str(),"lp");
         }
