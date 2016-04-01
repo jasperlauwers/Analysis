@@ -94,6 +94,7 @@ void FakeLeptonPlotter::writeFakeRate(string extension)
             fakeHistCont.add(fakeHistCont, 0);
             fakeHistCont.color.back()++;
             fakeHistCont.reducedNames.back() += "_before_ewk_correction";
+            fakeHistCont.sampleType.back() = SampleType::SIGNAL;
             fakeHistCont.histograms.back() = (TH1*) fakeHistCont.histograms[0]->Clone();
         }
         for( TH1* h : hMC )
