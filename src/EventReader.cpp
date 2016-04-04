@@ -76,6 +76,8 @@ EventReader::EventReader(EventContainer& eventCont, const ConfigContainer& cfgCo
                 branches.push_back("std_vector_electron_ooEmooP");
                 branches.push_back("std_vector_electron_passConversionVeto");
                 branches.push_back("std_vector_electron_scEta");
+//                 "std_vector_lepton_d0","std_vector_lepton_dz", "std_vector_lepton_sumPUPt",
+//                       "std_vector_lepton_chargedHadronIso","std_vector_lepton_neutralHadronIso","std_vector_lepton_photonIso", "jetRho",
                 firstElectronID = false;
             }
             
@@ -191,9 +193,7 @@ bool EventReader::setSample(unsigned int iSample, unsigned int iSubSample)
     treeReader = new TreeReader(t);
     
     // Set Branch statusses
-    vector<string> sampleBranches= {"std_vector_lepton_eta","std_vector_lepton_pt","std_vector_lepton_phi","std_vector_lepton_flavour",
-                      "std_vector_lepton_eleIdTight","std_vector_lepton_isMediumMuon","std_vector_lepton_d0","std_vector_lepton_dz", "std_vector_lepton_sumPUPt",
-                      "std_vector_lepton_chargedHadronIso","std_vector_lepton_neutralHadronIso","std_vector_lepton_photonIso", "jetRho", "metPfType1","metPfType1Phi","nvtx"};
+    vector<string> sampleBranches= {"std_vector_lepton_eta","std_vector_lepton_pt","std_vector_lepton_phi","std_vector_lepton_flavour", "metPfType1","metPfType1Phi","nvtx"};
     sampleBranches.insert(sampleBranches.end(), branches.begin(), branches.end());
     
     // Set data/MC weight branches       
@@ -396,7 +396,7 @@ bool EventReader::fillNextEvent()
                 
                 if( abs((*treeReader->std_vector_lepton_flavour)[iLepton]) == 11 )
                 {
-                    eventContainer.leptons[iLepton].set((*treeReader->std_vector_lepton_pt)[iLepton],(*treeReader->std_vector_lepton_eta)[iLepton],(*treeReader->std_vector_lepton_phi)[iLepton],(*treeReader->std_vector_lepton_flavour)[iLepton], (*treeReader->std_vector_lepton_eleIdTight)[iLepton] == 1 );
+                    eventContainer.leptons[iLepton].set((*treeReader->std_vector_lepton_pt)[iLepton],(*treeReader->std_vector_lepton_eta)[iLepton],(*treeReader->std_vector_lepton_phi)[iLepton],(*treeReader->std_vector_lepton_flavour)[iLepton]/*, (*treeReader->std_vector_lepton_eleIdTight)[iLepton] == 1*/ );
                     if( needElectronId )
                     {
                         eventContainer.leptons[iLepton].setd0((*treeReader->std_vector_lepton_d0)[iLepton]);
@@ -419,11 +419,11 @@ bool EventReader::fillNextEvent()
                         (*treeReader->std_vector_lepton_pt)[iLepton],
                         (*treeReader->std_vector_lepton_eta)[iLepton],
                         (*treeReader->std_vector_lepton_phi)[iLepton],
-                        (*treeReader->std_vector_lepton_flavour)[iLepton],
-                        ((*treeReader->std_vector_lepton_isMediumMuon)[iLepton] == 1) );
+                        (*treeReader->std_vector_lepton_flavour)[iLepton]/*,
+                        ((*treeReader->std_vector_lepton_isMediumMuon)[iLepton] == 1)*/ );
     //                 eventContainer.leptons[iLepton].setd0((*treeReader->std_vector_lepton_d0)[iLepton]);
     //                 eventContainer.leptons[iLepton].setdz((*treeReader->std_vector_lepton_dz)[iLepton]);
-                    eventContainer.leptons[iLepton].setIsolation( ((*treeReader->std_vector_lepton_chargedHadronIso)[iLepton] + TMath::Max((*treeReader->std_vector_lepton_neutralHadronIso)[iLepton] + (*treeReader->std_vector_lepton_photonIso)[iLepton] - 0.5 * (*treeReader->std_vector_lepton_sumPUPt)[iLepton], 0.)) / (*treeReader->std_vector_lepton_pt)[iLepton] );
+//                     eventContainer.leptons[iLepton].setIsolation( ((*treeReader->std_vector_lepton_chargedHadronIso)[iLepton] + TMath::Max((*treeReader->std_vector_lepton_neutralHadronIso)[iLepton] + (*treeReader->std_vector_lepton_photonIso)[iLepton] - 0.5 * (*treeReader->std_vector_lepton_sumPUPt)[iLepton], 0.)) / (*treeReader->std_vector_lepton_pt)[iLepton] );
                 }
                 else
                 {

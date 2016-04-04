@@ -59,31 +59,5 @@ int main (int argc, char ** argv) {
     plotter.writePlots("png");
     plotter.writeFakeRate("png");
     
-    
-    TFile *f = new TFile((cfgContainer.outputDir + filename).c_str(),"UPDATE");
-    TH1F *hPtNum = (TH1F*) f->Get(("data_leptonpt1_" + cfgContainer.plotString).c_str());
-    TH1F *hPtDen = (TH1F*) f->Get(("data_looseleptonpt1_" + cfgContainer.plotString).c_str());
-    TH1F *hFRpt = (TH1F*) hPtNum->Clone("Fake_rate_pt");
-    TH1F *hEtaNum = (TH1F*) f->Get(("data_leptoneta1_" + cfgContainer.plotString).c_str());
-    TH1F *hEtaDen = (TH1F*) f->Get(("data_looseleptoneta1_" + cfgContainer.plotString).c_str());
-    TH1F *hFReta = (TH1F*) hEtaNum->Clone("Fake_rate_eta");
-    
-    hFRpt->Divide(hPtDen);
-    hFReta->Divide(hEtaDen);
-    
-    hFRpt->SetTitle("Fake_rate_pt");
-    hFReta->SetTitle("Fake_rate_eta");
-    
-    hFRpt->Write();
-    hFReta->Write();
-    
-    TCanvas *c = new TCanvas("c","", 600, 600);
-    hFRpt->Draw();
-    c->Print((cfgContainer.outputDir + hFRpt->GetTitle() + ".png").c_str(),"png");
-    hFReta->Draw();
-    c->Print((cfgContainer.outputDir + hFReta->GetTitle() + ".png").c_str(),"png");
-    
-    f->Close();
-    
     delete cHandler;
 }
