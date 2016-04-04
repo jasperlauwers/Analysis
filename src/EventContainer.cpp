@@ -94,7 +94,7 @@ unsigned int EventContainer::nJets( float minPt ) const
 }
 float EventContainer::jetmaxcsv( float minPt ) const
 {
-    float maxCSV = 0;
+    float maxCSV = -1.;
     for( unsigned int i = 0; i < goodJets.size(); ++i )
     {
         if( jets[goodJets[i]].pt() < minPt )

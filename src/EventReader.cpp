@@ -45,7 +45,7 @@ EventReader::EventReader(EventContainer& eventCont, const ConfigContainer& cfgCo
                 branches.push_back("std_vector_jet_pt");
                 branches.push_back("std_vector_jet_phi");
                 branches.push_back("std_vector_jet_mass");
-                branches.push_back("std_vector_jet_csvv2ivf");
+                branches.push_back("std_vector_jet_cmvav2");
                 firstJet = false; 
             } 
             
@@ -337,7 +337,7 @@ bool EventReader::fillNextEvent()
             if( (*treeReader->std_vector_jet_pt)[iJet] >= configContainer.minJetPt )
             {
                 eventContainer.jets[iJet].set((*treeReader->std_vector_jet_pt)[iJet],(*treeReader->std_vector_jet_eta)[iJet],(*treeReader->std_vector_jet_phi)[iJet],(*treeReader->std_vector_jet_mass)[iJet]);
-                eventContainer.jets[iJet].setCsv((*treeReader->std_vector_jet_csvv2ivf)[iJet]);
+                eventContainer.jets[iJet].setCsv((*treeReader->std_vector_jet_cmvav2)[iJet]);
                 eventContainer.goodJets.push_back(iJet);
             }
             else
