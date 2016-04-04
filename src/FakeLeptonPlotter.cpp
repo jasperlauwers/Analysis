@@ -121,7 +121,7 @@ void FakeLeptonPlotter::writeFakeRate(string extension)
             
             // fill empty/negative bins
             unsigned int nBins = fakeHistogramContainers[iFake].histograms[iHist]->GetNcells();
-            for( unsigned int i = 1; i <= nBins; ++i )
+            for( unsigned int i = 0; i < (nBins+2); ++i )
             {
                 if( hDenomVector[iFake][iHist]->GetBinContent(i) <= 0)
                 {
@@ -131,6 +131,10 @@ void FakeLeptonPlotter::writeFakeRate(string extension)
                 if( fakeHistogramContainers[iFake].histograms[iHist]->GetBinContent(i) < 0.)
                 {
                     fakeHistogramContainers[iFake].histograms[iHist]->SetBinContent(i,0);
+                }
+                if( fakeHistogramContainers[iFake].histograms[iHist]->GetBinContent(i) > hDenomVector[iFake][iHist]->GetBinContent(i) )
+                {
+                    fakeHistogramContainers[iFake].histograms[iHist]->SetBinContent(i,hDenomVector[iFake][iHist]->GetBinContent(i));
                 }
             }
         }
