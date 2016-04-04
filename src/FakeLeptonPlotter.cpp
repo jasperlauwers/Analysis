@@ -114,20 +114,26 @@ void FakeLeptonPlotter::writeFakeRate(string extension)
         
     for( unsigned int iFake = 0; iFake < fakeHistogramContainers.size(); ++iFake )
     {
-        // fill empty denominator bins
-//         unsigned int nBins = hDenom[iFake]->GetNcells();
-//         for( unsigned int i = 1; i <= nBins; ++i )
-//         {
-//             if( hDenom[iFake]->GetBinContent(i) <= 0.)
-//             {
-//                 hDenom[iFake]->SetBinContent(i,1.);
-//             }
-//         }
-        
-        // remove underflow in numerator, important for TGraphAsymmErrors to work!
         for( unsigned int iHist = 0; iHist < fakeHistogramContainers[iFake].histograms.size(); ++iHist )
+        {
+            // remove underflow in numerator, important for TGraphAsymmErrors to work!
             fakeHistogramContainers[iFake].histograms[iHist]->ClearUnderflowAndOverflow();
             
+            // fill empty/negative bins
+            unsigned int nBins = fakeHistogramContainers[iFake].histograms[iHist]->GetNcells();
+            for( unsigned int i = 1; i <= nBins; ++i )
+            {
+                if( hDenomVector[iFake][iHist]->GetBinContent(i) <= 0)
+                {
+                    hDenomVector[iFake][iHist]->SetBinContent(i,1.);
+                    fakeHistogramContainers[iFake].histograms[iHist]->SetBinContent(i,0.);
+                }
+                if( fakeHistogramContainers[iFake].histograms[iHist]->GetBinContent(i) < 0.)
+                {
+                    fakeHistogramContainers[iFake].histograms[iHist]->SetBinContent(i,0);
+                }
+            }
+        }
         BasePlotter::writeEfficiency(fakeHistogramContainers[iFake], hDenomVector[iFake], extension);
     }
     
