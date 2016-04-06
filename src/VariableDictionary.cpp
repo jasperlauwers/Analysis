@@ -189,7 +189,39 @@ void VariableDictionary::stringToFunction(const vector<string>& variableNames, v
                 string::size_type leptonPosition = iSubString.find("leptonclosest");
                 iSubString.erase(leptonPosition, 13);
                 
-                if( iSubString.find("pt") != string::npos ) 
+                if( iSubString.find("loosept") != string::npos ) 
+                {
+                    string::size_type varPosition = iSubString.find("pt");
+                    iSubString.erase(varPosition, 2);
+                    eventFunctions.push_back( bind(&EventContainer::looseleptonclosestjetpt, &eventContainer, getIndex(iSubString, iString)) );
+                    if( maxFlag )
+                        ComparisonTypes.push_back( ComparisonType::SMALLER_THAN );
+                    else
+                        ComparisonTypes.push_back( ComparisonType::GREATER_THAN );
+                }
+                else if( iSubString.find("loosedr") != string::npos ) 
+                {
+                    string::size_type varPosition = iSubString.find("dr");
+                    iSubString.erase(varPosition, 2);
+                    eventFunctions.push_back( bind(&EventContainer::looseleptonclosestjetpt, &eventContainer, getIndex(iSubString, iString)) );
+                    if( minFlag )
+                        ComparisonTypes.push_back( ComparisonType::ABS_GREATER_THAN );
+                    else
+                        ComparisonTypes.push_back( ComparisonType::ABS_SMALLER_THAN );
+                }
+                else if( iSubString.find("looseflavour") != string::npos )
+                {
+                    string::size_type varPosition = iSubString.find("flavour");
+                    iSubString.erase(varPosition, 7);
+                    eventFunctions.push_back( bind(&EventContainer::looseleptonclosestjetpartonflavour, &eventContainer, getIndex(iSubString, iString)) );
+                    if( maxFlag )
+                        ComparisonTypes.push_back( ComparisonType::SMALLER_THAN );
+                    else if( minFlag )
+                        ComparisonTypes.push_back( ComparisonType::GREATER_THAN );
+                    else
+                        ComparisonTypes.push_back( ComparisonType::EQUAL );
+                }
+                else if( iSubString.find("pt") != string::npos ) 
                 {
                     string::size_type varPosition = iSubString.find("pt");
                     iSubString.erase(varPosition, 2);
@@ -759,7 +791,7 @@ float VariableDictionary::getFloat(const string& indexString, const string& full
     }
     catch(...)
     {
-        cerr << "Retrieving value failed for variable: " << fullString << endl;
+        cerr << "Retrieving value failed for \"" << indexString << "\" from variable: " << fullString << endl;
         throw;
     }
     
