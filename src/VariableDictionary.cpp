@@ -191,8 +191,8 @@ void VariableDictionary::stringToFunction(const vector<string>& variableNames, v
                 
                 if( iSubString.find("loosept") != string::npos ) 
                 {
-                    string::size_type varPosition = iSubString.find("pt");
-                    iSubString.erase(varPosition, 2);
+                    string::size_type varPosition = iSubString.find("loosept");
+                    iSubString.erase(varPosition, 7);
                     eventFunctions.push_back( bind(&EventContainer::looseleptonclosestjetpt, &eventContainer, getIndex(iSubString, iString)) );
                     if( maxFlag )
                         ComparisonTypes.push_back( ComparisonType::SMALLER_THAN );
@@ -201,8 +201,8 @@ void VariableDictionary::stringToFunction(const vector<string>& variableNames, v
                 }
                 else if( iSubString.find("loosedr") != string::npos ) 
                 {
-                    string::size_type varPosition = iSubString.find("dr");
-                    iSubString.erase(varPosition, 2);
+                    string::size_type varPosition = iSubString.find("loosedr");
+                    iSubString.erase(varPosition, 7);
                     eventFunctions.push_back( bind(&EventContainer::looseleptonclosestjetpt, &eventContainer, getIndex(iSubString, iString)) );
                     if( minFlag )
                         ComparisonTypes.push_back( ComparisonType::ABS_GREATER_THAN );
@@ -211,8 +211,8 @@ void VariableDictionary::stringToFunction(const vector<string>& variableNames, v
                 }
                 else if( iSubString.find("looseflavour") != string::npos )
                 {
-                    string::size_type varPosition = iSubString.find("flavour");
-                    iSubString.erase(varPosition, 7);
+                    string::size_type varPosition = iSubString.find("looseflavour");
+                    iSubString.erase(varPosition, 12);
                     eventFunctions.push_back( bind(&EventContainer::looseleptonclosestjetpartonflavour, &eventContainer, getIndex(iSubString, iString)) );
                     if( maxFlag )
                         ComparisonTypes.push_back( ComparisonType::SMALLER_THAN );
