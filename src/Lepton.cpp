@@ -164,3 +164,28 @@ float Lepton::isolation() const
 {
     return _isolation;
 }
+
+void Lepton::setClosestJetPt(float closestJetPt)
+{
+    _closestJetPt  = closestJetPt;
+}
+float Lepton::closestJetPt() const
+{
+    return _closestJetPt;
+}
+void Lepton::setClosestJetDr(float closestJetDr)
+{
+    _closestJetDr  = closestJetDr;
+}
+float Lepton::closestJetDr() const
+{
+    return _closestJetDr;
+}
+void Lepton::setClosestJetPartonFlavour(float closestJetPartonFlavour)
+{
+    _closestJetPartonFlavour  = closestJetPartonFlavour;
+}
+float Lepton::closestJetPartonFlavour() const
+{
+    return _closestJetPartonFlavour;
+}

@@ -285,6 +285,27 @@ unsigned int EventContainer::nLeptons( float minPt ) const
     }
     return goodLeptons.size();
 }
+float EventContainer::leptonclosestjetpt(unsigned int i) const
+{
+    if( i < goodLeptons.size() )
+        return leptons[goodLeptons[i]].closestJetPt();
+    else
+        return -9999.9;
+}
+float EventContainer::leptonclosestjetdr(unsigned int i) const
+{
+    if( i < goodLeptons.size() )
+        return leptons[goodLeptons[i]].closestJetDr();
+    else
+        return -9999.9;
+}
+float EventContainer::leptonclosestjetpartonflavour(unsigned int i) const
+{
+    if( i < goodLeptons.size() )
+        return leptons[goodLeptons[i]].closestJetPartonFlavour();
+    else
+        return -9999.9;
+}
 
 // Loose leptons
 float EventContainer::looseleptonpt(unsigned int i) const
@@ -344,6 +365,27 @@ float EventContainer::nlooseleptons(float minPt) const
             return i;
     }
     return looseLeptons.size();
+}
+float EventContainer::looseleptonclosestjetpt(unsigned int i) const
+{
+    if( looseLeptons[i].pt() > 0 )
+        return looseLeptons[i].closestJetPt();
+    else
+        return -9999.9;
+}
+float EventContainer::looseleptonclosestjetdr(unsigned int i) const
+{
+    if( looseLeptons[i].pt() > 0 )
+        return looseLeptons[i].closestJetDr();
+    else
+        return -9999.9;
+}
+float EventContainer::looseleptonclosestjetpartonflavour(unsigned int i) const
+{
+    if( looseLeptons[i].pt() > 0 )
+        return looseLeptons[i].closestJetPartonFlavour();
+    else
+        return -9999.9;
 }
 
 // Gen leptons

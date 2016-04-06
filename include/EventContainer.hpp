@@ -56,6 +56,9 @@ public:
     float leptonphi(unsigned int) const;
     float leptoncharge(unsigned int) const;
     unsigned int nLeptons( float minPt ) const;
+    float leptonclosestjetpt(unsigned int) const;
+    float leptonclosestjetdr(unsigned int) const;
+    float leptonclosestjetpartonflavour(unsigned int) const;
 
     // Loose leptons
     float looseleptonpt(unsigned int) const;
@@ -64,6 +67,9 @@ public:
     float looseleptonflavour(unsigned int) const;
     float loosemllminpt(float subtractMass, float minPt) const;
     float nlooseleptons(float minPt) const;
+    float looseleptonclosestjetpt(unsigned int) const;
+    float looseleptonclosestjetdr(unsigned int) const;
+    float looseleptonclosestjetpartonflavour(unsigned int) const;
     
     // Gen leptons
     float genleptonpt(unsigned int) const;

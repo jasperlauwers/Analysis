@@ -51,10 +51,19 @@ public:
     float scEta() const;
     float isolation() const;
     
+    // fake rate parameters
+    void setClosestJetPt(float);
+    float closestJetPt() const;
+    void setClosestJetDr(float);
+    float closestJetDr() const;
+    void setClosestJetPartonFlavour(float);
+    float closestJetPartonFlavour() const;
+    
 private:
     float _pId;
     bool passMedium, _isPrompt, _fromTau; 
     float _d0, _dEtaIn, _dPhiIn, _dz, _effArea, _missHits, _sIetaIeta, _hOverE, _ooEmoop, _convVeto, _scEta, _isolation;
+    float _closestJetPt, _closestJetDr, _closestJetPartonFlavour;
 };
 
 #endif
