@@ -183,6 +183,50 @@ void VariableDictionary::stringToFunction(const vector<string>& variableNames, v
                 else
                     ComparisonTypes.push_back( ComparisonType::GREATER_THAN );
             }
+            else if( iSubString.find("leptonclosest") != string::npos ) 
+            {
+                // jet closest to lepton variables
+                string::size_type leptonPosition = iSubString.find("leptonclosest");
+                iSubString.erase(leptonPosition, 13);
+                
+                if( iSubString.find("pt") != string::npos ) 
+                {
+                    string::size_type varPosition = iSubString.find("pt");
+                    iSubString.erase(varPosition, 2);
+                    eventFunctions.push_back( bind(&EventContainer::leptonclosestjetpt, &eventContainer, getIndex(iSubString, iString)) );
+                    if( maxFlag )
+                        ComparisonTypes.push_back( ComparisonType::SMALLER_THAN );
+                    else
+                        ComparisonTypes.push_back( ComparisonType::GREATER_THAN );
+                }
+                else if( iSubString.find("dr") != string::npos ) 
+                {
+                    string::size_type varPosition = iSubString.find("dr");
+                    iSubString.erase(varPosition, 2);
+                    eventFunctions.push_back( bind(&EventContainer::leptonclosestjetpt, &eventContainer, getIndex(iSubString, iString)) );
+                    if( minFlag )
+                        ComparisonTypes.push_back( ComparisonType::ABS_GREATER_THAN );
+                    else
+                        ComparisonTypes.push_back( ComparisonType::ABS_SMALLER_THAN );
+                }
+                else if( iSubString.find("flavour") != string::npos )
+                {
+                    string::size_type varPosition = iSubString.find("flavour");
+                    iSubString.erase(varPosition, 7);
+                    eventFunctions.push_back( bind(&EventContainer::leptonclosestjetpartonflavour, &eventContainer, getIndex(iSubString, iString)) );
+                    if( maxFlag )
+                        ComparisonTypes.push_back( ComparisonType::SMALLER_THAN );
+                    else if( minFlag )
+                        ComparisonTypes.push_back( ComparisonType::GREATER_THAN );
+                    else
+                        ComparisonTypes.push_back( ComparisonType::EQUAL );
+                }
+                else
+                {
+                    cerr << "Variable '" << iString << "' in cuts or variables list not known." << endl;
+                    throw 1;
+                }
+            }
             else if( iSubString.find("pt") != string::npos ) 
             {
                 string::size_type varPosition = iSubString.find("pt");
@@ -242,50 +286,6 @@ void VariableDictionary::stringToFunction(const vector<string>& variableNames, v
                     ComparisonTypes.push_back( ComparisonType::SMALLER_THAN );
                 else
                     ComparisonTypes.push_back( ComparisonType::GREATER_THAN );
-            }
-            else if( iSubString.find("leptonclosest") != string::npos ) 
-            {
-                // jet closest to lepton variables
-                string::size_type leptonPosition = iSubString.find("leptonclosest");
-                iSubString.erase(leptonPosition, 13);
-                
-                if( iSubString.find("pt") != string::npos ) 
-                {
-                    string::size_type varPosition = iSubString.find("pt");
-                    iSubString.erase(varPosition, 2);
-                    eventFunctions.push_back( bind(&EventContainer::leptonclosestjetpt, &eventContainer, getIndex(iSubString, iString)) );
-                    if( maxFlag )
-                        ComparisonTypes.push_back( ComparisonType::SMALLER_THAN );
-                    else
-                        ComparisonTypes.push_back( ComparisonType::GREATER_THAN );
-                }
-                else if( iSubString.find("dr") != string::npos ) 
-                {
-                    string::size_type varPosition = iSubString.find("dr");
-                    iSubString.erase(varPosition, 2);
-                    eventFunctions.push_back( bind(&EventContainer::leptonclosestjetpt, &eventContainer, getIndex(iSubString, iString)) );
-                    if( minFlag )
-                        ComparisonTypes.push_back( ComparisonType::ABS_GREATER_THAN );
-                    else
-                        ComparisonTypes.push_back( ComparisonType::ABS_SMALLER_THAN );
-                }
-                else if( iSubString.find("flavour") != string::npos )
-                {
-                    string::size_type varPosition = iSubString.find("flavour");
-                    iSubString.erase(varPosition, 7);
-                    eventFunctions.push_back( bind(&EventContainer::leptonclosestjetpartonflavour, &eventContainer, getIndex(iSubString, iString)) );
-                    if( maxFlag )
-                        ComparisonTypes.push_back( ComparisonType::SMALLER_THAN );
-                    else if( minFlag )
-                        ComparisonTypes.push_back( ComparisonType::GREATER_THAN );
-                    else
-                        ComparisonTypes.push_back( ComparisonType::EQUAL );
-                }
-                else
-                {
-                    cerr << "Variable '" << iString << "' in cuts or variables list not known." << endl;
-                    throw 1;
-                }
             }
             else
             {
