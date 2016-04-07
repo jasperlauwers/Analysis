@@ -136,27 +136,37 @@ void BasePlotter::writeStacked(const HistogramContainer& histContainer, string e
     // Set y-range
     float hMax = 0.;
     float hMin = 0.;
-    if( histContainer.axisRanges.size() > 0 )
+    bool maxMakesSense = true;
+    if ( hStack.size() > 0 ) 
+        hMax = getMaximumIncludingErrors(hStack[hStack.size()-1]);
+    if ( hData ) 
+        hMax = max( getMaximumIncludingErrors(hData) , hMax ); 
+    if ( hSignal ) 
+        hMax = max( getMaximumIncludingErrors(hSignal) , hMax ); 
+    
+    // Check consistency (for efficiency plot with fixed axis)
+    if( histContainer.axisRanges.size() > 0 && hMax > histContainer.axisRanges[1] )
+        maxMakesSense = false;
+    
+    if( configContainer.logY ) 
     {
-        hMin = histContainer.axisRanges[0];
-        hMax = histContainer.axisRanges[1];
+        c->SetLogy(1);
+        hMin = 0.05;
+        hMax *= 500;
     }
     else
+        hMax *= 1.55;
+    if( histContainer.axisRanges.size() > 0 )
     {
-        if ( hStack.size() > 0 ) 
-            hMax = getMaximumIncludingErrors(hStack[hStack.size()-1]);
-        if ( hData ) 
-            hMax = max( getMaximumIncludingErrors(hData) , hMax ); 
-        if ( hSignal ) 
-            hMax = max( getMaximumIncludingErrors(hSignal) , hMax ); 
-        if( configContainer.logY ) 
+        if( maxMakesSense )
         {
-            c->SetLogy(1);
-            hMin = 0.05;
-            hMax *= 500;
+            hMin = histContainer.axisRanges[0];
+            hMax = histContainer.axisRanges[1];
         }
-        else
-            hMax *= 1.55;
+        else 
+        {
+            cout << "Maximum range is too small for: " << histContainer.containerName << ". Set to default.\n";
+        }
     }
     
         
@@ -335,12 +345,29 @@ void BasePlotter::writeEfficiency(const HistogramContainer& numeratorContainer, 
     
     // Set y-range
     float hMax = 0.;
-    for( unsigned int iSample = 0; iSample < nSamples; ++iSample )
+    float hMin = 0.;
+    if( numeratorContainer.axisRanges.size() > 0 )
     {
-        float tempMax = hEff[iSample]->GetHistogram()->GetMaximum();
-        if (tempMax > hMax)
-            hMax = tempMax;
-    }        
+        hMin = numeratorContainer.axisRanges[0];
+        hMax = numeratorContainer.axisRanges[1];
+    }
+    else
+    {
+        for( unsigned int iSample = 0; iSample < nSamples; ++iSample )
+        {
+            float tempMax = hEff[iSample]->GetHistogram()->GetMaximum();
+            if (tempMax > hMax)
+                hMax = tempMax;
+        }     
+        if( configContainer.logY ) 
+        {
+            c->SetLogy(1);
+            hMin = 0.05;
+            hMax *= 500;
+        }
+        else
+            hMax *= 1.55;
+    }
     
     for( unsigned int iSample = 0; iSample < nSamples; ++iSample )
     {
@@ -369,13 +396,7 @@ void BasePlotter::writeEfficiency(const HistogramContainer& numeratorContainer, 
     // Draw TGraphs
     for( unsigned int iSample = 0; iSample < nSamples; ++iSample )
     {
-        if( configContainer.logY ) 
-        {
-            hEff[iSample]->GetYaxis()->SetRangeUser( 0.05 , 500*hMax);
-            c->SetLogy(1);
-        }
-        else
-            hEff[iSample]->GetYaxis()->SetRangeUser(0., 1.55*hMax);
+        hEff[iSample]->GetYaxis()->SetRangeUser(hMin, hMax);
         
         if( iSample == 0) 
             hEff[iSample]->Draw("APZ");
