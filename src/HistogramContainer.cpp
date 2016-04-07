@@ -14,12 +14,14 @@ HistogramContainer::HistogramContainer(string name, unsigned int nTotal) : conta
 
 HistogramContainer::~HistogramContainer() { }
 
-void HistogramContainer::add(TH1* h, string histName, int color_, SampleType sampleType_)
+void HistogramContainer::add(TH1* h, string histName, int color_, SampleType sampleType_, const vector<double>& axisRange)
 {
     histograms.push_back(h);
     reducedNames.push_back(histName);
     color.push_back(color_);
     sampleType.push_back(sampleType_);
+    if( axisRanges.size() > 0 )
+        axisRanges = axisRange;
 }
 
 void HistogramContainer::add(const HistogramContainer& histContainer, int index)
@@ -28,6 +30,7 @@ void HistogramContainer::add(const HistogramContainer& histContainer, int index)
     reducedNames.push_back(histContainer.reducedNames[index]);
     color.push_back(histContainer.color[index]);
     sampleType.push_back(histContainer.sampleType[index]);
+    axisRanges = histContainer.axisRanges;
 }
 
 void HistogramContainer::pop_back()
@@ -35,7 +38,7 @@ void HistogramContainer::pop_back()
     histograms.pop_back();
     reducedNames.pop_back();
     color.pop_back();
-    sampleType.pop_back();    
+    sampleType.pop_back();
 }
 
 bool HistogramContainer::check() const

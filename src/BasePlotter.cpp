@@ -135,22 +135,35 @@ void BasePlotter::writeStacked(const HistogramContainer& histContainer, string e
 
     // Set y-range
     float hMax = 0.;
-    if ( hStack.size() > 0 ) 
-        hMax = getMaximumIncludingErrors(hStack[hStack.size()-1]);
-    if ( hData ) 
-        hMax = max( getMaximumIncludingErrors(hData) , hMax ); 
-    if ( hSignal ) 
-        hMax = max( getMaximumIncludingErrors(hSignal) , hMax ); 
-    if( configContainer.logY ) 
-        c->SetLogy(1);
+    float hMin = 0.;
+    if( histContainer.axisRanges.size() > 0 )
+    {
+        hMin = histContainer.axisRanges[0];
+        hMax = histContainer.axisRanges[1];
+    }
+    else
+    {
+        if ( hStack.size() > 0 ) 
+            hMax = getMaximumIncludingErrors(hStack[hStack.size()-1]);
+        if ( hData ) 
+            hMax = max( getMaximumIncludingErrors(hData) , hMax ); 
+        if ( hSignal ) 
+            hMax = max( getMaximumIncludingErrors(hSignal) , hMax ); 
+        if( configContainer.logY ) 
+        {
+            c->SetLogy(1);
+            hMin = 0.05;
+            hMax *= 500;
+        }
+        else
+            hMax *= 1.55;
+    }
+    
         
     // Draw stack
     for( int iHist = hStack.size()-1; iHist > -1; --iHist )
     {
-        if( configContainer.logY ) 
-            hStack[iHist]->GetYaxis()->SetRangeUser( 0.05 , 500*hMax);
-        else
-            hStack[iHist]->GetYaxis()->SetRangeUser(0., 1.55*hMax);
+        hStack[iHist]->GetYaxis()->SetRangeUser(hMin, hMax);
         hStack[iHist]->Draw("hist same");
     }
     
@@ -172,20 +185,14 @@ void BasePlotter::writeStacked(const HistogramContainer& histContainer, string e
     // Draw signal
     if( hSignal && !configContainer.signalStacked ) 
     {
-        if( configContainer.logY ) 
-            hSignal->GetYaxis()->SetRangeUser( 0.05 , 500*hMax);
-        else
-            hSignal->GetYaxis()->SetRangeUser(0., 1.55*hMax);
+        hSignal->GetYaxis()->SetRangeUser(hMin, hMax);
         hSignal->Draw("e same");
     }
     
     // Draw data
     if( hData ) 
     {
-        if( configContainer.logY ) 
-            hData->GetYaxis()->SetRangeUser( 0.05 , 500*hMax);
-        else
-            hData->GetYaxis()->SetRangeUser(0., 1.55*hMax);
+        hData->GetYaxis()->SetRangeUser(hMin, hMax);
         hData->Draw("e same");
     }
    

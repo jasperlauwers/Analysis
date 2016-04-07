@@ -196,7 +196,7 @@ bool EventReader::setSample(unsigned int iSample, unsigned int iSubSample)
     treeReader = new TreeReader(t);
     
     // Set Branch statusses
-    vector<string> sampleBranches= {"std_vector_lepton_eta","std_vector_lepton_pt","std_vector_lepton_phi","std_vector_lepton_flavour", "metPfType1","metPfType1Phi","nvtx"};
+    vector<string> sampleBranches= {"std_vector_lepton_eta","std_vector_lepton_pt","std_vector_lepton_phi","std_vector_lepton_flavour", "metPfType1","metPfType1Phi","nvtx" /*,"std_vector_lepton_idisoW","effTrigW"*/};
     sampleBranches.insert(sampleBranches.end(), branches.begin(), branches.end());
     
     // Set data/MC weight branches       
@@ -465,7 +465,7 @@ bool EventReader::fillNextEvent()
     else if( sampleType != SampleType::DATA )
     {
         if( hasNegWeight )
-            eventContainer.setWeight( treeReader->baseW * (treeReader->GEN_weight_SM/abs(treeReader->GEN_weight_SM)) * treeReader->puW * maxEventsWeight);
+            eventContainer.setWeight( treeReader->baseW * (treeReader->GEN_weight_SM/abs(treeReader->GEN_weight_SM)) * treeReader->puW * maxEventsWeight /** (*treeReader->std_vector_lepton_idisoW)[0] * (*treeReader->std_vector_lepton_idisoW)[1] * treeReader->effTrigW*/  );
         else
             eventContainer.setWeight( treeReader->baseW * treeReader->puW * maxEventsWeight);
     }

@@ -14,7 +14,8 @@ public:
     virtual ~VariableReader();
     
 private:
+    void readVariableName(const Setting&);
     VariableContainer& variableContainer;
-    
+    bool is2D;    
 };
 #endif

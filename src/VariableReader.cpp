@@ -2,48 +2,36 @@
 #include "VariableReader.hpp"
 
 VariableReader::VariableReader(const string& fileName, VariableContainer& varContainer)
-: ConfigReader(fileName), variableContainer(varContainer)
+: ConfigReader(fileName), variableContainer(varContainer), is2D(false)
 {
     // Allow float -> int and int -> float conversions
     cfg.setAutoConvert(true);
     
     const Setting& variables = cfg.lookup("variables");
     const unsigned int nVar = variables.getLength();
-         
-    // Check # arguments
-    if( (nVar%3) != 0 ) 
-    {
-        cerr << "Number of elements in variables list not correct." << endl;
-        throw 1;
-    }
     
-    bool is2D = false;
+    unsigned int nRange = 0;
     for( unsigned int iVar=0; iVar < nVar; ++iVar ) 
     {
-        int remainder = iVar%3;
+        int remainder = (iVar-nRange)%3;
         if( remainder == 0 ) 
         {
-            string varName = (variables[iVar]).c_str();
-            transform(varName.begin(), varName.end(), varName.begin(), ::tolower); // convert to lower case
-            
-            if( varName.find(":") != string::npos )
+            const Setting& setting = variables[iVar];
+            if( setting.getType() == Setting::Type::TypeString )
             {
-                if( is2D )
-                    is2D = false;
-                else
-                {
-                    string::size_type splitPosition = varName.find(":");
-                    variableContainer.variableNames.push_back( varName.substr(0,splitPosition) );
-                    variableContainer.variableNames.push_back( varName.substr(splitPosition+1) );
-                    variableContainer.is2D.push_back(true);
-                    variableContainer.is2D.push_back(true);
-                    is2D = true;
-                }
+                readVariableName(variables[iVar]);
             }
-            else 
+            else
             {
-                variableContainer.variableNames.push_back( varName );
-                variableContainer.is2D.push_back(false);
+                const unsigned int axisLength = setting.getLength();
+                if( axisLength != 2 )
+                {
+                    cerr << "Need exactly two numbers for y-axis range: " << (variables[iVar-3]).c_str() << endl;
+                    throw 1;
+                }
+                vector<double> axisVector = {(double) setting[0], (double) setting[1]};  
+                variableContainer.axisRanges[variableContainer.variableNames.size()-1] = ( axisVector );
+                nRange++;
             }
         }
         else if( remainder == 1 ) 
@@ -68,6 +56,39 @@ VariableReader::VariableReader(const string& fileName, VariableContainer& varCon
             variableContainer.binning.push_back( binVector );
         }
     }
+    
+    // Check # arguments
+    if( (nVar-variableContainer.axisRanges.size())%3 != 0 ) 
+    {
+        cerr << "Number of elements in variables list not correct." << endl;
+        throw 1;
+    }
 }
 
 VariableReader::~VariableReader() { }
+
+void VariableReader::readVariableName(const Setting& varSetting)
+{
+    string varName = (varSetting).c_str();
+    transform(varName.begin(), varName.end(), varName.begin(), ::tolower); // convert to lower case
+    
+    if( varName.find(":") != string::npos )
+    {
+        if( is2D )
+            is2D = false;
+        else
+        {
+            string::size_type splitPosition = varName.find(":");
+            variableContainer.variableNames.push_back( varName.substr(0,splitPosition) );
+            variableContainer.variableNames.push_back( varName.substr(splitPosition+1) );
+            variableContainer.is2D.push_back(true);
+            variableContainer.is2D.push_back(true);
+            is2D = true;
+        }
+    }
+    else 
+    {
+        variableContainer.variableNames.push_back( varName );
+        variableContainer.is2D.push_back(false);
+    }    
+}

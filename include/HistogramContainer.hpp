@@ -15,7 +15,7 @@ struct HistogramContainer {
     HistogramContainer(string name);
     HistogramContainer(string name, unsigned int nTotal);
     ~HistogramContainer();
-    void add(TH1* h, string histName, int color_ = 1, SampleType sampleType = SampleType::MC);
+    void add(TH1* h, string histName, int color_ = 1, SampleType sampleType = SampleType::MC, const vector<double>& axisRange = vector<double>());
     void add(const HistogramContainer& histContainer, int index);
     void pop_back();
     bool check() const;
@@ -27,5 +27,6 @@ struct HistogramContainer {
     vector<string> reducedNames; // sample name
     vector<int> color;
     vector<SampleType> sampleType;
+    vector<double> axisRanges;
 };
 #endif
