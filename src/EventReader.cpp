@@ -465,7 +465,7 @@ bool EventReader::fillNextEvent()
     else if( sampleType != SampleType::DATA )
     {
         if( hasNegWeight )
-            eventContainer.setWeight( treeReader->baseW * (treeReader->GEN_weight_SM/abs(treeReader->GEN_weight_SM)) * treeReader->puW * maxEventsWeight /** (*treeReader->std_vector_lepton_idisoW)[0] * (*treeReader->std_vector_lepton_idisoW)[1] * treeReader->effTrigW*/  );
+            eventContainer.setWeight( treeReader->baseW * (treeReader->GEN_weight_SM/abs(treeReader->GEN_weight_SM)) * treeReader->puW * maxEventsWeight/* * (*treeReader->std_vector_lepton_idisoW)[0] * (*treeReader->std_vector_lepton_idisoW)[1] * treeReader->effTrigW*/  );
         else
             eventContainer.setWeight( treeReader->baseW * treeReader->puW * maxEventsWeight);
     }

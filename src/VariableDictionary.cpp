@@ -203,7 +203,7 @@ void VariableDictionary::stringToFunction(const vector<string>& variableNames, v
                 {
                     string::size_type varPosition = iSubString.find("loosedr");
                     iSubString.erase(varPosition, 7);
-                    eventFunctions.push_back( bind(&EventContainer::looseleptonclosestjetpt, &eventContainer, getIndex(iSubString, iString)) );
+                    eventFunctions.push_back( bind(&EventContainer::looseleptonclosestjetdr, &eventContainer, getIndex(iSubString, iString)) );
                     if( minFlag )
                         ComparisonTypes.push_back( ComparisonType::ABS_GREATER_THAN );
                     else
@@ -235,7 +235,7 @@ void VariableDictionary::stringToFunction(const vector<string>& variableNames, v
                 {
                     string::size_type varPosition = iSubString.find("dr");
                     iSubString.erase(varPosition, 2);
-                    eventFunctions.push_back( bind(&EventContainer::leptonclosestjetpt, &eventContainer, getIndex(iSubString, iString)) );
+                    eventFunctions.push_back( bind(&EventContainer::leptonclosestjetdr, &eventContainer, getIndex(iSubString, iString)) );
                     if( minFlag )
                         ComparisonTypes.push_back( ComparisonType::ABS_GREATER_THAN );
                     else
