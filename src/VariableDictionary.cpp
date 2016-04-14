@@ -383,6 +383,16 @@ void VariableDictionary::stringToFunction(const vector<string>& variableNames, v
                 else
                     ComparisonTypes.push_back( ComparisonType::GREATER_THAN );
             }
+            else if( iSubString.find("abseta") != string::npos )
+            {
+                string::size_type varPosition = iSubString.find("abseta");
+                iSubString.erase(varPosition, 6);
+                eventFunctions.push_back( bind(&EventContainer::looseleptonabseta, &eventContainer, getIndex(iSubString, iString)) );
+                if( minFlag )
+                    ComparisonTypes.push_back( ComparisonType::GREATER_THAN );
+                else
+                    ComparisonTypes.push_back( ComparisonType::SMALLER_THAN );
+            }
             else if( iSubString.find("eta") != string::npos ) 
             {
                 string::size_type varPosition = iSubString.find("eta");
@@ -432,6 +442,16 @@ void VariableDictionary::stringToFunction(const vector<string>& variableNames, v
                     ComparisonTypes.push_back( ComparisonType::SMALLER_THAN );
                 else
                     ComparisonTypes.push_back( ComparisonType::GREATER_THAN );
+            }
+            else if( iSubString.find("abseta") != string::npos )
+            {
+                string::size_type varPosition = iSubString.find("abseta");
+                iSubString.erase(varPosition, 6);
+                eventFunctions.push_back( bind(&EventContainer::leptonabseta, &eventContainer, getIndex(iSubString, iString)) );
+                if( minFlag )
+                    ComparisonTypes.push_back( ComparisonType::GREATER_THAN );
+                else
+                    ComparisonTypes.push_back( ComparisonType::SMALLER_THAN );
             }
             else if( iSubString.find("eta") != string::npos ) 
             {

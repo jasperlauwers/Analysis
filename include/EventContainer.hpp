@@ -53,6 +53,7 @@ public:
     // Leptons
     float leptonpt(unsigned int) const;
     float leptoneta(unsigned int) const;
+    float leptonabseta(unsigned int) const;
     float leptonphi(unsigned int) const;
     float leptoncharge(unsigned int) const;
     unsigned int nLeptons( float minPt ) const;
@@ -63,6 +64,7 @@ public:
     // Loose leptons
     float looseleptonpt(unsigned int) const;
     float looseleptoneta(unsigned int) const;
+    float looseleptonabseta(unsigned int) const;
     float looseleptonphi(unsigned int) const;
     float looseleptonflavour(unsigned int) const;
     float loosemllminpt(float subtractMass, float minPt) const;

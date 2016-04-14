@@ -262,6 +262,13 @@ float EventContainer::leptoneta(unsigned int i) const
     else
         return -9999.9;
 }
+float EventContainer::leptonabseta(unsigned int i) const
+{
+    if( i < goodLeptons.size() )
+        return abs(leptons[goodLeptons[i]].eta());
+    else
+        return -9999.9;
+}
 float EventContainer::leptonphi(unsigned int i) const
 {
     if( i < goodLeptons.size() )
@@ -319,6 +326,13 @@ float EventContainer::looseleptoneta(unsigned int i) const
 {
     if( looseLeptons[i].pt() > 0 )
         return looseLeptons[i].eta();
+    else
+        return -9999.9;
+}
+float EventContainer::looseleptonabseta(unsigned int i) const
+{
+    if( looseLeptons[i].pt() > 0 )
+        return abs(looseLeptons[i].eta());
     else
         return -9999.9;
 }
