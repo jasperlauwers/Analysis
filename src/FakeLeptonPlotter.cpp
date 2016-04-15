@@ -138,18 +138,30 @@ void FakeLeptonPlotter::writeFakeRate(string extension)
                 }
             }
         }
+        // Make plots
         BasePlotter::writeEfficiency(fakeHistogramContainers[iFake], hDenomVector[iFake], extension);
     }
+    
+    // Write histrograms
+    system(("mkdir -p " + configContainer.outputDir).c_str());   
+    TFile* f = new TFile((configContainer.outputDir + "Fakerate.root").c_str(), "RECREATE");
+        
+    for( unsigned int iFake = 0; iFake < fakeHistogramContainers.size(); ++iFake )
+    {      
+        TGraphAsymmErrors* tgraph = new TGraphAsymmErrors(fakeHistogramContainers[iFake].histograms[0], hDenomVector[iFake][0], "cl=0.683 b(1,1) mode");
+        tgraph->Write();
+    }  
+    f->Close();
     
     // verbose output
     for( unsigned int iVar = 0; iVar < fakeHistogramContainers.size(); ++iVar )
     {  
+        
         if( iVar == 0 )
             BasePlotter::writeHist("fake_lepton_intermediate.root", fakeHistogramContainers[iVar].histograms, "RECREATE");
         else
             BasePlotter::writeHist("fake_lepton_intermediate.root", fakeHistogramContainers[iVar].histograms, "UPDATE");
         
         BasePlotter::writeHist("fake_lepton_intermediate.root", hDenomVector[iVar], "UPDATE");
-    }
-    
+    }   
 }
