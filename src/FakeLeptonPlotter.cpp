@@ -147,9 +147,18 @@ void FakeLeptonPlotter::writeFakeRate(string extension)
     TFile* f = new TFile((configContainer.outputDir + "Fakerate.root").c_str(), "RECREATE");
         
     for( unsigned int iFake = 0; iFake < fakeHistogramContainers.size(); ++iFake )
-    {      
-        TGraphAsymmErrors* tgraph = new TGraphAsymmErrors(fakeHistogramContainers[iFake].histograms[0], hDenomVector[iFake][0], "cl=0.683 b(1,1) mode");
-        tgraph->Write();
+    {
+        if( fakeHistogramContainers[iFake].histograms[0]->GetDimension() == 1 )
+        {
+            TGraphAsymmErrors* tgraph = new TGraphAsymmErrors(fakeHistogramContainers[iFake].histograms[0], hDenomVector[iFake][0], "cl=0.683 b(1,1) mode");
+            tgraph->Write();
+        }
+        else
+        {
+            TH1* hTemp = (TH1*) fakeHistogramContainers[iFake].histograms[0]->Clone();
+            hTemp->Divide(hDenomVector[iFake][0]);
+            hTemp->Write();
+        }
     }  
     f->Close();
     
