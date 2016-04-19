@@ -227,6 +227,13 @@ bool EventReader::setSample(unsigned int iSample, unsigned int iSubSample)
             hasNegWeight = true;
         }
         
+        if( !triggerSelection ) 
+        {
+            sampleBranches.push_back("std_vector_lepton_idisoW"); 
+            sampleBranches.push_back("effTrigW");
+//             sampleBranches.push_back("bPogSF");
+        }
+        
         sampleBranches.insert(sampleBranches.end(), genBranches.begin(), genBranches.end());
     }
 
@@ -464,10 +471,13 @@ bool EventReader::fillNextEvent()
 //     }
     else if( sampleType != SampleType::DATA )
     {
-        if( hasNegWeight )
-            eventContainer.setWeight( treeReader->baseW * (treeReader->GEN_weight_SM/abs(treeReader->GEN_weight_SM)) * treeReader->puW * maxEventsWeight/* * (*treeReader->std_vector_lepton_idisoW)[0] * (*treeReader->std_vector_lepton_idisoW)[1] * treeReader->effTrigW*/  );
-        else
-            eventContainer.setWeight( treeReader->baseW * treeReader->puW * maxEventsWeight);
+        float weight = treeReader->baseW * treeReader->puW * maxEventsWeight;
+        if( !triggerSelection ) 
+            weight *= (treeReader->effTrigW * (*treeReader->std_vector_lepton_idisoW)[0] * (*treeReader->std_vector_lepton_idisoW)[1] /* * treeReader->bPogSF*/ );
+        if( hasNegWeight ) 
+            weight *= (treeReader->GEN_weight_SM/abs(treeReader->GEN_weight_SM));
+        
+        eventContainer.setWeight( weight );
     }
     
     return true;
