@@ -246,6 +246,32 @@ float EventContainer::isolatedjetpt() const
     }
     return -9999.9;    
 }
+float EventContainer::isolatedbjetpt(float btag) const
+{
+    for( auto iJet : goodJets )
+    {
+        // Skip non-b jets
+        if( jets[iJet].csv() < btag )
+            continue;
+        bool farFromLepton = true;
+        for( unsigned int iLepton=0; iLepton < looseLeptons.size(); ++iLepton )
+        {
+            if( looseLeptons[iLepton].pt() > 0. )
+            {
+                if( jets[iJet].dR(looseLeptons[iLepton]) < 1. )
+                {
+                    farFromLepton = false;
+                    break;
+                }
+            }
+            else
+                break;
+        }
+        if( farFromLepton ) 
+            return jets[iJet].pt();
+    }
+    return -9999.9;    
+}
 
 // Leptons
 float EventContainer::leptonpt(unsigned int i) const

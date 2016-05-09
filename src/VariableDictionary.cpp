@@ -175,7 +175,17 @@ void VariableDictionary::stringToFunction(const vector<string>& variableNames, v
             string::size_type jetPosition = iSubString.find("jet");
             iSubString.erase(jetPosition, 3);
 
-            if( iSubString.find("isolatedpt") != string::npos ) 
+            if( iSubString.find("isolatedbpt") != string::npos ) 
+            {
+                string::size_type varPosition = iSubString.find("isolatedbpt");
+                iSubString.erase(varPosition, 11);
+                eventFunctions.push_back( bind(&EventContainer::isolatedbjetpt, &eventContainer, getFloat(iSubString, iString)) );
+                if( maxFlag )
+                    ComparisonTypes.push_back( ComparisonType::SMALLER_THAN );
+                else
+                    ComparisonTypes.push_back( ComparisonType::GREATER_THAN );
+            }
+            else if( iSubString.find("isolatedpt") != string::npos ) 
             {
                 eventFunctions.push_back( bind(&EventContainer::isolatedjetpt, &eventContainer) );
                 if( maxFlag )

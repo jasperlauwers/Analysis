@@ -49,6 +49,7 @@ public:
     
     // Isolated jets
     float isolatedjetpt() const;
+    float isolatedbjetpt(float btag) const;
     
     // Leptons
     float leptonpt(unsigned int) const;
