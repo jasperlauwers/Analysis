@@ -392,7 +392,7 @@ bool EventReader::fillNextEvent()
                 eventContainer.looseLeptons[iLepton].setClosestJetPt((*treeReader->std_vector_lepton_closejet_pt)[iLepton]);
                 eventContainer.looseLeptons[iLepton].setClosestJetDr((*treeReader->std_vector_lepton_closejet_drlj)[iLepton]);
                 eventContainer.looseLeptons[iLepton].setClosestJetPartonFlavour((*treeReader->std_vector_lepton_closejet_PartonFlavour)[iLepton]);
-                eventContainer.looseLeptons[iLepton].setIsolation((*treeReader->std_vector_lepton_trackIso)[iLepton]);
+                eventContainer.looseLeptons[iLepton].setIsolation((*treeReader->std_vector_lepton_trackIso)[iLepton]/(*treeReader->std_vector_lepton_pt)[iLepton]);
                 
                 eventContainer.goodLeptons.push_back(iLepton);
                 eventContainer.leptons[iLepton].set((*treeReader->std_vector_lepton_pt)[iLepton],(*treeReader->std_vector_lepton_eta)[iLepton],(*treeReader->std_vector_lepton_phi)[iLepton],(*treeReader->std_vector_lepton_flavour)[iLepton], (*treeReader->std_vector_lepton_isTightLepton)[iLepton] == 1 );
