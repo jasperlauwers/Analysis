@@ -16,6 +16,7 @@ public:
     void doCleaning();
     void doFakeLeptonCleaning();
     void doTrackJetsCleaning();
+    void doLooseLeptonIsoCleaning();
     
 private:
     EventContainer& eventContainer;    

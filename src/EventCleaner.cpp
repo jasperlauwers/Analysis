@@ -101,3 +101,23 @@ void EventCleaner::doTrackJetsCleaning()
         }
     }
 }
+
+void EventCleaner::doLooseLeptonIsoCleaning()
+{
+    // Lepton cleaning
+    unsigned int nLeptons = eventContainer.looseLeptons.size();
+    for( unsigned int iLepton=0; iLepton < nLeptons; ++iLepton ) {        
+        if( eventContainer.looseLeptons[iLepton].pt() <= 0. )
+	    break;
+
+	if( eventContainer.looseLeptons[iLepton].isolation() >= 0.4 )
+        {
+	    for( unsigned int iLepton2=iLepton; iLepton < nLeptons; ++iLepton ) { 
+  		looseLeptons[iLepton] = looseLeptons[iLepton+1];
+	    }
+            looseLeptons[nLeptons].set(0,0,0,0);
+	    iLepton--;
+        }
+    }
+}
+
