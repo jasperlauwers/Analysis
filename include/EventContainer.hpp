@@ -61,7 +61,9 @@ public:
     float leptonclosestjetpt(unsigned int) const;
     float leptonclosestjetdr(unsigned int) const;
     float leptonclosestjetpartonflavour(unsigned int) const;
+    float flavourleptonpt(float) const;
 
+    
     // Loose leptons
     float looseleptonpt(unsigned int) const;
     float looseleptoneta(unsigned int) const;
@@ -73,6 +75,7 @@ public:
     float looseleptonclosestjetpt(unsigned int) const;
     float looseleptonclosestjetdr(unsigned int) const;
     float looseleptonclosestjetpartonflavour(unsigned int) const;
+    float looseflavourleptonpt(float) const;
     
     // Gen leptons
     float genleptonpt(unsigned int) const;
@@ -98,6 +101,7 @@ public:
     float drjjll() const;
     float zeppenfeldlep(unsigned int index) const;
     float mt() const; //  Transversal Mass ( loose lepton, MET) 
+    bool passZjetFR(float flavour) const; 
     
     // Weight
     float weight() const;

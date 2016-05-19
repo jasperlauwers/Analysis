@@ -339,6 +339,15 @@ float EventContainer::leptonclosestjetpartonflavour(unsigned int i) const
     else
         return -9999.9;
 }
+float EventContainer::flavourleptonpt(float flavour) const
+{
+    for( unsigned int i = 0; i < goodLeptons.size(); ++i )
+    {
+        if( looseLeptons[i].pt() > 0 && ((flavour == 11 && looseLeptons[i].isElectron()) || (flavour == 13 && looseLeptons[i].isMuon()))  )
+            return looseLeptons[i].pt();           
+    }
+    return -9999.9;
+}
 
 // Loose leptons
 float EventContainer::looseleptonpt(unsigned int i) const
@@ -426,6 +435,15 @@ float EventContainer::looseleptonclosestjetpartonflavour(unsigned int i) const
         return looseLeptons[i].closestJetPartonFlavour();
     else
         return -9999.9;
+}
+float EventContainer::looseflavourleptonpt(float flavour) const
+{
+    for( unsigned int i = 0; i < looseLeptons.size(); ++i )
+    {
+        if( looseLeptons[i].pt() > 0 && ((flavour == 11 && looseLeptons[i].isElectron()) || (flavour == 13 && looseLeptons[i].isMuon()))  )
+            return looseLeptons[i].pt();
+    }
+    return -9999.9;
 }
 
 // Gen leptons
@@ -652,6 +670,34 @@ float EventContainer::zeppenfeldlep(unsigned int index) const
 float EventContainer::mt() const
 {
     return sqrt( pow(looseLeptons[0].pt()+met.pt(),2) - pow(looseLeptons[0].px()+met.px(),2) - pow(looseLeptons[0].py()+met.py(),2) );
+}
+
+bool EventContainer::passZjetFR(float flavour) const
+{
+    const Lepton *lZ1 = nullptr, *lZ2 = nullptr, *l = nullptr;
+    for( unsigned int iLepton=0; iLepton < looseLeptons.size(); ++iLepton ) {   
+        if( looseLeptons[iLepton].pt() <= 0 )
+            break;
+        if( (flavour == 13. && looseLeptons[iLepton].isElectron()) || (flavour == 11. && looseLeptons[iLepton].isMuon()) )
+        {
+            if( lZ1 )
+                lZ2 = &(looseLeptons[iLepton]);
+            else
+                lZ1 = &(looseLeptons[iLepton]);
+        }
+        else
+            l = &(looseLeptons[iLepton]);
+    }
+    if( !lZ1 || !lZ2 || !l )
+        return false;
+    if( lZ1->charge() * lZ2->charge() != -1 )
+        return false;
+    if( abs(lZ1->mpp(*lZ2) -91) > 15 ) 
+        return false;
+    
+//     leptons[goodLeptons[2]] = *l;
+//     looseLeptons[2] = *l;
+    return true;
 }
 
 float EventContainer::weight() const

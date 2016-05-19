@@ -443,7 +443,27 @@ void VariableDictionary::stringToFunction(const vector<string>& variableNames, v
             string::size_type leptonPosition = iSubString.find("lepton");
             iSubString.erase(leptonPosition, 6);
             
-            if( iSubString.find("pt") != string::npos ) 
+            if( iSubString.find("looseflavourpt") != string::npos ) 
+            {
+                string::size_type varPosition = iSubString.find("looseflavourpt");
+                iSubString.erase(varPosition, 14);
+                eventFunctions.push_back( bind(&EventContainer::looseflavourleptonpt, &eventContainer, getFloat(iSubString, iString)) );
+                if( maxFlag )
+                    ComparisonTypes.push_back( ComparisonType::SMALLER_THAN );
+                else
+                    ComparisonTypes.push_back( ComparisonType::GREATER_THAN );
+            }
+            else if( iSubString.find("flavourpt") != string::npos ) 
+            {
+                string::size_type varPosition = iSubString.find("flavourpt");
+                iSubString.erase(varPosition, 9);
+                eventFunctions.push_back( bind(&EventContainer::flavourleptonpt, &eventContainer, getFloat(iSubString, iString)) );
+                if( maxFlag )
+                    ComparisonTypes.push_back( ComparisonType::SMALLER_THAN );
+                else
+                    ComparisonTypes.push_back( ComparisonType::GREATER_THAN );
+            }
+            else if( iSubString.find("pt") != string::npos ) 
             {
                 string::size_type varPosition = iSubString.find("pt");
                 iSubString.erase(varPosition, 2);
@@ -773,6 +793,13 @@ void VariableDictionary::stringToFunction(const vector<string>& variableNames, v
                 ComparisonTypes.push_back( ComparisonType::SMALLER_THAN );
             else
                 ComparisonTypes.push_back( ComparisonType::GREATER_THAN );
+        }
+        else if( iSubString.find("passzfr") != string::npos ) 
+        {
+            string::size_type varPosition = iSubString.find("passzfr");
+            iSubString.erase(varPosition, 7);
+            eventFunctions.push_back( bind(&EventContainer::passZjetFR, &eventContainer, getFloat(iSubString, iString)) );
+            ComparisonTypes.push_back( ComparisonType::EQUAL );
         }
         
         else
