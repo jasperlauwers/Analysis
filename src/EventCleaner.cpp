@@ -112,10 +112,10 @@ void EventCleaner::doLooseLeptonIsoCleaning()
 
 	if( eventContainer.looseLeptons[iLepton].isolation() >= 0.4 )
         {
-	    for( unsigned int iLepton2=iLepton; iLepton2 < nLeptons; ++iLepton2 ) { 
+	    for( unsigned int iLepton2=iLepton; iLepton2 < nLeptons-1; ++iLepton2 ) { 
   		eventContainer.looseLeptons[iLepton2] = eventContainer.looseLeptons[iLepton2+1];
 	    }
-            eventContainer.looseLeptons[nLeptons].set(0,0,0,0);
+            eventContainer.looseLeptons[nLeptons-1].set(0,0,0,0);
 	    iLepton--;
         }
     }
