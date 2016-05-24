@@ -62,7 +62,7 @@ public:
     float leptonclosestjetdr(unsigned int) const;
     float leptonclosestjetpartonflavour(unsigned int) const;
     float flavourleptonpt(float) const;
-
+    float leptoncorrectedpt(unsigned int) const;
     
     // Loose leptons
     float looseleptonpt(unsigned int) const;
@@ -76,6 +76,7 @@ public:
     float looseleptonclosestjetdr(unsigned int) const;
     float looseleptonclosestjetpartonflavour(unsigned int) const;
     float looseflavourleptonpt(float) const;
+    float looseleptoncorrectedpt(unsigned int) const;
     
     // Gen leptons
     float genleptonpt(unsigned int) const;

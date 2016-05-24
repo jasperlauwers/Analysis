@@ -90,6 +90,12 @@ EventReader::EventReader(EventContainer& eventCont, const ConfigContainer& cfgCo
                 branches.push_back("std_vector_lepton_closejet_PartonFlavour");
                 branches.push_back("std_vector_lepton_closejet_drlj");
                 branches.push_back("std_vector_lepton_trackIso");
+                branches.push_back("std_vector_lepton_sumPUPt");
+                branches.push_back("std_vector_lepton_chargedHadronIso");
+                branches.push_back("std_vector_lepton_neutralHadronIso");
+                branches.push_back("std_vector_lepton_photonIso");
+                branches.push_back("jetRho");
+                branches.push_back("std_vector_electron_effectiveArea");
 //                 genBranches.push_back("std_vector_looseLepton_eta");
 //                 genBranches.push_back("std_vector_looseLepton_pt");
 //                 genBranches.push_back("std_vector_looseLepton_phi");
@@ -362,7 +368,7 @@ bool EventReader::fillNextEvent()
         for( unsigned int iJet=0; iJet < 50; ++iJet ) {
             if( (*treeReader->std_vector_trackjet_pt)[iJet] >= 0. )
             {
-                eventContainer.trackJets[iJet].set((*treeReader->std_vector_jet_pt)[iJet],(*treeReader->std_vector_jet_eta)[iJet],(*treeReader->std_vector_jet_phi)[iJet],0);
+                eventContainer.trackJets[iJet].set((*treeReader->std_vector_trackjet_pt)[iJet],(*treeReader->std_vector_trackjet_eta)[iJet],(*treeReader->std_vector_trackjet_phi)[iJet],0);
                 eventContainer.goodTrackJets.push_back(iJet);
             }
         }
@@ -392,13 +398,26 @@ bool EventReader::fillNextEvent()
                 eventContainer.looseLeptons[iLepton].setClosestJetPt((*treeReader->std_vector_lepton_closejet_pt)[iLepton]);
                 eventContainer.looseLeptons[iLepton].setClosestJetDr((*treeReader->std_vector_lepton_closejet_drlj)[iLepton]);
                 eventContainer.looseLeptons[iLepton].setClosestJetPartonFlavour((*treeReader->std_vector_lepton_closejet_PartonFlavour)[iLepton]);
-                eventContainer.looseLeptons[iLepton].setIsolation((*treeReader->std_vector_lepton_trackIso)[iLepton]/(*treeReader->std_vector_lepton_pt)[iLepton]);
+                eventContainer.looseLeptons[iLepton].setTrackIso((*treeReader->std_vector_lepton_trackIso)[iLepton]/(*treeReader->std_vector_lepton_pt)[iLepton]);
                 
                 eventContainer.goodLeptons.push_back(iLepton);
                 eventContainer.leptons[iLepton].set((*treeReader->std_vector_lepton_pt)[iLepton],(*treeReader->std_vector_lepton_eta)[iLepton],(*treeReader->std_vector_lepton_phi)[iLepton],(*treeReader->std_vector_lepton_flavour)[iLepton], (*treeReader->std_vector_lepton_isTightLepton)[iLepton] == 1 );
                 eventContainer.leptons[iLepton].setClosestJetPt((*treeReader->std_vector_lepton_closejet_pt)[iLepton]);
                 eventContainer.leptons[iLepton].setClosestJetDr((*treeReader->std_vector_lepton_closejet_drlj)[iLepton]);
                 eventContainer.leptons[iLepton].setClosestJetPartonFlavour((*treeReader->std_vector_lepton_closejet_PartonFlavour)[iLepton]);
+                
+                if( abs((*treeReader->std_vector_lepton_flavour)[iLepton]) == 11 )
+                {
+                    float iso = ((*treeReader->std_vector_lepton_chargedHadronIso)[iLepton] + TMath::Max((*treeReader->std_vector_lepton_neutralHadronIso)[iLepton] + (*treeReader->std_vector_lepton_photonIso)[iLepton] - (treeReader->jetRho * (*treeReader->std_vector_electron_effectiveArea)[iLepton]), (float) 0.) ) / (*treeReader->std_vector_lepton_pt)[iLepton];
+                    eventContainer.leptons[iLepton].setIsolation(iso);
+                    eventContainer.looseLeptons[iLepton].setIsolation(iso);
+                }
+                else if( abs((*treeReader->std_vector_lepton_flavour)[iLepton]) == 13 )
+                {
+                    float iso = ((*treeReader->std_vector_lepton_chargedHadronIso)[iLepton] + TMath::Max((*treeReader->std_vector_lepton_neutralHadronIso)[iLepton] + (*treeReader->std_vector_lepton_photonIso)[iLepton] - 0.5 * (*treeReader->std_vector_lepton_sumPUPt)[iLepton], 0.)) / (*treeReader->std_vector_lepton_pt)[iLepton];
+                    eventContainer.leptons[iLepton].setIsolation(iso);
+                    eventContainer.looseLeptons[iLepton].setIsolation(iso);
+                }
             }
             else
                 eventContainer.looseLeptons[iLepton].set(0,0,0,0);

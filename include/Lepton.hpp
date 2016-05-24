@@ -38,6 +38,7 @@ public:
     void setconversionVeto(float); 
     void setscEta(float); 
     void setIsolation(float);
+    void setTrackIso(float);
     float d0() const;
     float dEtaIn() const;
     float dPhiIn() const;
@@ -50,6 +51,7 @@ public:
     float conversionVeto() const;
     float scEta() const;
     float isolation() const;
+    float trackIso() const;
     
     // fake rate parameters
     void setClosestJetPt(float);
@@ -62,7 +64,7 @@ public:
 private:
     float _pId;
     bool passMedium, _isPrompt, _fromTau; 
-    float _d0, _dEtaIn, _dPhiIn, _dz, _effArea, _missHits, _sIetaIeta, _hOverE, _ooEmoop, _convVeto, _scEta, _isolation;
+    float _d0, _dEtaIn, _dPhiIn, _dz, _effArea, _missHits, _sIetaIeta, _hOverE, _ooEmoop, _convVeto, _scEta, _isolation, _trackIso;
     float _closestJetPt, _closestJetDr, _closestJetPartonFlavour;
 };
 

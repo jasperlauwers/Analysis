@@ -115,6 +115,10 @@ void Lepton::setIsolation( float isolation )
 {
     _isolation = isolation;
 }
+void Lepton::setTrackIso( float trackIso ) 
+{
+    _trackIso = trackIso;
+}
 
 float Lepton::d0() const
 {
@@ -163,6 +167,10 @@ float Lepton::scEta() const
 float Lepton::isolation() const
 {
     return _isolation;
+}
+float Lepton::trackIso() const
+{
+    return _trackIso;
 }
 
 void Lepton::setClosestJetPt(float closestJetPt)

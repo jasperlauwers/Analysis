@@ -114,7 +114,7 @@ void EventCleaner::doLooseLeptonIsoCleaning()
         if( eventContainer.looseLeptons[iLepton].isMuon() )
             trackIsoCut = 0.4;
             
-	if( eventContainer.looseLeptons[iLepton].isolation() >= trackIsoCut )
+	if( eventContainer.looseLeptons[iLepton].trackIso() >= trackIsoCut )
         {
 	    for( unsigned int iLepton2=iLepton; iLepton2 < nLeptons-1; ++iLepton2 ) { 
   		eventContainer.looseLeptons[iLepton2] = eventContainer.looseLeptons[iLepton2+1];

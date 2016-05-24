@@ -348,6 +348,25 @@ float EventContainer::flavourleptonpt(float flavour) const
     }
     return -9999.9;
 }
+float EventContainer::leptoncorrectedpt(unsigned int i) const
+{
+    if( i < goodLeptons.size() )
+    {
+        if( leptons[goodLeptons[i]].isElectron() )
+        {
+            double isoCut = 0.0354;
+            if( abs(leptons[goodLeptons[i]].eta()) > 1.479 )
+                isoCut = 0.0646;
+            return leptons[goodLeptons[i]].pt() * ( 1. + max(0., leptons[goodLeptons[i]].isolation() - isoCut) );
+        }
+        else if( leptons[goodLeptons[i]].isMuon() )
+            return leptons[goodLeptons[i]].pt() * ( 1. + max(0., leptons[goodLeptons[i]].isolation() - 0.15) );
+        else
+            return -9999.9;
+    }            
+    else
+        return -9999.9;
+}
 
 // Loose leptons
 float EventContainer::looseleptonpt(unsigned int i) const
@@ -444,6 +463,25 @@ float EventContainer::looseflavourleptonpt(float flavour) const
             return looseLeptons[i].pt();
     }
     return -9999.9;
+}
+float EventContainer::looseleptoncorrectedpt(unsigned int i) const
+{
+    if( looseLeptons[i].pt() > 0 )
+    {
+        if( looseLeptons[i].isElectron() )
+        {
+            double isoCut = 0.0354;
+            if( abs(looseLeptons[i].eta()) > 1.479 )
+                isoCut = 0.0646;
+            return looseLeptons[i].pt() * ( 1. + max(0., looseLeptons[i].isolation() - isoCut) );
+        }
+        else if( looseLeptons[i].isMuon() )
+            return looseLeptons[i].pt() * ( 1. + max(0., looseLeptons[i].isolation() - 0.15) );
+        else
+            return -9999.9;
+    }            
+    else
+        return -9999.9;
 }
 
 // Gen leptons
