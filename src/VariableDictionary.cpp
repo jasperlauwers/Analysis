@@ -383,7 +383,17 @@ void VariableDictionary::stringToFunction(const vector<string>& variableNames, v
             string::size_type leptonPosition = iSubString.find("looselepton");
             iSubString.erase(leptonPosition, 11);
             
-            if( iSubString.find("pt") != string::npos ) 
+            if( iSubString.find("correctedpt") != string::npos ) 
+            {
+                string::size_type varPosition = iSubString.find("correctedpt");
+                iSubString.erase(varPosition, 11);
+                eventFunctions.push_back( bind(&EventContainer::looseleptoncorrectedpt, &eventContainer, getIndex(iSubString, iString)) );
+                if( maxFlag )
+                    ComparisonTypes.push_back( ComparisonType::SMALLER_THAN );
+                else
+                    ComparisonTypes.push_back( ComparisonType::GREATER_THAN );
+            }
+            else if( iSubString.find("pt") != string::npos ) 
             {
                 string::size_type varPosition = iSubString.find("pt");
                 iSubString.erase(varPosition, 2);
@@ -458,6 +468,16 @@ void VariableDictionary::stringToFunction(const vector<string>& variableNames, v
                 string::size_type varPosition = iSubString.find("flavourpt");
                 iSubString.erase(varPosition, 9);
                 eventFunctions.push_back( bind(&EventContainer::flavourleptonpt, &eventContainer, getFloat(iSubString, iString)) );
+                if( maxFlag )
+                    ComparisonTypes.push_back( ComparisonType::SMALLER_THAN );
+                else
+                    ComparisonTypes.push_back( ComparisonType::GREATER_THAN );
+            }
+            else if( iSubString.find("correctedpt") != string::npos ) 
+            {
+                string::size_type varPosition = iSubString.find("correctedpt");
+                iSubString.erase(varPosition, 11);
+                eventFunctions.push_back( bind(&EventContainer::leptoncorrectedpt, &eventContainer, getIndex(iSubString, iString)) );
                 if( maxFlag )
                     ComparisonTypes.push_back( ComparisonType::SMALLER_THAN );
                 else
