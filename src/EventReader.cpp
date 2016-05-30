@@ -215,8 +215,8 @@ bool EventReader::setSample(unsigned int iSample, unsigned int iSubSample)
         if( sampleType == SampleType::FAKELEPTON )
         {
             sampleBranches.push_back("fakeW2l2j"); 
-            sampleBranches.push_back("fakeW2l2jstatUp");
-            sampleBranches.push_back("fakeW2l2jstatDown");
+            sampleBranches.push_back("fakeW2l2jstatMuUp");
+            sampleBranches.push_back("fakeW2l2jstatMuDown");
         }
         
         if( triggerSelection )
@@ -483,7 +483,7 @@ bool EventReader::fillNextEvent()
     if( sampleType == SampleType::FAKELEPTON )
     {
         eventContainer.setWeight( treeReader->fakeW2l2j );
-        eventContainer.setFakeWeights( treeReader->fakeW2l2jstatUp, treeReader->fakeW2l2jstatDown );
+        eventContainer.setFakeWeights( treeReader->fakeW2l2jstatMuUp, treeReader->fakeW2l2jstatMuDown );
     }
     // For pu reweighting plot
 //     if( sampleType == SampleType::SIGNAL )

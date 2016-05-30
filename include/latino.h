@@ -400,8 +400,10 @@ public :
    Float_t         mtw2;
    Float_t         mtw1;
    Float_t         fakeW2l2j;
-   Float_t         fakeW2l2jstatUp;
-   Float_t         fakeW2l2jstatDown;
+   Float_t         fakeW2l2jstatElUp;
+   Float_t         fakeW2l2jstatElDown;
+   Float_t         fakeW2l2jstatMuUp;
+   Float_t         fakeW2l2jstatMuDown;
 
    // List of branches
    TBranch        *b_GEN_weight_SM;   //!
@@ -779,8 +781,10 @@ public :
    TBranch        *b_yll;   //!
    TBranch        *b_mtw2;   //!
    TBranch        *b_mtw1;   //!
-   TBranch        *b_fakeW2l2jstatUp;   //!
-   TBranch        *b_fakeW2l2jstatDown;   //!
+   TBranch        *b_fakeW2l2jstatElUp;   //!
+   TBranch        *b_fakeW2l2jstatElDown;   //!
+   TBranch        *b_fakeW2l2jstatMuUp;   //!
+   TBranch        *b_fakeW2l2jstatMuDown;   //!
    TBranch        *b_fakeW2l2j;   //!
    
    latino(TTree *tree=0);
@@ -1386,8 +1390,10 @@ void latino::Init(TTree *tree)
    fChain->SetBranchAddress("mtw2", &mtw2, &b_mtw2);
    fChain->SetBranchAddress("mtw1", &mtw1, &b_mtw1);
    fChain->SetBranchAddress("fakeW2l2j", &fakeW2l2j, &b_fakeW2l2j);
-   fChain->SetBranchAddress("fakeW2l2jstatUp", &fakeW2l2jstatUp, &b_fakeW2l2jstatUp);
-   fChain->SetBranchAddress("fakeW2l2jstatDown", &fakeW2l2jstatDown, &b_fakeW2l2jstatDown);
+   fChain->SetBranchAddress("fakeW2l2jstatElUp", &fakeW2l2jstatElUp, &b_fakeW2l2jstatElUp);
+   fChain->SetBranchAddress("fakeW2l2jstatElDown", &fakeW2l2jstatElDown, &b_fakeW2l2jstatElDown);
+   fChain->SetBranchAddress("fakeW2l2jstatMuUp", &fakeW2l2jstatMuUp, &b_fakeW2l2jstatMuUp);
+   fChain->SetBranchAddress("fakeW2l2jstatMuDown", &fakeW2l2jstatMuDown, &b_fakeW2l2jstatMuDown);
    Notify();
 }
 

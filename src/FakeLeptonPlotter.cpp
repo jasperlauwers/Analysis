@@ -101,14 +101,17 @@ void FakeLeptonPlotter::writeFakeRate(string extension)
             fakeHistCont.histograms[0]->Add(h, -1.);           
         }
         
-        // Get Denominator
-        if( histogramContainers[iVar].containerName.find("loose") != string::npos ) 
+        // Seperate Numerator and Denominator
+        if( histogramContainers[iVar].containerName.find("lepton") != string::npos ) 
         {
-            hDenomVector.push_back(fakeHistCont.histograms);
-        }
-        else
-        {
-            fakeHistogramContainers.push_back(fakeHistCont);
+            if( histogramContainers[iVar].containerName.find("loose") != string::npos ) 
+            {
+                hDenomVector.push_back(fakeHistCont.histograms);
+            }
+            else
+            {
+                fakeHistogramContainers.push_back(fakeHistCont);
+            }
         }
     }
         
