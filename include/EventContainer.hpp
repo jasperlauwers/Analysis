@@ -79,6 +79,7 @@ public:
     float looseleptonclosestjetpartonflavour(unsigned int) const;
     float looseflavourleptonpt(float) const;
     float looseleptoncorrectedpt(unsigned int) const;
+    float looseleptonisolation(unsigned int) const;
     
     // Gen leptons
     float genleptonpt(unsigned int) const;

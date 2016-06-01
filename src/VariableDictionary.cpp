@@ -440,6 +440,16 @@ void VariableDictionary::stringToFunction(const vector<string>& variableNames, v
                 eventFunctions.push_back( bind(&EventContainer::looseleptonflavour, &eventContainer, getIndex(iSubString, iString)) );
                 ComparisonTypes.push_back( ComparisonType::EQUAL );
             }
+            else if( iSubString.find("isolation") != string::npos ) 
+            {
+                string::size_type varPosition = iSubString.find("isolation");
+                iSubString.erase(varPosition, 9);
+                eventFunctions.push_back( bind(&EventContainer::looseleptonisolation, &eventContainer, getIndex(iSubString, iString)) );
+                if( minFlag )
+                    ComparisonTypes.push_back( ComparisonType::GREATER_THAN );
+                else
+                    ComparisonTypes.push_back( ComparisonType::SMALLER_THAN );
+            }
             else
             {
                 cerr << "Variable '" << iString << "' in cuts or variables list not known." << endl;

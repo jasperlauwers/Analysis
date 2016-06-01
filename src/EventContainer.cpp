@@ -498,6 +498,13 @@ float EventContainer::looseleptoncorrectedpt(unsigned int i) const
     else
         return -9999.9;
 }
+float EventContainer::looseleptonisolation(unsigned int i) const
+{
+    if( looseLeptons[i].pt() > 0 )
+        return looseLeptons[i].isolation();
+    else
+        return -9999.9;
+}
 
 // Gen leptons
 float EventContainer::genleptonpt(unsigned int i) const
