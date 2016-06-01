@@ -16,10 +16,11 @@ EventReader::EventReader(EventContainer& eventCont, const ConfigContainer& cfgCo
             if( iString.find("genjet") != string::npos && firstGenJet )
             {
                 needGenJets = true;
-                needGenLeptons = true; // for cleaning jets
+//                 needGenLeptons = true; // for cleaning jets
                 genBranches.push_back("std_vector_jetGen_eta");
                 genBranches.push_back("std_vector_jetGen_pt");
                 genBranches.push_back("std_vector_jetGen_phi");
+//                 genBranches.push_back("std_vector_partonGen_isHardProcess");
                 firstGenJet = false;
             }
             else if( iString.find("puppijet") != string::npos && firstPuppiJet )
@@ -319,12 +320,13 @@ bool EventReader::fillNextEvent()
     while( skipEvent ); // Cut on trigger for data
     
     // Fill gen jets
-    if( needGenJets )
+    if( needGenJets && sampleType != SampleType::DATA && sampleType != SampleType::FAKELEPTON )
     {
         for( unsigned int iJet=0; iJet < nJets; ++iJet ) {
             if( (*treeReader->std_vector_jetGen_pt)[iJet] > 0 )
             {
                 eventContainer.genJets[iJet].set((*treeReader->std_vector_jetGen_pt)[iJet],(*treeReader->std_vector_jetGen_eta)[iJet],(*treeReader->std_vector_jetGen_phi)[iJet], 0);
+                eventContainer.genJets[iJet].setIsHardProcess(1);
                 eventContainer.goodGenJets.push_back(iJet);
             }
             else

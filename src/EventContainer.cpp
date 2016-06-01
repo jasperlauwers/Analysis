@@ -134,6 +134,14 @@ float EventContainer::genjetmass(unsigned int i) const
     else
         return -9999.9;
 }
+float EventContainer::genjetnhardprocess() const
+{
+    float n = 0;
+    for( unsigned int i = 0; i < goodGenJets.size(); ++i )
+        if( genJets[goodGenJets[i]].isHardProcess() ) 
+            n++;
+    return n;
+}
 
 // Puppi jets
 float EventContainer::puppijetpt(unsigned int i) const
@@ -364,6 +372,13 @@ float EventContainer::leptoncorrectedpt(unsigned int i) const
         else
             return -9999.9;
     }            
+    else
+        return -9999.9;
+}
+float EventContainer::leptonisolation(unsigned int i) const
+{
+    if( i < goodLeptons.size() )
+        return leptons[goodLeptons[i]].isolation();
     else
         return -9999.9;
 }

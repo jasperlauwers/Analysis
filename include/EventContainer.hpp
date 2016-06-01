@@ -34,6 +34,7 @@ public:
     float genjeteta(unsigned int) const;
     float genjetphi(unsigned int) const;
     float genjetmass(unsigned int) const;
+    float genjetnhardprocess() const;
     
     // Puppi jets
     float puppijetpt(unsigned int) const;
@@ -63,6 +64,7 @@ public:
     float leptonclosestjetpartonflavour(unsigned int) const;
     float flavourleptonpt(float) const;
     float leptoncorrectedpt(unsigned int) const;
+    float leptonisolation(unsigned int) const;
     
     // Loose leptons
     float looseleptonpt(unsigned int) const;

@@ -28,15 +28,23 @@ void Jet::setCsv( float csv )
 {
     CSV = csv;
 }
-float Jet::csv() const
-{
-    return CSV;
-}
 void Jet::setPuId( float puId )
 {
     _puId = puId;
 }
+void Jet::setIsHardProcess( float isHardProcess )
+{
+    _isHardProcess = isHardProcess;
+}
+float Jet::csv() const
+{
+    return CSV;
+}
 float Jet::puId() const
 {
     return _puId;
+}
+bool Jet::isHardProcess() const
+{
+    return _isHardProcess;
 }
