@@ -80,6 +80,7 @@ public:
     float looseflavourleptonpt(float) const;
     float looseleptoncorrectedpt(unsigned int) const;
     float looseleptonisolation(unsigned int) const;
+    float looseleptonpasstight(unsigned int) const;
     
     // Gen leptons
     float genleptonpt(unsigned int) const;
@@ -106,6 +107,9 @@ public:
     float zeppenfeldlep(unsigned int index) const;
     float mt() const; //  Transversal Mass ( loose lepton, MET) 
     bool passZjetFR(float flavour) const; 
+    float loosechannel() const;
+    float looseproductleptoncharge() const;
+    float loosemll() const;
     
     // Weight
     float weight() const;

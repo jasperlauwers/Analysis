@@ -450,6 +450,13 @@ void VariableDictionary::stringToFunction(const vector<string>& variableNames, v
                 else
                     ComparisonTypes.push_back( ComparisonType::SMALLER_THAN );
             }
+            else if( iSubString.find("passTight") != string::npos ) 
+            {
+                string::size_type varPosition = iSubString.find("passTight");
+                iSubString.erase(varPosition, 9);
+                eventFunctions.push_back( bind(&EventContainer::looseleptonpasstight, &eventContainer, getIndex(iSubString, iString)) );
+                ComparisonTypes.push_back( ComparisonType::EQUAL );
+            }
             else
             {
                 cerr << "Variable '" << iString << "' in cuts or variables list not known." << endl;
@@ -532,6 +539,16 @@ void VariableDictionary::stringToFunction(const vector<string>& variableNames, v
                     ComparisonTypes.push_back( ComparisonType::ABS_GREATER_THAN );
                 else
                     ComparisonTypes.push_back( ComparisonType::ABS_SMALLER_THAN );
+            }
+            else if( iSubString == "looseproductcharge" ) 
+            {
+                eventFunctions.push_back( bind(&EventContainer::looseproductleptoncharge, &eventContainer) );
+                if( maxFlag )
+                    ComparisonTypes.push_back( ComparisonType::SMALLER_THAN );
+                else if( minFlag )
+                    ComparisonTypes.push_back( ComparisonType::GREATER_THAN );
+                else
+                    ComparisonTypes.push_back( ComparisonType::EQUAL );
             }
             else if( iSubString == "productcharge" ) 
             {
@@ -718,6 +735,14 @@ void VariableDictionary::stringToFunction(const vector<string>& variableNames, v
             else
                 ComparisonTypes.push_back( ComparisonType::GREATER_THAN );
         }
+        else if( iSubString == "loosemll" ) 
+        {
+            eventFunctions.push_back( bind(&EventContainer::loosemll, &eventContainer) );
+            if( maxFlag )
+                ComparisonTypes.push_back( ComparisonType::SMALLER_THAN );
+            else
+                ComparisonTypes.push_back( ComparisonType::GREATER_THAN );
+        }
         else if( iSubString == "mll" ) 
         {
             eventFunctions.push_back( bind(&EventContainer::mll, &eventContainer) );
@@ -807,6 +832,16 @@ void VariableDictionary::stringToFunction(const vector<string>& variableNames, v
         {
             eventFunctions.push_back( bind(&EventContainer::genchannel, &eventContainer) );
             ComparisonTypes.push_back( ComparisonType::EQUAL );
+        }
+        else if( iSubString == "loosechannel" ) 
+        {
+            eventFunctions.push_back( bind(&EventContainer::loosechannel, &eventContainer) );
+            if( maxFlag )
+                ComparisonTypes.push_back( ComparisonType::SMALLER_THAN );
+            else if( minFlag )
+                ComparisonTypes.push_back( ComparisonType::GREATER_THAN );
+            else
+                ComparisonTypes.push_back( ComparisonType::EQUAL );
         }
         else if( iSubString == "channel" ) 
         {

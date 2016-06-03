@@ -505,6 +505,13 @@ float EventContainer::looseleptonisolation(unsigned int i) const
     else
         return -9999.9;
 }
+float EventContainer::looseleptonpasstight(unsigned int i) const
+{
+    if( looseLeptons[i].pt() > 0 )
+        return looseLeptons[i].passesMedium();
+    else
+        return -9999.9;
+}
 
 // Gen leptons
 float EventContainer::genleptonpt(unsigned int i) const
@@ -758,6 +765,45 @@ bool EventContainer::passZjetFR(float flavour) const
 //     leptons[goodLeptons[2]] = *l;
 //     looseLeptons[2] = *l;
     return true;
+}
+float EventContainer::loosechannel() const
+{
+    if( looseLeptons[1].pt() > 0 )
+    {
+        if( looseLeptons[0].isElectron() )
+        {
+            if(  looseLeptons[1].isElectron() ) 
+                return 1.; // ee
+            else 
+                return 2; // em
+        }
+        else
+        {
+            if(  looseLeptons[1].isElectron() ) 
+                return 3.; // me
+            else 
+                return 0; // mm
+        }
+    }
+    else
+        return -9999.9;
+}
+float EventContainer::looseproductleptoncharge() const
+{
+    if( looseLeptons[1].pt() > 0 )
+    {
+        return looseLeptons[0].charge() * looseLeptons[1].charge();
+    }
+    else
+        return -9999.9;
+}
+float EventContainer::loosemll() const{
+    if( looseLeptons[1].pt() > 0 )
+    {
+        return looseLeptons[0].mpp(looseLeptons[1]);
+    }
+    else
+        return -9999.9;    
 }
 
 float EventContainer::weight() const
