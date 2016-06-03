@@ -450,9 +450,9 @@ void VariableDictionary::stringToFunction(const vector<string>& variableNames, v
                 else
                     ComparisonTypes.push_back( ComparisonType::SMALLER_THAN );
             }
-            else if( iSubString.find("passTight") != string::npos ) 
+            else if( iSubString.find("passtight") != string::npos ) 
             {
-                string::size_type varPosition = iSubString.find("passTight");
+                string::size_type varPosition = iSubString.find("passtight");
                 iSubString.erase(varPosition, 9);
                 eventFunctions.push_back( bind(&EventContainer::looseleptonpasstight, &eventContainer, getIndex(iSubString, iString)) );
                 ComparisonTypes.push_back( ComparisonType::EQUAL );
