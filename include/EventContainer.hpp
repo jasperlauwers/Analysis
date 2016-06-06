@@ -138,6 +138,10 @@ public:
     float electronscEta(unsigned int) const;
     float electronisolation(unsigned int) const;
     
+    // Event number
+    float eventNo() const;
+    void setEventNo(float); 
+    
     // Data members
     unsigned int iEvent;
     vector<Lepton> leptons, genLeptons, looseLeptons;
@@ -149,6 +153,7 @@ public:
 private:
     float _weight, _reweight, _upWeight, _downWeight;
     float _nVertices;
+    unsigned int _eventNo;
 };
 
 

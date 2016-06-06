@@ -36,6 +36,7 @@ int main (int argc, char ** argv) {
     EventSelecter selecter(eventContainer, cfgContainer.cutContainer);
     CutPlotter plotter(eventContainer, cfgContainer);
     
+    int totTT = 0, totTL = 0, totLL =0;
     for( unsigned int iSample = 0; iSample < cfgContainer.sampleContainer.reducedNames.size(); ++iSample) 
     {
         for( unsigned int iSubSample = 0; iSubSample < cfgContainer.sampleContainer.sampleNames[iSample].size(); ++iSubSample) 
@@ -55,7 +56,23 @@ int main (int argc, char ** argv) {
                         }
                         else
                             break; // accumulate cuts
-                    }               
+                            
+                    }
+                    
+                    // Temporary fake counter
+                    if( cfgContainer.sampleContainer.sampleType[iSample] == SampleType::FAKELEPTON && selecter.passCuts() )
+                    {
+                        int nTightLept = 0;
+                        for( auto iLepton : eventContainer.goodLeptons ) {
+                            if( eventContainer.leptons[iLepton].passesMedium() ) 
+                                nTightLept++;
+                        }
+                        cout << "Tight leptons: " << nTightLept << endl;
+                        if( nTightLept  == 0 ) totLL++;
+                        else if( nTightLept  == 1 ) totTL++;
+                        else totTT++;
+                        cout << "Event nr:\t" << eventContainer.eventNo() << "\tfake weigth:\t" << eventContainer.weight() << endl;
+                    }
                 }
             }
         }
@@ -64,6 +81,7 @@ int main (int argc, char ** argv) {
     plotter.writeHist("Cut_efficiency.root");
     plotter.writeEfficiency("png");
     plotter.writeStacked("png");
+    cout << "TT: " << totTT << "\tTL: " << totTL << "\tLL: " << totLL << endl;
     
     delete cHandler;
 }

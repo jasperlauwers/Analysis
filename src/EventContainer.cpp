@@ -966,3 +966,13 @@ float EventContainer::electronisolation(unsigned int i) const
     }
     return -9999.9;
 }
+
+// Event number
+float EventContainer::eventNo() const
+{
+    return _eventNo;
+}
+void EventContainer::setEventNo(float eventNo)
+{
+    _eventNo = eventNo;
+}

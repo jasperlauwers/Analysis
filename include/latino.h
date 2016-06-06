@@ -70,6 +70,7 @@ public :
    Float_t         jetssvhe2;
    Float_t         kfW;
    Float_t         lumi;
+   Int_t           event;
    Float_t         mctruth;
    Float_t         metGeneta;
    Float_t         metGenphi;
@@ -452,6 +453,7 @@ public :
    TBranch        *b_jetssvhe2;   //!
    TBranch        *b_kfW;   //!
    TBranch        *b_lumi;   //!
+   TBranch        *b_event;   //!
    TBranch        *b_mctruth;   //!
    TBranch        *b_metGeneta;   //!
    TBranch        *b_metGenphi;   //!
@@ -1060,6 +1062,7 @@ void latino::Init(TTree *tree)
    fChain->SetBranchAddress("jetssvhe2", &jetssvhe2, &b_jetssvhe2);
    fChain->SetBranchAddress("kfW", &kfW, &b_kfW);
    fChain->SetBranchAddress("lumi", &lumi, &b_lumi);
+   fChain->SetBranchAddress("event", &event, &b_event);
    fChain->SetBranchAddress("mctruth", &mctruth, &b_mctruth);
    fChain->SetBranchAddress("metGeneta", &metGeneta, &b_metGeneta);
    fChain->SetBranchAddress("metGenphi", &metGenphi, &b_metGenphi);

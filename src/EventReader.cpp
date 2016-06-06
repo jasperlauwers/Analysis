@@ -222,6 +222,9 @@ bool EventReader::setSample(unsigned int iSample, unsigned int iSubSample)
         
         if( triggerSelection )
             sampleBranches.push_back("std_vector_trigger");
+        
+        // Debug eventNo info
+        sampleBranches.push_back("event"); 
     }
     else
     {
@@ -486,7 +489,11 @@ bool EventReader::fillNextEvent()
     {
         eventContainer.setWeight( treeReader->fakeW2l2j );
         eventContainer.setFakeWeights( treeReader->fakeW2l2jstatMuUp, treeReader->fakeW2l2jstatMuDown );
+        
+        // Debug eventNo info
+        eventContainer.setEventNo( treeReader->event );
     }
+    
     // For pu reweighting plot
 //     if( sampleType == SampleType::SIGNAL )
 //     {
@@ -501,6 +508,11 @@ bool EventReader::fillNextEvent()
             weight *= (treeReader->GEN_weight_SM/abs(treeReader->GEN_weight_SM));
         
         eventContainer.setWeight( weight );
+    }
+    else
+    {
+        // Debug eventNo info
+        eventContainer.setEventNo( treeReader->event );
     }
     
     return true;

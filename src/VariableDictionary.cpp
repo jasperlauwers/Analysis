@@ -886,6 +886,16 @@ void VariableDictionary::stringToFunction(const vector<string>& variableNames, v
             eventFunctions.push_back( bind(&EventContainer::passZjetFR, &eventContainer, getFloat(iSubString, iString)) );
             ComparisonTypes.push_back( ComparisonType::EQUAL );
         }
+        else if( iSubString == "eventNo" ) 
+        {
+            eventFunctions.push_back( bind(&EventContainer::eventNo, &eventContainer) );
+            if( maxFlag )
+                ComparisonTypes.push_back( ComparisonType::SMALLER_THAN );
+            else if( minFlag )
+                ComparisonTypes.push_back( ComparisonType::GREATER_THAN );
+            else
+                ComparisonTypes.push_back( ComparisonType::EQUAL );
+        }
         
         else
         {
