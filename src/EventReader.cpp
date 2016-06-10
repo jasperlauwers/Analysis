@@ -17,9 +17,12 @@ EventReader::EventReader(EventContainer& eventCont, const ConfigContainer& cfgCo
             {
                 needGenJets = true;
 //                 needGenLeptons = true; // for cleaning jets
-                genBranches.push_back("std_vector_jetGen_eta");
-                genBranches.push_back("std_vector_jetGen_pt");
-                genBranches.push_back("std_vector_jetGen_phi");
+//                 genBranches.push_back("std_vector_jetGen_eta");
+//                 genBranches.push_back("std_vector_jetGen_pt");
+//                 genBranches.push_back("std_vector_jetGen_phi");
+                genBranches.push_back("std_vector_LHEparton_pt");
+                genBranches.push_back("std_vector_LHEparton_eta");
+                genBranches.push_back("std_vector_LHEparton_phi");
 //                 genBranches.push_back("std_vector_partonGen_isHardProcess");
                 firstGenJet = false;
             }
@@ -47,6 +50,7 @@ EventReader::EventReader(EventContainer& eventCont, const ConfigContainer& cfgCo
                 branches.push_back("std_vector_jet_phi");
                 branches.push_back("std_vector_jet_mass");
                 branches.push_back("std_vector_jet_cmvav2");
+                branches.push_back("std_vector_jet_softMuPt");
                 firstJet = false; 
             } 
             
@@ -326,9 +330,9 @@ bool EventReader::fillNextEvent()
     if( needGenJets && sampleType != SampleType::DATA && sampleType != SampleType::FAKELEPTON )
     {
         for( unsigned int iJet=0; iJet < nJets; ++iJet ) {
-            if( (*treeReader->std_vector_jetGen_pt)[iJet] > 0 )
+            if( (*treeReader->std_vector_LHEparton_pt)[iJet] > 0 )
             {
-                eventContainer.genJets[iJet].set((*treeReader->std_vector_jetGen_pt)[iJet],(*treeReader->std_vector_jetGen_eta)[iJet],(*treeReader->std_vector_jetGen_phi)[iJet], 0);
+                eventContainer.genJets[iJet].set((*treeReader->std_vector_LHEparton_pt)[iJet],(*treeReader->std_vector_LHEparton_eta)[iJet],(*treeReader->std_vector_LHEparton_phi)[iJet], 0);
                 eventContainer.genJets[iJet].setIsHardProcess(1);
                 eventContainer.goodGenJets.push_back(iJet);
             }
@@ -360,6 +364,7 @@ bool EventReader::fillNextEvent()
             {
                 eventContainer.jets[iJet].set((*treeReader->std_vector_jet_pt)[iJet],(*treeReader->std_vector_jet_eta)[iJet],(*treeReader->std_vector_jet_phi)[iJet],(*treeReader->std_vector_jet_mass)[iJet]);
                 eventContainer.jets[iJet].setCsv((*treeReader->std_vector_jet_cmvav2)[iJet]);
+                eventContainer.jets[iJet].setSoftMuPt((*treeReader->std_vector_jet_softMuPt)[iJet]);
                 eventContainer.goodJets.push_back(iJet);
             }
             else

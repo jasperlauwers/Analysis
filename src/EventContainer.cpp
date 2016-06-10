@@ -104,6 +104,18 @@ float EventContainer::jetmaxcsv( float minPt ) const
     }
     return maxCSV;
 }
+float EventContainer::jetmaxSoftMuonPt( float minPt ) const
+{
+    float maxPt = -9999.9;
+    for( unsigned int i = 0; i < goodJets.size(); ++i )
+    {
+        if( jets[goodJets[i]].pt() < minPt )
+            break;
+        if( jets[goodJets[i]].softMuPt() > maxPt )
+            maxPt = jets[goodJets[i]].softMuPt();
+    }
+    return maxPt;
+}
 
 // Gen jets 
 float EventContainer::genjetpt(unsigned int i) const
@@ -550,6 +562,13 @@ float EventContainer::dmll(float subtractMass) const
     else
         return -9999.9;
 }
+float EventContainer::dmee(float subtractMass) const
+{    
+    if( goodLeptons.size() > 1 && leptons[goodLeptons[0]].isElectron() && leptons[goodLeptons[1]].isElectron())
+        return leptons[goodLeptons[0]].mpp(leptons[goodLeptons[1]]) - subtractMass;
+    else
+        return -9999.9;
+}
 float EventContainer::dmllminpt(float subtractMass, float minPt) const
 {
     float dmll = -9999.9;
@@ -797,13 +816,41 @@ float EventContainer::looseproductleptoncharge() const
     else
         return -9999.9;
 }
-float EventContainer::loosemll() const{
+float EventContainer::loosemll() const
+{
     if( looseLeptons[1].pt() > 0 )
     {
         return looseLeptons[0].mpp(looseLeptons[1]);
     }
     else
         return -9999.9;    
+}
+float EventContainer::detametl() const
+{
+    float mindeta = 9999.9;
+    for( auto iLep : goodLeptons )
+    {
+        mindeta = min( abs(leptons[goodLeptons[iLep]].dEta(met)), mindeta ); 
+    }
+    return mindeta;   
+}
+float EventContainer::mmetl() const
+{
+    int closestLepIndex = -1;
+    float mindeta = 9999.9;
+    for( auto iLep : goodLeptons )
+    {
+        float dEta = abs(leptons[goodLeptons[iLep]].dEta(met));
+        if( dEta < mindeta )
+        {
+            closestLepIndex = iLep;
+            mindeta = dEta; 
+        } 
+    }
+    if( closestLepIndex > -1 )
+        return leptons[closestLepIndex].mpp(met);
+    else 
+        return 9999.9;
 }
 
 float EventContainer::weight() const

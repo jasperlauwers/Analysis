@@ -762,6 +762,11 @@ void VariableDictionary::stringToFunction(const vector<string>& variableNames, v
                 eventFunctions.push_back( bind(&EventContainer::dmll, &eventContainer, 91) );
             ComparisonTypes.push_back( ComparisonType::ABS_GREATER_THAN );
         }
+        else if( iSubString == "zeeveto"  ) 
+        {
+            eventFunctions.push_back( bind(&EventContainer::dmee, &eventContainer, 91) );
+            ComparisonTypes.push_back( ComparisonType::ABS_GREATER_THAN );
+        }
         else if( iSubString == "mjj" ) 
         {
             eventFunctions.push_back( bind(&EventContainer::mjj, &eventContainer) );
@@ -886,7 +891,7 @@ void VariableDictionary::stringToFunction(const vector<string>& variableNames, v
             eventFunctions.push_back( bind(&EventContainer::passZjetFR, &eventContainer, getFloat(iSubString, iString)) );
             ComparisonTypes.push_back( ComparisonType::EQUAL );
         }
-        else if( iSubString == "eventNo" ) 
+        else if( iSubString == "eventno" ) 
         {
             eventFunctions.push_back( bind(&EventContainer::eventNo, &eventContainer) );
             if( maxFlag )
@@ -896,7 +901,29 @@ void VariableDictionary::stringToFunction(const vector<string>& variableNames, v
             else
                 ComparisonTypes.push_back( ComparisonType::EQUAL );
         }
-        
+        else if( iSubString.find("softmuonveto") != string::npos ) 
+        {
+            string::size_type varPosition = iSubString.find("softmuonveto");
+            iSubString.erase(varPosition, 12);
+            eventFunctions.push_back( bind(&EventContainer::jetmaxSoftMuonPt, &eventContainer, getFloat(iSubString, iString)) );
+            ComparisonTypes.push_back( ComparisonType::SMALLER_THAN );
+        }
+        else if( iSubString == "detametl" ) 
+        {
+            eventFunctions.push_back( bind(&EventContainer::detametl, &eventContainer) );
+            if( maxFlag )
+                ComparisonTypes.push_back( ComparisonType::ABS_SMALLER_THAN );
+            else
+                ComparisonTypes.push_back( ComparisonType::ABS_GREATER_THAN ); 
+        }
+        else if( iSubString == "mmetl" ) 
+        {
+            eventFunctions.push_back( bind(&EventContainer::mmetl, &eventContainer) );
+            if( maxFlag )
+                ComparisonTypes.push_back( ComparisonType::SMALLER_THAN );
+            else
+                ComparisonTypes.push_back( ComparisonType::GREATER_THAN ); 
+        }
         else
         {
             cerr << "Variable '" << iString << "' in cuts or variables list not known." << endl;

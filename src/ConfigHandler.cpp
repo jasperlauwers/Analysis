@@ -3,7 +3,7 @@
 
 
 ConfigHandler::ConfigHandler(const string& fileName, ConfigContainer& cContainer) 
-: ConfigReader(fileName), hasSamples(false), hasVariables(false), hasCuts(false), cfgContainer(cContainer), sampleContainer(nullptr), variableContainer(nullptr), cutContainer(nullptr)
+: ConfigReader(fileName), hasSamples(false), hasVariables(false), hasCuts(false), hasFakes(false), cfgContainer(cContainer), sampleContainer(nullptr), variableContainer(nullptr), cutContainer(nullptr)
 {
     // Allow float -> int and int -> float conversions
     cfg.setAutoConvert(true);
@@ -30,6 +30,13 @@ ConfigHandler::ConfigHandler(const string& fileName, ConfigContainer& cContainer
         {
             cutsFile = cfg.lookup("CutsFile").c_str();
             hasCuts = true;
+        }
+        catch(const SettingNotFoundException &nfex) { } 
+        
+        try
+        {
+            fakesFile = cfg.lookup("FakesFile").c_str();
+            hasFakes = true;
         }
         catch(const SettingNotFoundException &nfex) { } 
         
@@ -229,6 +236,7 @@ ConfigHandler::ConfigHandler(const string& fileName, ConfigContainer& cContainer
     setSampleContainer( cfgContainer.sampleContainer );
     setVariableContainer( cfgContainer.variableContainer );
     setCutContainer( cfgContainer.cutContainer );
+    setFakeContainer( cfgContainer.fakeContainer );
 }
 
 ConfigHandler::~ConfigHandler() { }
@@ -272,6 +280,19 @@ void ConfigHandler::setCutContainer(CutContainer& cContainer)
     }
 }
 
+void ConfigHandler::setFakeContainer(FakeContainer& fContainer)
+{
+    if( hasFakes )
+    {
+        fakeContainer = &fContainer;
+    }
+    else
+    {
+        cout << "Config file doesn't contain 'FakesFile' setting. \n No fake weights calculated." << endl;
+//         throw SettingNotFoundException("CutsFile");
+    }
+}
+
 const Config& ConfigHandler::getConfig() const
 {
     return cfg;   
@@ -296,6 +317,11 @@ void ConfigHandler::readConfig()
         {
             CutReader cReader(cutsFile, *cutContainer);
             cout << "Read out cuts file successfully" << endl;
+        }
+        if( fakeContainer )
+        {
+            FakeReader fReader(fakesFile, *fakeContainer);
+            cout << "Read out fakes file successfully" << endl;
         }
     }
     catch(const SettingNotFoundException &nfex)

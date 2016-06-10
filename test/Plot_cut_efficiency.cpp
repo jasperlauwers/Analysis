@@ -4,6 +4,7 @@
 #include "ConfigHandler.hpp"
 #include "EventCleaner.hpp"
 #include "EventSelecter.hpp"
+#include "FakeCalc.hpp"
 #include "CutPlotter.hpp"
 
 int main (int argc, char ** argv) {
@@ -34,6 +35,7 @@ int main (int argc, char ** argv) {
     EventReader reader(eventContainer, cfgContainer);
 //     EventCleaner cleaner( eventContainer );
     EventSelecter selecter(eventContainer, cfgContainer.cutContainer);
+    FakeCalc fakeCalc(eventContainer, cfgContainer.fakeContainer);
     CutPlotter plotter(eventContainer, cfgContainer);
     
     int totTT = 0, totTL = 0, totLL =0;
@@ -46,6 +48,8 @@ int main (int argc, char ** argv) {
                 while( reader.fillNextEvent() )
                 {
     //                 cleaner.doCleaning();
+                    if( cfgContainer.sampleContainer.sampleType[iSample] == SampleType::FAKELEPTON && (&cfgContainer.fakeContainer) )
+                            fakeCalc.setFakeWeight();
                                     
                     plotter.fillTotal(iSample, iSubSample); // total # of events 
                     
@@ -62,6 +66,9 @@ int main (int argc, char ** argv) {
                     // Temporary fake counter
                     if( cfgContainer.sampleContainer.sampleType[iSample] == SampleType::FAKELEPTON && selecter.passCuts() )
                     {
+//                         if( &cfgContainer.fakeContainer)
+//                             fakeCalc.setFakeWeight();
+                            
                         int nTightLept = 0;
                         for( auto iLepton : eventContainer.goodLeptons ) {
                             if( eventContainer.leptons[iLepton].passesMedium() ) 
@@ -71,7 +78,9 @@ int main (int argc, char ** argv) {
                         if( nTightLept  == 0 ) totLL++;
                         else if( nTightLept  == 1 ) totTL++;
                         else totTT++;
-                        cout << "Event nr:\t" << eventContainer.eventNo() << "\tfake weigth:\t" << eventContainer.weight() << endl;
+//                         if( eventContainer.looseleptoncorrectedpt(1) < 30 )
+//                             cout << "Event nr:\t" << eventContainer.eventNo() << "\tfake weigth:\t" << eventContainer.weight() << endl;
+//                             cout << "lepton 1 pt cor:\t" << eventContainer.looseleptoncorrectedpt(0) << "lepton 2 pt cor:\t" << eventContainer.looseleptoncorrectedpt(1) << endl;
                     }
                 }
             }
@@ -81,7 +90,7 @@ int main (int argc, char ** argv) {
     plotter.writeHist("Cut_efficiency.root");
     plotter.writeEfficiency("png");
     plotter.writeStacked("png");
-    cout << "TT: " << totTT << "\tTL: " << totTL << "\tLL: " << totLL << endl;
+    cout /*<< "TT: " << totTT */<< "\tTL: " << totTL << "\tLL: " << totLL << endl;
     
     delete cHandler;
 }

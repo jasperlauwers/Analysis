@@ -98,7 +98,7 @@ void CutPlotter::writeEfficiency(string extension)
         if( histogramContainer.sampleType[iSample] == SampleType::FAKELEPTON ) 
         {
             float maximum = histogramContainer.histograms[iSample]->GetMaximum();
-            if( maximum > totEvents ) totEvents = maximum;
+            if( maximum > totEvents || isnan(totEvents) ) totEvents = maximum;
             
             unsigned int nBins = histogramContainer.histograms[iSample]->GetNbinsX();
             for( unsigned int iBin=0; iBin < nBins; ++iBin )

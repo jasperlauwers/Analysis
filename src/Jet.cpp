@@ -36,6 +36,10 @@ void Jet::setIsHardProcess( float isHardProcess )
 {
     _isHardProcess = isHardProcess;
 }
+void Jet::setSoftMuPt( float softMuPt )
+{
+    _softMuPt = softMuPt;
+}
 float Jet::csv() const
 {
     return CSV;
@@ -47,4 +51,8 @@ float Jet::puId() const
 bool Jet::isHardProcess() const
 {
     return _isHardProcess;
+}
+float Jet::softMuPt() const
+{
+    return _softMuPt;
 }

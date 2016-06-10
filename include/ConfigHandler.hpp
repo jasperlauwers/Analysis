@@ -7,6 +7,7 @@
 #include "VariableReader.hpp"
 #include "SampleReader.hpp"
 #include "CutReader.hpp"
+#include "FakeReader.hpp"
 #include "ConfigContainer.hpp"
 
 using namespace std;
@@ -19,15 +20,17 @@ public:
     void setSampleContainer(SampleContainer&);
     void setVariableContainer(VariableContainer&);
     void setCutContainer(CutContainer&);
+    void setFakeContainer(FakeContainer&);
     const Config& getConfig() const;
     void readConfig();
     
 protected:
-    bool hasSamples, hasVariables, hasCuts;
-    string samplesFile, variablesFile, cutsFile;
+    bool hasSamples, hasVariables, hasCuts, hasFakes;
+    string samplesFile, variablesFile, cutsFile, fakesFile;
     ConfigContainer& cfgContainer;
     SampleContainer *sampleContainer;
     VariableContainer *variableContainer;
     CutContainer *cutContainer;
+    FakeContainer *fakeContainer;
 };
 #endif

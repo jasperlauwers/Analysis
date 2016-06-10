@@ -28,6 +28,7 @@ public:
     float jetcsv(unsigned int) const;
     unsigned int nJets( float minPt ) const;
     float jetmaxcsv( float minPt ) const;
+    float jetmaxSoftMuonPt( float minPt ) const;
     
     // Gen jets
     float genjetpt(unsigned int) const;
@@ -90,6 +91,7 @@ public:
     // Di-particle varibles
     float mll() const;
     float dmll(float subtractMass) const;
+    float dmee(float subtractMass) const;
     float dmllminpt(float subtractMass, float minPt) const;
     float mjj() const;
     float ptll() const;
@@ -110,6 +112,8 @@ public:
     float loosechannel() const;
     float looseproductleptoncharge() const;
     float loosemll() const;
+    float detametl() const;
+    float mmetl() const;
     
     // Weight
     float weight() const;

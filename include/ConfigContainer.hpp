@@ -5,6 +5,7 @@
 #include "VariableContainer.hpp"
 #include "SampleContainer.hpp"
 #include "CutContainer.hpp"
+#include "FakeContainer.hpp"
 
 #include "string"
 
@@ -14,6 +15,7 @@ struct ConfigContainer {
     SampleContainer sampleContainer;
     VariableContainer variableContainer;
     CutContainer cutContainer;
+    FakeContainer fakeContainer;
     
     string treeName, sampleDir, outputDir, plotString;
     float luminosity, maxEvents, minJetPt, minLeptonPt;

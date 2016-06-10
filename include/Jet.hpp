@@ -16,12 +16,14 @@ public:
     void setCsv( float csv );
     void setPuId( float puId );
     void setIsHardProcess( float isHardProcess );
+    void setSoftMuPt( float softMuPt );
     float csv() const;
     float puId() const;
     bool isHardProcess() const;
+    float softMuPt() const;
     
 private:
-    float _puId, qgLikelihood, CSV;
+    float _puId, qgLikelihood, CSV, _softMuPt;
     bool _isHardProcess; 
     
 };

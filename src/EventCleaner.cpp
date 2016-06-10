@@ -124,4 +124,3 @@ void EventCleaner::doLooseLeptonIsoCleaning()
         }
     }
 }
-
