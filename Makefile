@@ -52,7 +52,7 @@ obj/VariableDictionary.o: VariableDictionary.cpp VariableDictionary.hpp EventCon
 
 obj/EventSelecter.o: EventSelecter.cpp EventSelecter.hpp VariableDictionary.hpp EventContainer.hpp Lepton.hpp Jet.hpp Met.hpp Particle.hpp CutContainer.hpp
 
-obj/FakeCalc.o: EventContainer.hpp Lepton.hpp Jet.hpp Met.hpp Particle.hpp FakeContainer.hpp
+obj/WeightCalc.o: EventContainer.hpp Lepton.hpp Jet.hpp Met.hpp Particle.hpp FakeContainer.hpp SampleContainer.hpp obj/EventReader.o
 
 obj/BasePlotter.o: BasePlotter.cpp BasePlotter.hpp HistogramContainer.hpp EventContainer.hpp Lepton.hpp Jet.hpp Met.hpp Particle.hpp ConfigContainer.hpp VariableContainer.hpp SampleContainer.hpp CutContainer.hpp LatinoStyle2.h
 
@@ -67,7 +67,7 @@ obj/testAnalysis.o: testAnalysis.cpp EventReader.hpp TreeReader.hpp latino.h Eve
 testAnalysis : $(OBJ_FILES) obj/testAnalysis.o obj/latino.o obj/LatinoStyle2.o
 	$(CC) -o $@ $^ $(CFLAGS) $(CFLAGS_libconfig) $(LIBS) $(LIBS_libconfig)
 
-obj/stackPlotter.o: stackPlotter.cpp EventReader.hpp TreeReader.hpp latino.h EventContainer.hpp Lepton.hpp Jet.hpp Met.hpp Particle.hpp VariableReader.hpp VariableContainer.hpp ConfigReader.hpp SampleReader.hpp SampleContainer.hpp CutReader.hpp CutContainer.hpp FakeReader.hpp FakeContainer.hpp EventCleaner.hpp ConfigHandler.hpp  EventSelecter.hpp FakeCalc.hpp VariableDictionary.hpp ConfigContainer.hpp EventPlotter.hpp BasePlotter.hpp HistogramContainer.hpp LatinoStyle2.h
+obj/stackPlotter.o: stackPlotter.cpp EventReader.hpp TreeReader.hpp latino.h EventContainer.hpp Lepton.hpp Jet.hpp Met.hpp Particle.hpp VariableReader.hpp VariableContainer.hpp ConfigReader.hpp SampleReader.hpp SampleContainer.hpp CutReader.hpp CutContainer.hpp FakeReader.hpp FakeContainer.hpp EventCleaner.hpp ConfigHandler.hpp  EventSelecter.hpp WeightCalc.hpp VariableDictionary.hpp ConfigContainer.hpp EventPlotter.hpp BasePlotter.hpp HistogramContainer.hpp LatinoStyle2.h
 
 stackPlotter : $(OBJ_FILES) obj/stackPlotter.o obj/latino.o obj/LatinoStyle2.o
 	$(CC) -o $@ $^ $(CFLAGS) $(CFLAGS_libconfig) $(LIBS) $(LIBS_libconfig)
@@ -82,7 +82,7 @@ obj/parallelStackPlots.o: parallelStackPlots.cpp EventReader.hpp TreeReader.hpp 
 parallelStackPlots : $(OBJ_FILES) obj/parallelStackPlots.o obj/latino.o obj/LatinoStyle2.o
 	$(CC) -o $@ $^ $(CFLAGS) $(CFLAGS_libconfig) $(LIBS) $(LIBS_libconfig)
 
-obj/Plot_cut_efficiency.o: Plot_cut_efficiency.cpp EventReader.hpp TreeReader.hpp latino.h EventContainer.hpp Lepton.hpp Jet.hpp Met.hpp Particle.hpp VariableReader.hpp VariableContainer.hpp ConfigReader.hpp SampleReader.hpp SampleContainer.hpp CutReader.hpp CutContainer.hpp FakeReader.hpp FakeContainer.hpp EventCleaner.hpp ConfigHandler.hpp EventSelecter.hpp FakeCalc.hpp ConfigContainer.hpp CutPlotter.hpp LatinoStyle2.h
+obj/Plot_cut_efficiency.o: Plot_cut_efficiency.cpp EventReader.hpp TreeReader.hpp latino.h EventContainer.hpp Lepton.hpp Jet.hpp Met.hpp Particle.hpp VariableReader.hpp VariableContainer.hpp ConfigReader.hpp SampleReader.hpp SampleContainer.hpp CutReader.hpp CutContainer.hpp FakeReader.hpp FakeContainer.hpp EventCleaner.hpp ConfigHandler.hpp EventSelecter.hpp WeightCalc.hpp ConfigContainer.hpp CutPlotter.hpp LatinoStyle2.h
 
 Plot_cut_efficiency : $(OBJ_FILES) obj/Plot_cut_efficiency.o obj/latino.o obj/LatinoStyle2.o
 	$(CC) -o $@ $^ $(CFLAGS) $(CFLAGS_libconfig) $(LIBS) $(LIBS_libconfig)

@@ -4,7 +4,7 @@
 #include "ConfigHandler.hpp"
 #include "EventCleaner.hpp"
 #include "EventSelecter.hpp"
-#include "FakeCalc.hpp"
+#include "WeightCalc.hpp"
 #include "CutPlotter.hpp"
 
 int main (int argc, char ** argv) {
@@ -35,21 +35,29 @@ int main (int argc, char ** argv) {
     EventReader reader(eventContainer, cfgContainer);
 //     EventCleaner cleaner( eventContainer );
     EventSelecter selecter(eventContainer, cfgContainer.cutContainer);
-    FakeCalc fakeCalc(eventContainer, cfgContainer.fakeContainer);
     CutPlotter plotter(eventContainer, cfgContainer);
+    WeightCalc weightCalc(eventContainer);
+
     
     int totTT = 0, totTL = 0, totLL =0;
     for( unsigned int iSample = 0; iSample < cfgContainer.sampleContainer.reducedNames.size(); ++iSample) 
     {
+        // Init fake weights
+        if( cfgContainer.sampleContainer.sampleType[iSample] == SampleType::FAKELEPTON && cfgContainer.fakeContainer.fakeElectronFile != "" )
+            weightCalc.initFakeWeight(&(cfgContainer.fakeContainer));
+        
         for( unsigned int iSubSample = 0; iSubSample < cfgContainer.sampleContainer.sampleNames[iSample].size(); ++iSubSample) 
         {
             if( reader.setSample(iSample, iSubSample) )
-            { 
+            {
+                // Init DY weights
+                if( cfgContainer.sampleContainer.sampleNames[iSample][iSubSample].find("DY") != string::npos )
+                    weightCalc.initDYWeight(reader);
+                
                 while( reader.fillNextEvent() )
                 {
     //                 cleaner.doCleaning();
-                    if( cfgContainer.sampleContainer.sampleType[iSample] == SampleType::FAKELEPTON && (&cfgContainer.fakeContainer) )
-                            fakeCalc.setFakeWeight();
+                    weightCalc.setWeight(cfgContainer.sampleContainer.sampleType[iSample], cfgContainer.sampleContainer.sampleNames[iSample][iSubSample]);
                                     
                     plotter.fillTotal(iSample, iSubSample); // total # of events 
                     
@@ -67,7 +75,7 @@ int main (int argc, char ** argv) {
                     if( cfgContainer.sampleContainer.sampleType[iSample] == SampleType::FAKELEPTON && selecter.passCuts() )
                     {
 //                         if( &cfgContainer.fakeContainer)
-//                             fakeCalc.setFakeWeight();
+//                             weightCalc.setFakeWeight();
                             
                         int nTightLept = 0;
                         for( auto iLepton : eventContainer.goodLeptons ) {

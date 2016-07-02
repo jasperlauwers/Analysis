@@ -3,7 +3,7 @@
 #include "TChain.h"
 
 EventReader::EventReader(EventContainer& eventCont, const ConfigContainer& cfgContainer)
-: eventContainer(eventCont), configContainer(cfgContainer), treeReader(nullptr), nLeptons(0), nJets(0), needJets(false), needGenJets(false), needPuppiJets(false), needGenLeptons(false), needElectronId(false), needTrackJets(false), triggerSelection(false), hasNegWeight(false), sampleType(SampleType::DATA), maxEventsWeight(1.) 
+: eventContainer(eventCont), configContainer(cfgContainer), treeReader(nullptr), nLeptons(0), nJets(0), needJets(false), needGenJets(false), needPuppiJets(false), needGenLeptons(false), needElectronId(false), needTrackJets(false), triggerSelection(false), hasNegWeight(false), isDY(false), sampleType(SampleType::DATA), maxEventsWeight(1.) 
 { 
     bool firstGenJet = true, firstPuppiJet = true, firstJet = true, firstgenLepton = true, firstElectronID = true, firstTrackJet = true, firstLooseLepton=true;
     vector<const vector<string>*> variableNames = {&configContainer.variableContainer.variableNames, &configContainer.cutContainer.variableNames};
@@ -87,7 +87,7 @@ EventReader::EventReader(EventContainer& eventCont, const ConfigContainer& cfgCo
             }
             
             // Loose lepton
-            if( iString.find("loose") != string::npos && firstLooseLepton )
+            if( /*iString.find("loose") != string::npos &&*/ firstLooseLepton )
             {
                 needLooseLeptons = true;
                 branches.push_back("std_vector_lepton_isTightLepton");
@@ -138,7 +138,7 @@ bool EventReader::setSample(unsigned int iSample, unsigned int iSubSample)
     // Check arguments
     if( iSample >= configContainer.sampleContainer.reducedNames.size() || iSubSample >= configContainer.sampleContainer.sampleNames[iSample].size() )
     {
-        cerr << "Indices for sample or subsample out of range in the Plotter::fill function." << endl;
+        cerr << "Indices for sample or subsample out of range in the EventReader::setSample function." << endl;
         throw 1;
     }
     
@@ -152,11 +152,10 @@ bool EventReader::setSample(unsigned int iSample, unsigned int iSubSample)
     // Delete treeReader for previous sample
     if( treeReader ) delete treeReader; 
 //     extraBranches.clear();
-    
-
-    
+        
     // Set TTree or TChain
     TTree *t;
+//     findTrees(iSample, iSubSample, t);
     if( configContainer.sampleContainer.sampleNames[iSample][iSubSample].find("*") != string::npos )
     {
         TChain* tChain = new TChain(configContainer.treeName.c_str());
@@ -180,7 +179,7 @@ bool EventReader::setSample(unsigned int iSample, unsigned int iSubSample)
                 regex regexp(reString);
                 
                 if ( regex_match( fname, regexp ) ) {
-                    cout << "File matches Regex: " << fname << endl;
+                    cout << "File matches Regex: " << inDir+fname << endl;
                     tChain->Add((inDir+fname).c_str());
                     nFiles++;
                 }
@@ -202,7 +201,8 @@ bool EventReader::setSample(unsigned int iSample, unsigned int iSubSample)
     {
         TFile* f = new TFile((configContainer.sampleDir + configContainer.sampleContainer.sampleNames[iSample][iSubSample] ).c_str(),"READ");
         t = (TTree*) f->Get(configContainer.treeName.c_str());                                                                                              
-    }  
+    }
+    
     
     // Make new treeReader
     treeReader = new TreeReader(t);
@@ -251,6 +251,11 @@ bool EventReader::setSample(unsigned int iSample, unsigned int iSubSample)
         
         sampleBranches.insert(sampleBranches.end(), genBranches.begin(), genBranches.end());
     }
+    
+    if( configContainer.sampleContainer.sampleNames[iSample][iSubSample].find("DY") != string::npos && configContainer.sampleContainer.sampleNames[iSample][iSubSample].find("M-10") == string::npos )
+        isDY = true;
+    else
+        isDY = false;
 
     cout << "Reading out branches: \n";
     for( const string& branch : sampleBranches )
@@ -506,7 +511,9 @@ bool EventReader::fillNextEvent()
 //     }
     else if( sampleType != SampleType::DATA )
     {
-        float weight = treeReader->baseW * treeReader->puW * maxEventsWeight;
+        float weight = treeReader->puW * maxEventsWeight;
+        if( ! isDY ) 
+             weight *= treeReader->baseW;
         if( !triggerSelection ) 
             weight *= (treeReader->effTrigW * (*treeReader->std_vector_lepton_idisoW)[0] * (*treeReader->std_vector_lepton_idisoW)[1] /* * treeReader->bPogSF*/ );
         if( hasNegWeight ) 
@@ -534,4 +541,155 @@ void EventReader::reweigh(unsigned int index)
         cerr << "Reweigh index out of bounds: " << index << " while maximum index is " <<  treeReader->std_vector_LHE_weight->size()-1 << endl;
         throw 1;
     }
+}
+
+void EventReader::getDYWeights(vector<float>& DYweights) const
+{
+    DYweights.clear();
+    DYweights.resize(5, 0.);
+    float NLOcor = 1.21623; // NLO/LO corr factor 
+    cout << "Recalculating DY baseW" << endl; 
+    
+    for( unsigned int iSample = 0; iSample < configContainer.sampleContainer.reducedNames.size(); ++iSample) 
+    {
+        for( unsigned int iSubSample = 0; iSubSample < configContainer.sampleContainer.sampleNames[iSample].size(); ++iSubSample) 
+        {
+            if( configContainer.sampleContainer.sampleNames[iSample][iSubSample].find("DY") != string::npos )
+            {
+                TTree *t;
+                cout << "iSample: " << iSample << ", iSubSample: " << iSubSample << endl;
+                
+//                 findTrees(iSample, iSubSample, t);
+                if( configContainer.sampleContainer.sampleNames[iSample][iSubSample].find("*") != string::npos )
+                {
+                    TChain* tChain = new TChain(configContainer.treeName.c_str());
+                    DIR *dpdf;
+                    struct dirent *epdf;
+                    unsigned int nFiles = 0;
+                    
+                    string inDir = configContainer.sampleDir;
+                    if( configContainer.sampleContainer.sampleNames[iSample][iSubSample].find("/") != string::npos )
+                    {
+                        inDir+=configContainer.sampleContainer.sampleNames[iSample][iSubSample].substr(0, configContainer.sampleContainer.sampleNames[iSample][iSubSample].find_last_of('/')+1); // +1: add last slash
+                    }
+                    dpdf = opendir(inDir.c_str());
+                    if (dpdf != NULL)
+                    {
+                        while ((epdf = readdir(dpdf)))
+                        {
+                            string fname = epdf->d_name;
+                            string reString = "("+configContainer.sampleContainer.sampleNames[iSample][iSubSample].substr(configContainer.sampleContainer.sampleNames[iSample][iSubSample].find_last_of('/')+1) + ")";
+                            reString.replace(reString.find("*"),1,")(.*)(");
+                            regex regexp(reString);
+                            
+                            if ( regex_match( fname, regexp ) ) {
+                                cout << "File matches Regex: " << inDir+fname << endl;
+                                tChain->Add((inDir+fname).c_str());
+                                nFiles++;
+                            }
+                        }
+                        if( nFiles < 1 )
+                        {
+                            cerr << "Regex did not match any file: " << configContainer.sampleContainer.sampleNames[iSample][iSubSample].substr(configContainer.sampleContainer.sampleNames[iSample][iSubSample].find_last_of('/')+1) << endl;
+                            throw 1;
+                        }
+                    }
+                    else
+                    {
+                        cerr << "Directory not found: " << inDir << endl;
+                        throw 1;
+                    }
+                    t = tChain;
+                }
+                else
+                {
+                    TFile* f = new TFile((configContainer.sampleDir + configContainer.sampleContainer.sampleNames[iSample][iSubSample] ).c_str(),"READ");
+                    t = (TTree*) f->Get(configContainer.treeName.c_str());                                                                                              
+                }
+                
+                TreeReader *tReader = new TreeReader(t);
+                tReader->GetEntry(1);
+                float invBaseW = pow(tReader->baseW,-1);
+                delete tReader;
+//                 delete t; // already deleted if this is from a tree (not for tchain)
+                
+                if( configContainer.sampleContainer.sampleNames[iSample][iSubSample].find("DY1JetsToLL") != string::npos )
+                    DYweights[1] += invBaseW / NLOcor;
+                else if( configContainer.sampleContainer.sampleNames[iSample][iSubSample].find("DY2JetsToLL") != string::npos )
+                    DYweights[2] += invBaseW / NLOcor;
+                else if( configContainer.sampleContainer.sampleNames[iSample][iSubSample].find("DY3JetsToLL") != string::npos )
+                    DYweights[3] += invBaseW / NLOcor;
+                else if( configContainer.sampleContainer.sampleNames[iSample][iSubSample].find("DY4JetsToLL") != string::npos )
+                    DYweights[4] += invBaseW / NLOcor;
+                else if( configContainer.sampleContainer.sampleNames[iSample][iSubSample].find("DYJetsToLL_M-50") != string::npos )
+                {
+                    if( configContainer.sampleContainer.sampleNames[iSample][iSubSample].find("-LO") != string::npos )
+                        invBaseW /= NLOcor;
+                    DYweights[0] += invBaseW;
+                    DYweights[1] += invBaseW;
+                    DYweights[2] += invBaseW;
+                    DYweights[3] += invBaseW;
+                    DYweights[4] += invBaseW;
+                }
+            }
+        }
+    }
+    
+    // Convert to real baseW 
+    for( unsigned int iWeight = 0; iWeight < 5; ++iWeight )
+    {
+        DYweights[iWeight] = pow( DYweights[iWeight], -1);
+    }    
+}
+
+void EventReader::findTrees(unsigned int iSample, unsigned int iSubSample, TTree *t) const
+{
+    if( configContainer.sampleContainer.sampleNames[iSample][iSubSample].find("*") != string::npos )
+    {
+        TChain* tChain = new TChain(configContainer.treeName.c_str());
+        DIR *dpdf;
+        struct dirent *epdf;
+        unsigned int nFiles = 0;
+        
+        string inDir = configContainer.sampleDir;
+        if( configContainer.sampleContainer.sampleNames[iSample][iSubSample].find("/") != string::npos )
+        {
+            inDir+=configContainer.sampleContainer.sampleNames[iSample][iSubSample].substr(0, configContainer.sampleContainer.sampleNames[iSample][iSubSample].find_last_of('/')+1); // +1: add last slash
+        }
+        dpdf = opendir(inDir.c_str());
+        if (dpdf != NULL)
+        {
+            while ((epdf = readdir(dpdf)))
+            {
+                string fname = epdf->d_name;
+                string reString = "("+configContainer.sampleContainer.sampleNames[iSample][iSubSample].substr(configContainer.sampleContainer.sampleNames[iSample][iSubSample].find_last_of('/')+1) + ")";
+                reString.replace(reString.find("*"),1,")(.*)(");
+                regex regexp(reString);
+                
+                if ( regex_match( fname, regexp ) ) {
+                    cout << "File matches Regex: " << fname << endl;
+                    tChain->Add((inDir+fname).c_str());
+                    nFiles++;
+                }
+            }
+            if( nFiles < 1 )
+            {
+                cerr << "Regex did not match any file: " << configContainer.sampleContainer.sampleNames[iSample][iSubSample].substr(configContainer.sampleContainer.sampleNames[iSample][iSubSample].find_last_of('/')+1) << endl;
+                throw 1;
+            }
+        }
+        else
+        {
+            cerr << "Directory not found: " << inDir << endl;
+            throw 1;
+        }
+        t = tChain;
+    }
+    else
+    {
+        TFile* f = new TFile((configContainer.sampleDir + configContainer.sampleContainer.sampleNames[iSample][iSubSample] ).c_str(),"READ");
+        t = (TTree*) f->Get(configContainer.treeName.c_str());                                                                                              
+    }
+    t->SetDirectory(0);
+    t->ls();
 }

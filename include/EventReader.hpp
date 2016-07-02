@@ -25,13 +25,16 @@ public:
     bool setSample(unsigned int iSample, unsigned int iSubSample);
     bool fillNextEvent();
     void reweigh(unsigned int index);
+    void getDYWeights(vector<float>&) const;
         
 private:
+    void findTrees(unsigned int iSample, unsigned int iSubSample, TTree *t) const;
+    
     EventContainer& eventContainer;
     const ConfigContainer& configContainer;
     TreeReader *treeReader;
     unsigned int nLeptons, nJets;  
-    bool needJets, needGenJets, needPuppiJets, needGenLeptons, needElectronId, firstLooseLepton, needLooseLeptons, needTrackJets, triggerSelection, hasNegWeight;
+    bool needJets, needGenJets, needPuppiJets, needGenLeptons, needElectronId, firstLooseLepton, needLooseLeptons, needTrackJets, triggerSelection, hasNegWeight, isDY;
     SampleType sampleType;
     vector<setFunction> functionVector;
     vector<string> branches, genBranches;

@@ -4,7 +4,7 @@
 #include "ConfigHandler.hpp"
 #include "EventCleaner.hpp"
 #include "EventSelecter.hpp"
-#include "FakeCalc.hpp"
+#include "WeightCalc.hpp"
 #include "EventPlotter.hpp"
 
 int main (int argc, char ** argv) {
@@ -36,15 +36,21 @@ int main (int argc, char ** argv) {
     EventReader reader(eventContainer, cfgContainer);
     EventCleaner cleaner(eventContainer);
     EventSelecter selecter(eventContainer, cfgContainer.cutContainer);
-    FakeCalc *fakeCalc = nullptr;
-    if( cfgContainer.fakeContainer.fakeElectronFile != "" )
-        fakeCalc =  new FakeCalc(eventContainer, cfgContainer.fakeContainer);
+    WeightCalc weightCalc(eventContainer);
     EventPlotter plotter(eventContainer, cfgContainer);
     
     for( unsigned int iSample = 0; iSample < cfgContainer.sampleContainer.reducedNames.size(); ++iSample) 
     {
+        // Init fake weights
+        if( cfgContainer.sampleContainer.sampleType[iSample] == SampleType::FAKELEPTON && cfgContainer.fakeContainer.fakeElectronFile != "" )
+            weightCalc.initFakeWeight(&(cfgContainer.fakeContainer));
+        
         for( unsigned int iSubSample = 0; iSubSample < cfgContainer.sampleContainer.sampleNames[iSample].size(); ++iSubSample) 
         {
+            // Init DY weights
+            if( cfgContainer.sampleContainer.sampleNames[iSample][iSubSample].find("DY") != string::npos )
+            weightCalc.initDYWeight(reader);
+            
             if( reader.setSample(iSample, iSubSample) )
             {   
                 while( reader.fillNextEvent() )
@@ -53,12 +59,9 @@ int main (int argc, char ** argv) {
                     cleaner.doTrackJetsCleaning();
                     if( selecter.passCuts() )
                     {
-                        if( cfgContainer.fakeContainer.fakeElectronFile != "" && cfgContainer.sampleContainer.sampleType[iSample] == SampleType::FAKELEPTON )
-                        {
-                            fakeCalc->setFakeWeight();
-//                             cout << "Event nr:\t" << eventContainer.eventNo() << "\tfake weigth:\t" << eventContainer.weight() << endl;
-//                             cout << "lepton 1 pt cor:\t" << eventContainer.looseleptoncorrectedpt(0) << "lepton 2 pt cor:\t" << eventContainer.looseleptoncorrectedpt(1) << endl;
-                        }
+                        weightCalc.setWeight(cfgContainer.sampleContainer.sampleType[iSample], cfgContainer.sampleContainer.sampleNames[iSample][iSubSample]);
+//                         cout << "Event nr:\t" << eventContainer.eventNo() << "\tfake weigth:\t" << eventContainer.weight() << endl;
+//                         cout << "lepton 1 pt cor:\t" << eventContainer.looseleptoncorrectedpt(0) << "lepton 2 pt cor:\t" << eventContainer.looseleptoncorrectedpt(1) << endl;
                         plotter.fill(iSample, iSubSample);
                     }
                 }
@@ -69,7 +72,5 @@ int main (int argc, char ** argv) {
     plotter.writeHist(filename);
     plotter.writePlots("png");
     
-    if( fakeCalc )
-        delete fakeCalc;
     delete cHandler;
 }
