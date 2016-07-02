@@ -319,7 +319,7 @@ bool EventReader::fillNextEvent()
                 unsigned int nTriggers = configContainer.cutContainer.triggerVector.size();
                 for( unsigned int iTrig=0; iTrig < nTriggers; ++iTrig )
                 {
-                    bool passTrigger = ( (*treeReader->std_vector_trigger)[configContainer.cutContainer.triggerVector[iTrig]] && (*treeReader->std_vector_lepton_pt)[0] > configContainer.cutContainer.triggerPtVector[iTrig] );
+                    bool passTrigger = ( (*treeReader->std_vector_trigger)[configContainer.cutContainer.triggerVector[iTrig]] == 1 && (*treeReader->std_vector_lepton_pt)[0] > configContainer.cutContainer.triggerPtVector[iTrig] );
                     if( passTrigger && ( iTrig+1 == nTriggers || (*treeReader->std_vector_lepton_pt)[0] < configContainer.cutContainer.triggerPtVector[iTrig+1] ) )
                     {
                         eventContainer.setWeight(1000. / configContainer.cutContainer.triggerLumiVector[iTrig]);
