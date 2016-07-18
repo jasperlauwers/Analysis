@@ -111,7 +111,7 @@ float EventContainer::jetmaxSoftMuonPt( float minPt ) const
     {
         if( jets[goodJets[i]].pt() < minPt )
             break;
-        if( jets[goodJets[i]].softMuPt() > maxPt )
+        if( jets[goodJets[i]].softMuPt() > maxPt && jets[goodJets[i]].softMuDr() < 0.3 )
             maxPt = jets[goodJets[i]].softMuPt();
     }
     return maxPt;

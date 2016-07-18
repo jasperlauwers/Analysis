@@ -82,12 +82,35 @@ int main (int argc, char ** argv) {
                             if( eventContainer.leptons[iLepton].passesMedium() ) 
                                 nTightLept++;
                         }
-                        cout << "Tight leptons: " << nTightLept << endl;
                         if( nTightLept  == 0 ) totLL++;
                         else if( nTightLept  == 1 ) totTL++;
                         else totTT++;
+                        
+//                         // Print soft mu
+//                         if( nTightLept  > 0 )
+//                         {
+//                             cout << "Tight leptons: " << nTightLept << endl;
+//                             for( int i = 0; i < eventContainer.goodJets.size(); ++i )
+//                             {
+//                                 if( eventContainer.jets[eventContainer.goodJets[i]].pt() > 0 )
+//                                 {
+//                                     cout << "jet pt: " << eventContainer.jets[eventContainer.goodJets[i]].pt() << endl;
+//                                     cout << "soft muon pt: " << eventContainer.jets[eventContainer.goodJets[i]].softMuPt() << endl;
+//                                     cout << "dR: " << eventContainer.jets[eventContainer.goodJets[i]].softMuDr() << endl;
+//                                 }
+//                             }
+//                       
+//                             for( int i = 0; i < eventContainer.goodLeptons.size(); ++i )
+//                             {
+//                                 if( eventContainer.leptons[eventContainer.goodLeptons[i]].pt() > 0 )
+//                                 {
+//                                     cout << "lepton pt: " << eventContainer.leptons[eventContainer.goodLeptons[i]].pt() << endl;
+//                                 }
+//                             }
+//                             cout << endl;
+//                         }
 //                         if( eventContainer.looseleptoncorrectedpt(1) < 30 )
-//                             cout << "Event nr:\t" << eventContainer.eventNo() << "\tfake weigth:\t" << eventContainer.weight() << endl;
+//                             cout << "Event nr:\t" << setprecision(10) << eventContainer.eventNo() << "\tfake weigth:\t" << eventContainer.weight() << endl;
 //                             cout << "lepton 1 pt cor:\t" << eventContainer.looseleptoncorrectedpt(0) << "lepton 2 pt cor:\t" << eventContainer.looseleptoncorrectedpt(1) << endl;
                     }
                 }
@@ -95,6 +118,7 @@ int main (int argc, char ** argv) {
         }
     }
     plotter.printEvents();
+    plotter.writeEvents();
     plotter.writeHist("Cut_efficiency.root");
     plotter.writeEfficiency("png");
     plotter.writeStacked("png");

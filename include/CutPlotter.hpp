@@ -14,6 +14,7 @@
 #include "TLatex.h"
 #include "TGraphAsymmErrors.h"
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <iomanip>
 #include <cmath>
@@ -33,8 +34,10 @@ public:
     void writeEfficiency(string extension);
     void writeHist(string filename);
     void printEvents() const;
+    void writeEvents() const;
         
 private:
+    void outEvents( ostream& str ) const;
     unsigned int nSamples, nCuts;
     HistogramContainer histogramContainer;
     vector<vector<unsigned int>> numberOfEntriesVector;

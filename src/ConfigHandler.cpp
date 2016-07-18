@@ -204,6 +204,17 @@ ConfigHandler::ConfigHandler(const string& fileName, ConfigContainer& cContainer
             cfgContainer.drawUncertainty = true;
         }
         
+        // DrawNormalized
+        try
+        {
+            cfgContainer.drawNormalized = cfg.lookup("DrawNormalized");
+        }
+        catch(const SettingNotFoundException &nfex) 
+        {
+            cout << "DrawNormalized setting not found. Using default: false" << endl;
+            cfgContainer.drawNormalized = false;
+        }
+        
         // PlotString
         try
         {
@@ -302,24 +313,28 @@ void ConfigHandler::readConfig()
 {
     try
     {
-        if( sampleContainer )
+        if( hasSamples )
         {
+            cout << "Reading out samples file" << endl;
             SampleReader sReader(samplesFile, *sampleContainer);
             cout << "Read out samples file successfully" << endl;
         }
         
-        if( variableContainer )
+        if( hasVariables )
         {
+            cout << "Reading out variables file" << endl;
             VariableReader vReader(variablesFile, *variableContainer);
             cout << "Read out variables file successfully" << endl;
         }
-        if( cutContainer )
+        if( hasCuts )
         {
+            cout << "Reading out cuts file" << endl;
             CutReader cReader(cutsFile, *cutContainer);
             cout << "Read out cuts file successfully" << endl;
         }
-        if( fakeContainer )
+        if( hasFakes )
         {
+            cout << "Reading out fakes file" << endl;
             FakeReader fReader(fakesFile, *fakeContainer);
             cout << "Read out fakes file successfully" << endl;
         }

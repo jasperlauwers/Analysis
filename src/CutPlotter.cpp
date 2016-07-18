@@ -136,52 +136,73 @@ void CutPlotter::writeEfficiency(string extension)
 
 void CutPlotter::printEvents() const
 {
-    unsigned int coutWidth = 20;
-    cout << setprecision(2) << fixed << endl;
+    outEvents(cout);
+}
+
+
+void CutPlotter::writeEvents() const
+{
+    system(("mkdir -p " + configContainer.outputDir).c_str());   
+    ofstream f(configContainer.outputDir + "Cut_events.txt");
+    if (f.is_open())
+    {
+        outEvents(f);
+    }
+    else
+    {
+        cerr << "Unable to open file Cut_events.txt" << endl;
+    }
+    f.close();
+}
+
+void CutPlotter::outEvents( ostream& str ) const
+{
+    unsigned int strWidth = 20;
+    str << setprecision(2) << fixed << endl;
     
     // Number of events
-    cout << "Number of events after cuts" << endl;
-    cout << setw(coutWidth) << " ";
+    str << "Number of events after cuts" << endl;
+    str << setw(strWidth) << " ";
     for( unsigned int iSample = 0; iSample < nSamples; ++iSample )
     {
-        cout << setw(coutWidth) << configContainer.sampleContainer.reducedNames[iSample];
+        str << setw(strWidth) << configContainer.sampleContainer.reducedNames[iSample];
     }
-    cout << endl;
+    str << endl;
     
     for( unsigned int iCut = 0; iCut <= nCuts; ++iCut ) 
     {
         if( iCut )
-            cout << setw(coutWidth) << configContainer.cutContainer.variableNames[iCut-1];
+            str << setw(strWidth) << configContainer.cutContainer.variableNames[iCut-1];
         else
-            cout << setw(coutWidth) << "Total";
+            str << setw(strWidth) << "Total";
         for( unsigned int iSample = 0; iSample < nSamples; ++iSample )
         {
-            cout << setw(coutWidth) << histogramContainer.histograms[iSample]->GetBinContent(iCut);
+            str << setw(strWidth) << histogramContainer.histograms[iSample]->GetBinContent(iCut);
         }
-        cout << endl;
+        str << endl;
     }
-    cout << endl;
+    str << endl;
     
     // Number of entries
-    cout << "Number of entries after cuts" << endl;
-    cout << setw(coutWidth) << " ";
+    str << "Number of entries after cuts" << endl;
+    str << setw(strWidth) << " ";
     for( unsigned int iSample = 0; iSample < nSamples; ++iSample )
     {
-        cout << setw(coutWidth) << configContainer.sampleContainer.reducedNames[iSample];
+        str << setw(strWidth) << configContainer.sampleContainer.reducedNames[iSample];
     }
-    cout << endl;
+    str << endl;
 
     for( unsigned int iCut = 0; iCut <= nCuts; ++iCut ) 
     {
         if( iCut )
-            cout << setw(coutWidth) << configContainer.cutContainer.variableNames[iCut-1];
+            str << setw(strWidth) << configContainer.cutContainer.variableNames[iCut-1];
         else
-            cout << setw(coutWidth) << "Total";
+            str << setw(strWidth) << "Total";
         for( unsigned int iSample = 0; iSample < nSamples; ++iSample )
         {
-            cout << setw(coutWidth) << numberOfEntriesVector[iSample][iCut];
+            str << setw(strWidth) << numberOfEntriesVector[iSample][iCut];
         }
-        cout << endl;
+        str << endl;
     }
-    cout << endl;
+    str << endl;
 }

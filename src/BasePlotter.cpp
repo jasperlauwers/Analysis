@@ -137,12 +137,17 @@ void BasePlotter::writeStacked(const HistogramContainer& histContainer, string e
     float hMax = 0.;
     float hMin = 0.;
     bool maxMakesSense = true;
-    if ( hStack.size() > 0 ) 
-        hMax = getMaximumIncludingErrors(hStack[hStack.size()-1]);
-    if ( hData ) 
-        hMax = max( getMaximumIncludingErrors(hData) , hMax ); 
-    if ( hSignal ) 
-        hMax = max( getMaximumIncludingErrors(hSignal) , hMax ); 
+    if( configContainer.drawNormalized )
+        hMax = 1;
+    else
+    {
+        if ( hStack.size() > 0 ) 
+            hMax = getMaximumIncludingErrors(hStack[hStack.size()-1]);
+        if ( hData ) 
+            hMax = max( getMaximumIncludingErrors(hData) , hMax ); 
+        if ( hSignal ) 
+            hMax = max( getMaximumIncludingErrors(hSignal) , hMax ); 
+    }
     
     // Check consistency (for efficiency plot with fixed axis)
     if( histContainer.axisRanges.size() > 0 && hMax > histContainer.axisRanges[1] )
@@ -158,7 +163,7 @@ void BasePlotter::writeStacked(const HistogramContainer& histContainer, string e
         hMax *= 1.55;
     if( histContainer.axisRanges.size() > 0 )
     {
-        if( maxMakesSense )
+        if( maxMakesSense && (!configContainer.drawNormalized) )
         {
             hMin = histContainer.axisRanges[0];
             hMax = histContainer.axisRanges[1];
@@ -173,7 +178,13 @@ void BasePlotter::writeStacked(const HistogramContainer& histContainer, string e
     // Draw stack
     for( int iHist = hStack.size()-1; iHist > -1; --iHist )
     {
-        hStack[iHist]->GetYaxis()->SetRangeUser(hMin, hMax);
+        if( configContainer.drawNormalized )
+        {
+            hStack[iHist]->Scale(1./hStack[iHist]->Integral());
+            hStack[iHist]->GetYaxis()->SetRangeUser(hMin, getMaximumIncludingErrors(hStack[iHist])*1.5);
+        }
+        else
+            hStack[iHist]->GetYaxis()->SetRangeUser(hMin, hMax);
         hStack[iHist]->Draw("hist same");
     }
     
@@ -195,14 +206,26 @@ void BasePlotter::writeStacked(const HistogramContainer& histContainer, string e
     // Draw signal
     if( hSignal && !configContainer.signalStacked ) 
     {
-        hSignal->GetYaxis()->SetRangeUser(hMin, hMax);
+        if( configContainer.drawNormalized )
+        {
+            hSignal->Scale(1./hSignal->Integral());
+            hSignal->GetYaxis()->SetRangeUser(hMin, getMaximumIncludingErrors(hSignal)*1.5);
+        }
+        else
+            hSignal->GetYaxis()->SetRangeUser(hMin, hMax);
         hSignal->Draw("e same");
     }
     
     // Draw data
     if( hData ) 
     {
-        hData->GetYaxis()->SetRangeUser(hMin, hMax);
+        if( configContainer.drawNormalized )
+        {
+            hData->Scale(1./hData->Integral());
+            hData->GetYaxis()->SetRangeUser(hMin, getMaximumIncludingErrors(hData)*1.5);
+        }
+        else
+            hData->GetYaxis()->SetRangeUser(hMin, hMax);
         hData->Draw("e same");
     }
    
@@ -232,14 +255,14 @@ void BasePlotter::writeStacked(const HistogramContainer& histContainer, string e
             hRatio->GetYaxis()->SetTitle("Signal / Background"); 
         }
         
-        if( configContainer.signalStacked || !hData )
-            hRatio->Divide(hStack[hStack.size()-1]);
-        else
-        {
+//         if( configContainer.signalStacked || !hData )
+//             hRatio->Divide(hStack[hStack.size()-1]);
+//         else
+//         {
             TH1F* hAllMC = (TH1F*) hStack[hStack.size()-1]->Clone("allMC");
 //             hAllMC->Add( hSignal );
             hRatio->Divide(hAllMC);
-        }
+//         }
 
         hRatio->GetYaxis()->SetRangeUser(0, 2); 
         hRatio->Draw("ep");

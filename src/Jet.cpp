@@ -36,9 +36,13 @@ void Jet::setIsHardProcess( float isHardProcess )
 {
     _isHardProcess = isHardProcess;
 }
-void Jet::setSoftMuPt( float softMuPt )
+// void Jet::setSoftMuPt( float softMuPt )
+// {
+//     softMuPt;
+// }
+void Jet::setSoftMu( float pt, float eta, float phi )
 {
-    _softMuPt = softMuPt;
+    softMuon = Lepton(pt, eta, phi, 13);
 }
 float Jet::csv() const
 {
@@ -54,5 +58,9 @@ bool Jet::isHardProcess() const
 }
 float Jet::softMuPt() const
 {
-    return _softMuPt;
+    return softMuon.pt();
+}
+float Jet::softMuDr() const
+{
+    return this->dR(softMuon);
 }
