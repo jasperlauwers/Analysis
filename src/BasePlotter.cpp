@@ -53,7 +53,8 @@ void BasePlotter::writeStacked(const HistogramContainer& histContainer, string e
     if( extension[0] == '.' )
         extension.erase(0,1);
     
-    system(("mkdir -p " + configContainer.outputDir).c_str());  
+    system(("mkdir -p " + configContainer.outputDir).c_str()); 
+    TFile* f = new TFile((configContainer.outputDir + "Plots.root").c_str(), "UPDATE");
     
     unsigned int nSamples = histContainer.reducedNames.size();
     TCanvas *c = new TCanvas(("Canv_stacked_" + histContainer.containerName).c_str(), "", 600, 600 + (120 * configContainer.plotRatio));
@@ -312,6 +313,8 @@ void BasePlotter::writeStacked(const HistogramContainer& histContainer, string e
     
     c->Print((configContainer.outputDir + histContainer.containerName + "." + extension).c_str(), extension.c_str());
     cout << "Wrote plot " << (histContainer.containerName + "." + extension) << endl;
+    c->Write();
+    f->Close();
 }
 
 void BasePlotter::writeEfficiency(const HistogramContainer& numeratorContainer, const vector<TH1*>& denominatorHistograms, string extension) const
@@ -335,6 +338,7 @@ void BasePlotter::writeEfficiency(const HistogramContainer& numeratorContainer, 
         extension.erase(0,1);
     
     system(("mkdir -p " + configContainer.outputDir).c_str());  
+    TFile* f = new TFile((configContainer.outputDir + "Efficiency.root").c_str(), "UPDATE");
     
     unsigned int nSamples = numeratorContainer.histograms.size();
     TCanvas *c = new TCanvas("Cut_eff_canv", "", 600, 600);
@@ -435,6 +439,8 @@ void BasePlotter::writeEfficiency(const HistogramContainer& numeratorContainer, 
     
     c->Print((configContainer.outputDir + numeratorContainer.containerName + "." + extension).c_str(), extension.c_str());
     cout << "Wrote plot " << (numeratorContainer.containerName + "." + extension) << endl;
+    c->Write();
+    f->Close();
 }
 
 void BasePlotter::setCanvasAttributes( unsigned int nSamples, TLegend*& leg, vector<TLatex*>& latexVector) const
