@@ -8,7 +8,7 @@ CFLAGS_libconfig = -I. -I/home/jlauwers/VBS/Run2/Analysis/libconfig-1.5/lib
 LIBS   = $(shell root-config --libs) -lPhysics -lThread -lMinuit -lHtml -lVMC -lEG -lGeom 
 LIBS_libconfig =  -L/home/jlauwers/VBS/Run2/Analysis/libconfig-1.5/lib/.libs/ -lconfig++
 
-all: testAnalysis Plot_cut_efficiency stackPlotter qcdScalePlotter fakeLepton
+all: testAnalysis Plot_cut_efficiency stackPlotter qcdScalePlotter fakeLepton multiplePlotter
 
 obj/%.o: %.cpp
 	$(CC) -c -o $@ $< $(CFLAGS) $(CFLAGS_libconfig)
@@ -22,7 +22,7 @@ obj/TreeReader.o: TreeReader.cpp TreeReader.hpp latino.h
 
 obj/Particle.o: Particle.cpp Particle.hpp
 
-obj/Jet.o: Jet.cpp Jet.hpp Particle.hpp
+obj/Jet.o: Jet.cpp Jet.hpp Lepton.hpp Particle.hpp
 
 obj/Lepton.o: Lepton.cpp Lepton.hpp Particle.hpp
 
@@ -90,6 +90,11 @@ Plot_cut_efficiency : $(OBJ_FILES) obj/Plot_cut_efficiency.o obj/latino.o obj/La
 obj/fakeLepton.o: stackPlotter.cpp EventReader.hpp TreeReader.hpp latino.h EventContainer.hpp Lepton.hpp Jet.hpp Met.hpp Particle.hpp VariableReader.hpp VariableContainer.hpp ConfigReader.hpp SampleReader.hpp SampleContainer.hpp CutReader.hpp CutContainer.hpp EventCleaner.hpp ConfigHandler.hpp  EventSelecter.hpp VariableDictionary.hpp ConfigContainer.hpp FakeLeptonPlotter.hpp EventPlotter.hpp BasePlotter.hpp HistogramContainer.hpp LatinoStyle2.h
 
 fakeLepton : $(OBJ_FILES) obj/fakeLepton.o obj/latino.o obj/LatinoStyle2.o
+	$(CC) -o $@ $^ $(CFLAGS) $(CFLAGS_libconfig) $(LIBS) $(LIBS_libconfig)
+
+obj/multiplePlotter.o: multiplePlotter.cpp EventReader.hpp TreeReader.hpp latino.h EventContainer.hpp Lepton.hpp Jet.hpp Met.hpp Particle.hpp VariableReader.hpp VariableContainer.hpp ConfigReader.hpp SampleReader.hpp SampleContainer.hpp CutReader.hpp CutContainer.hpp FakeReader.hpp FakeContainer.hpp EventCleaner.hpp ConfigHandler.hpp  EventSelecter.hpp WeightCalc.hpp VariableDictionary.hpp ConfigContainer.hpp EventPlotter.hpp BasePlotter.hpp HistogramContainer.hpp LatinoStyle2.h
+
+multiplePlotter : $(OBJ_FILES) obj/multiplePlotter.o obj/latino.o obj/LatinoStyle2.o
 	$(CC) -o $@ $^ $(CFLAGS) $(CFLAGS_libconfig) $(LIBS) $(LIBS_libconfig)
 
 clean:
