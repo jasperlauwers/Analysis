@@ -147,6 +147,7 @@ void CutPlotter::writeEvents() const
     if (f.is_open())
     {
         outEvents(f);
+        outEvents(f, true);
     }
     else
     {
@@ -155,18 +156,33 @@ void CutPlotter::writeEvents() const
     f.close();
 }
 
-void CutPlotter::outEvents( ostream& str ) const
+void CutPlotter::outEvents( ostream& str, bool latex ) const
 {
     unsigned int strWidth = 20;
     str << setprecision(2) << fixed << endl;
     
     // Number of events
     str << "Number of events after cuts" << endl;
-    str << setw(strWidth) << " ";
+    if ( latex )
+    {
+        str << "\\begin{table}[h]\n\\centering\n\\begin{tabular}{|";
+        for( unsigned int iSample = 0; iSample < nSamples; ++iSample )
+            str << "c|";
+        str << "}\n\\hline\n" << setw(strWidth+1) << "&";   
+    }
+    else
+        str << setw(strWidth) << " ";
     for( unsigned int iSample = 0; iSample < nSamples; ++iSample )
     {
-        str << setw(strWidth) << configContainer.sampleContainer.reducedNames[iSample];
+        if( configContainer.sampleContainer.sampleType[iSample] != SampleType::DATA || configContainer.unblind )
+        {
+            str << setw(strWidth) << configContainer.sampleContainer.reducedNames[iSample];
+            if( latex && iSample < (nSamples-1) )
+                str << "&";
+        }
     }
+    if( latex )
+        str <<  "\\\\ \\hline";
     str << endl;
     
     for( unsigned int iCut = 0; iCut <= nCuts; ++iCut ) 
@@ -175,21 +191,47 @@ void CutPlotter::outEvents( ostream& str ) const
             str << setw(strWidth) << configContainer.cutContainer.variableNames[iCut-1];
         else
             str << setw(strWidth) << "Total";
+        if( latex )
+                str << "&";
         for( unsigned int iSample = 0; iSample < nSamples; ++iSample )
         {
-            str << setw(strWidth) << histogramContainer.histograms[iSample]->GetBinContent(iCut);
+            if( configContainer.sampleContainer.sampleType[iSample] != SampleType::DATA || configContainer.unblind )
+            {
+                str << setw(strWidth) << histogramContainer.histograms[iSample]->GetBinContent(iCut);
+                if( latex && iSample < (nSamples-1) )
+                    str << "&";
+            }
         }
+        if( latex )
+            str <<  "\\\\ \\hline";
         str << endl;
     }
+    if( latex )
+        str << "\\end{tabular}\n\\label{tab:events}\n\\caption{Expected events after applying each selection cut}\n\\end{table}\n";
     str << endl;
     
     // Number of entries
     str << "Number of entries after cuts" << endl;
-    str << setw(strWidth) << " ";
+    if ( latex )
+    {
+        str << "\\begin{table}[h]\n\\centering\n\\begin{tabular}{|";
+        for( unsigned int iSample = 0; iSample < nSamples; ++iSample )
+            str << "c|";
+        str << "}\n\\hline\n" << setw(strWidth+1) << "&";   
+    }
+    else
+        str << setw(strWidth) << " ";
     for( unsigned int iSample = 0; iSample < nSamples; ++iSample )
     {
-        str << setw(strWidth) << configContainer.sampleContainer.reducedNames[iSample];
+        if( configContainer.sampleContainer.sampleType[iSample] != SampleType::DATA || configContainer.unblind )
+        {
+            str << setw(strWidth) << configContainer.sampleContainer.reducedNames[iSample];
+            if( latex && iSample < (nSamples-1) )
+                str << "&";
+        }
     }
+    if( latex )
+        str <<  "\\\\ \\hline";
     str << endl;
 
     for( unsigned int iCut = 0; iCut <= nCuts; ++iCut ) 
@@ -198,11 +240,23 @@ void CutPlotter::outEvents( ostream& str ) const
             str << setw(strWidth) << configContainer.cutContainer.variableNames[iCut-1];
         else
             str << setw(strWidth) << "Total";
+        
+        if( latex )
+                str << "&";
         for( unsigned int iSample = 0; iSample < nSamples; ++iSample )
         {
-            str << setw(strWidth) << numberOfEntriesVector[iSample][iCut];
+            if( configContainer.sampleContainer.sampleType[iSample] != SampleType::DATA || configContainer.unblind )
+            {
+                str << setw(strWidth) << numberOfEntriesVector[iSample][iCut];
+                if( latex && iSample < (nSamples-1) )
+                    str << "&";
+            }
         }
+        if( latex )
+            str <<  "\\\\ \\hline";
         str << endl;
     }
+    if( latex )
+        str << "\\end{tabular}\n\\label{tab:entries}\n\\caption{Number of entries after applying each selection cut}\n\\end{table}\n";
     str << endl;
 }

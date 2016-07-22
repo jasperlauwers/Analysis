@@ -37,7 +37,7 @@ public:
     void writeEvents() const;
         
 private:
-    void outEvents( ostream& str ) const;
+    void outEvents( ostream& str, bool latex = false ) const;
     unsigned int nSamples, nCuts;
     HistogramContainer histogramContainer;
     vector<vector<unsigned int>> numberOfEntriesVector;
