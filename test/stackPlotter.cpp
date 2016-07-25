@@ -48,8 +48,8 @@ int main (int argc, char ** argv) {
         for( unsigned int iSubSample = 0; iSubSample < cfgContainer.sampleContainer.sampleNames[iSample].size(); ++iSubSample) 
         {
             // Init DY weights
-            if( cfgContainer.sampleContainer.sampleNames[iSample][iSubSample].find("DY") != string::npos )
-            weightCalc.initDYWeight(reader);
+            if( cfgContainer.flipChargeDY && cfgContainer.sampleContainer.sampleNames[iSample][iSubSample].find("DY") != string::npos )
+                weightCalc.initDYWeight(reader);
             
             if( reader.setSample(iSample, iSubSample) )
             {   

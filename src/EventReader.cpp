@@ -226,7 +226,7 @@ bool EventReader::setSample(unsigned int iSample, unsigned int iSubSample)
             sampleBranches.push_back("fakeW2l2jstatMuDown");
         }
         
-        if( triggerSelection )
+//         if( triggerSelection )
             sampleBranches.push_back("std_vector_trigger");
         
         // Debug eventNo info
@@ -247,7 +247,10 @@ bool EventReader::setSample(unsigned int iSample, unsigned int iSubSample)
         if( !triggerSelection ) 
         {
             sampleBranches.push_back("std_vector_lepton_idisoW"); 
-            sampleBranches.push_back("effTrigW");
+//             sampleBranches.push_back("effTrigW");
+            sampleBranches.push_back("effTrigW_DbleEle");
+            sampleBranches.push_back("effTrigW_DbleMu");
+            sampleBranches.push_back("effTrigW_EleMu");
 //             sampleBranches.push_back("bPogSF");
         }
         
@@ -255,15 +258,15 @@ bool EventReader::setSample(unsigned int iSample, unsigned int iSubSample)
             sampleBranches.insert(sampleBranches.end(), genBranches.begin(), genBranches.end());
     }
     
-    if( configContainer.sampleContainer.sampleNames[iSample][iSubSample].find("DY") != string::npos && configContainer.sampleContainer.sampleNames[iSample][iSubSample].find("M-10") == string::npos )
-    {
-        isDY = true;
-        sampleBranches.push_back("std_vector_LHEparton_pt");
-        sampleBranches.push_back("std_vector_LHEparton_eta");
-        sampleBranches.push_back("std_vector_LHEparton_phi");
-    }
-    else
-        isDY = false;
+//     if( configContainer.sampleContainer.sampleNames[iSample][iSubSample].find("DY") != string::npos && configContainer.sampleContainer.sampleNames[iSample][iSubSample].find("M-10") == string::npos )
+//     {
+//         isDY = true;
+//         sampleBranches.push_back("std_vector_LHEparton_pt");
+//         sampleBranches.push_back("std_vector_LHEparton_eta");
+//         sampleBranches.push_back("std_vector_LHEparton_phi");
+//     }
+//     else
+//         isDY = false;
 
     cout << "Reading out branches: \n";
     for( const string& branch : sampleBranches )
@@ -320,7 +323,9 @@ bool EventReader::fillNextEvent()
         
         if( sampleType == SampleType::DATA || sampleType == SampleType::FAKELEPTON)
         {
-            skipEvent = ( treeReader->trigger == 0 );
+//             skipEvent = ( treeReader->trigger != 1 );
+            skipEvent = ( treeReader->trigger != 1 || ((*treeReader->std_vector_trigger)[5] != 1 &&  (*treeReader->std_vector_trigger)[10] != 1 && (*treeReader->std_vector_trigger)[12] != 1 && (*treeReader->std_vector_trigger)[7] != 1 && (*treeReader->std_vector_trigger)[9] != 1) );
+            
             if( triggerSelection ) 
             {
                 skipEvent = true;
@@ -526,7 +531,8 @@ bool EventReader::fillNextEvent()
         if( ! isDY ) 
              weight *= treeReader->baseW;
         if( !triggerSelection ) 
-            weight *= (treeReader->effTrigW * (*treeReader->std_vector_lepton_idisoW)[0] * (*treeReader->std_vector_lepton_idisoW)[1] /* * treeReader->bPogSF*/ );
+            weight *= ( (treeReader->effTrigW_DbleEle +  treeReader->effTrigW_DbleMu + treeReader->effTrigW_EleMu)
+                        * (*treeReader->std_vector_lepton_idisoW)[0] * (*treeReader->std_vector_lepton_idisoW)[1] /* * treeReader->bPogSF*/ );
         if( hasNegWeight ) 
             weight *= (treeReader->GEN_weight_SM/abs(treeReader->GEN_weight_SM));
         

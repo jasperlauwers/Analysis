@@ -115,6 +115,17 @@ ConfigHandler::ConfigHandler(const string& fileName, ConfigContainer& cContainer
             cfgContainer.minLeptonPt = 0.;
         }
         
+        // FlipChargeDY
+        try
+        {
+            cfgContainer.flipChargeDY = cfg.lookup("FlipChargeDY");
+        }
+        catch(const SettingNotFoundException &nfex) 
+        {
+            cout << "FlipChargeDY setting not found. Using default: false" << endl;
+            cfgContainer.flipChargeDY = false;
+        }
+        
         ////////// Plot Settings ////////// 
         // MaxEvents
         try

@@ -56,13 +56,17 @@ void WeightCalc::initDYWeight(const EventReader& reader)
     if( applyDYWeight )
         return;
     
-    reader.getDYWeights(DYweights);
+//     reader.getDYWeights(DYweights);
     applyDYWeight = true;
     
     // detajj weight
-    TFile* f = new TFile("DYWeight/DY_LOtoNLO_weight.root","READ");
-    hDYshapeWeight = (TH1F*) f->Get("DY_detajj_weight"); //contains shape + NLO correction
-    maxVal = 3.9;
+//     TFile* f = new TFile("DYWeight/DY_LOtoNLO_weight.root","READ");
+//     hDYshapeWeight = (TH1F*) f->Get("DY_detajj_weight"); //contains shape + NLO correction
+//     maxVal = 3.9;
+    
+    // lepton eta weight
+    TFile* f = new TFile("DYWeight/DY_SStoOS_weight.root","READ");
+    hDYshapeWeight = (TH1F*) f->Get("DY_leptoneta_weight"); //contains shape + normalization
 }
 
 void WeightCalc::setWeight(SampleType sampleType, const string& sampleName) 
@@ -130,16 +134,19 @@ void WeightCalc::setWeight(SampleType sampleType, const string& sampleName)
     }
     
     // DY   
-    if( applyDYWeight && sampleName.find("DY") != string::npos && sampleName.find("M-10") == string::npos )
+    if( applyDYWeight && sampleName.find("DY") != string::npos /*&& sampleName.find("M-10") == string::npos*/ )
     {    
         float weight = eventContainer.weight();
         
-        unsigned int nJets = eventContainer.genjetnhardprocess();
-        weight *= DYweights[nJets];
+//         unsigned int nJets = eventContainer.genjetnhardprocess();
+//         weight *= DYweights[nJets];
         
-        if( sampleName.find("DYJetsToLL_M-50_") == string::npos )
-            weight *= hDYshapeWeight->GetBinContent(hDYshapeWeight->FindBin(min(eventContainer.detajj(), maxVal))); 
-
-        eventContainer.setWeight(weight); 
+//         if( sampleName.find("DYJetsToLL_M-50_") == string::npos )
+//             weight *= hDYshapeWeight->GetBinContent(hDYshapeWeight->FindBin(min(eventContainer.detajj(), maxVal)));
+        if( eventContainer.channel() == 1 ) 
+        {
+            weight *= ( hDYshapeWeight->GetBinContent(hDYshapeWeight->FindBin( eventContainer.leptons[eventContainer.goodLeptons[0]].eta())) + hDYshapeWeight->GetBinContent(hDYshapeWeight->FindBin( eventContainer.leptons[eventContainer.goodLeptons[1]].eta()))) / 2.; 
+            eventContainer.setWeight(weight); 
+        }
     }
 }

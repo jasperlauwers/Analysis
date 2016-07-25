@@ -365,6 +365,9 @@ public :
    Float_t         effTrigW_Down;
    Float_t         effTrigW_Up;
    Float_t         effTrigW;
+   Float_t         effTrigW_DbleEle;
+   Float_t         effTrigW_DbleMu;
+   Float_t         effTrigW_EleMu;
    vector<float>   *std_vector_lepton_idisoW;
    vector<float>   *std_vector_lepton_idisoW_Up;
    vector<float>   *std_vector_lepton_idisoW_Down;
@@ -748,6 +751,9 @@ public :
    TBranch        *b_effTrigW_Down;   //!
    TBranch        *b_effTrigW_Up;   //!
    TBranch        *b_effTrigW;   //!
+   TBranch        *b_effTrigW_DbleEle;   //!
+   TBranch        *b_effTrigW_DbleMu;   //!
+   TBranch        *b_effTrigW_EleMu;   //!
    TBranch        *b_std_vector_lepton_idisoW;   //!
    TBranch        *b_std_vector_lepton_idisoW_Up;   //!
    TBranch        *b_std_vector_lepton_idisoW_Down;   //!
@@ -1356,6 +1362,9 @@ void latino::Init(TTree *tree)
    fChain->SetBranchAddress("bTPSF2JetDown", &bTPSF2JetDown, &b_bTPSF2JetDown);
    fChain->SetBranchAddress("effTrigW_Down", &effTrigW_Down, &b_effTrigW_Down);
    fChain->SetBranchAddress("effTrigW_Up", &effTrigW_Up, &b_effTrigW_Up);
+   fChain->SetBranchAddress("effTrigW_DbleEle", &effTrigW_DbleEle, &b_effTrigW_DbleEle);
+   fChain->SetBranchAddress("effTrigW_DbleMu", &effTrigW_DbleMu, &b_effTrigW_DbleMu);
+   fChain->SetBranchAddress("effTrigW_EleMu", &effTrigW_EleMu, &b_effTrigW_EleMu);
    fChain->SetBranchAddress("effTrigW", &effTrigW, &b_effTrigW);
    fChain->SetBranchAddress("std_vector_lepton_idisoW", &std_vector_lepton_idisoW, &b_std_vector_lepton_idisoW);
    fChain->SetBranchAddress("std_vector_lepton_idisoW_Up", &std_vector_lepton_idisoW_Up, &b_std_vector_lepton_idisoW_Up);
