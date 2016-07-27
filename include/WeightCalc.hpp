@@ -26,7 +26,7 @@ private:
     FakeContainer *fakeContainer;
     TH2F *hFakeElectron, *hFakeMuon, *hPromptElectron, *hPromptMuon;
     vector<float> DYweights;
-    TH1F *hDYshapeWeight;
+    TH2F *hDYshapeWeight;
     float maxVal;
     bool applyDYWeight, applyFakeWeight;
 };
