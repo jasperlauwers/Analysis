@@ -4,6 +4,7 @@
 #include "libconfig.h++"
 #include <iostream>
 #include <string>
+#include <fstream>
 #include "VariableReader.hpp"
 #include "SampleReader.hpp"
 #include "CutReader.hpp"
@@ -23,6 +24,8 @@ public:
     void setFakeContainer(FakeContainer&);
     const Config& getConfig() const;
     void readConfig();
+    // Makes a copy of the config files to the output directory (log file)
+    void writeConfig();
     
 protected:
     bool hasSamples, hasVariables, hasCuts, hasFakes;
@@ -32,5 +35,6 @@ protected:
     VariableContainer *variableContainer;
     CutContainer *cutContainer;
     FakeContainer *fakeContainer;
+    const string& fileName;
 };
 #endif

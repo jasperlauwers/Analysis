@@ -3,7 +3,7 @@
 
 
 ConfigHandler::ConfigHandler(const string& fileName, ConfigContainer& cContainer) 
-: ConfigReader(fileName), hasSamples(false), hasVariables(false), hasCuts(false), hasFakes(false), cfgContainer(cContainer), sampleContainer(nullptr), variableContainer(nullptr), cutContainer(nullptr)
+: ConfigReader(fileName), hasSamples(false), hasVariables(false), hasCuts(false), hasFakes(false), cfgContainer(cContainer), sampleContainer(nullptr), variableContainer(nullptr), cutContainer(nullptr), fileName(fileName)
 {
     // Allow float -> int and int -> float conversions
     cfg.setAutoConvert(true);
@@ -359,5 +359,36 @@ void ConfigHandler::readConfig()
     {
         cerr << "Incorrect type or structure in the configuration file: " << tex.getPath() << endl;
         throw;
+    }
+}
+
+void ConfigHandler::writeConfig()
+{
+    ifstream ifStream(fileName, ios::binary);
+    
+    system(("mkdir -p " + cfgContainer.outputDir).c_str());   
+    ofstream ofStream(cfgContainer.outputDir+"Config_"+fileName, ios::binary);
+
+    ofStream << ifStream.rdbuf();
+    
+    if( hasSamples )
+    {
+        ifstream ifStream(samplesFile, ios::binary);
+        ofStream << ifStream.rdbuf();
+    }    
+    if( hasVariables )
+    {
+        ifstream ifStream(variablesFile, ios::binary);
+        ofStream << ifStream.rdbuf();
+    }
+    if( hasCuts )
+    {
+        ifstream ifStream(cutsFile, ios::binary);
+        ofStream << ifStream.rdbuf();
+    }
+    if( hasFakes )
+    {
+        ifstream ifStream(fakesFile, ios::binary);
+        ofStream << ifStream.rdbuf();
     }
 }

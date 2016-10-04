@@ -36,6 +36,7 @@ int main (int argc, char ** argv) {
             unique_ptr<ConfigHandler> ptr(new ConfigHandler(cfgNames[iCfg], cfgContainers[iCfg]));
             cHandlers.push_back(move(ptr));
             cHandlers[iCfg]->readConfig();
+            cHandlers[iCfg->writeConfig();
         }
         catch(...)
         {

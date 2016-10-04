@@ -347,21 +347,62 @@ public :
    Float_t         bPogSF;
    Float_t         bPogSFUp;
    Float_t         bPogSFDown;
-   Float_t         bTPSF;
-   Float_t         bTPSFUp;
-   Float_t         bTPSFDown;
-   Float_t         bPogSF1Jet;
-   Float_t         bPogSF1JetUp;
-   Float_t         bPogSF1JetDown;
-   Float_t         bTPSF1Jet;
-   Float_t         bTPSF1JetUp;
-   Float_t         bTPSF1JetDown;
-   Float_t         bPogSF2Jet;
-   Float_t         bPogSF2JetUp;
-   Float_t         bPogSF2JetDown;
-   Float_t         bTPSF2Jet;
-   Float_t         bTPSF2JetUp;
-   Float_t         bTPSF2JetDown;
+   Float_t         bPogSF_CMVAL;
+   Float_t         bPogSF_CMVAL_Up;
+   Float_t         bPogSF_CMVAL_Down;
+   Float_t         bPogSF_CMVAM;
+   Float_t         bPogSF_CMVAM_Up;
+   Float_t         bPogSF_CMVAM_Down;
+   Float_t         bPogSF_CMVAT;
+   Float_t         bPogSF_CMVAT_Up;
+   Float_t         bPogSF_CMVAT_Down;
+   Float_t         bPogSF_CMVAreshape;
+   Float_t         bPogSF_CMVAreshape_up_jes;
+   Float_t         bPogSF_CMVAreshape_down_jes;
+   Float_t         bPogSF_CMVAreshape_up_lf;
+   Float_t         bPogSF_CMVAreshape_down_lf;
+   Float_t         bPogSF_CMVAreshape_up_hf;
+   Float_t         bPogSF_CMVAreshape_down_hf;
+   Float_t         bPogSF_CMVAreshape_up_hfstats1;
+   Float_t         bPogSF_CMVAreshape_down_hfstats1;
+   Float_t         bPogSF_CMVAreshape_up_hfstats2;
+   Float_t         bPogSF_CMVAreshape_down_hfstats2;
+   Float_t         bPogSF_CMVAreshape_up_lfstats1;
+   Float_t         bPogSF_CMVAreshape_down_lfstats1;
+   Float_t         bPogSF_CMVAreshape_up_lfstats2;
+   Float_t         bPogSF_CMVAreshape_down_lfstats2;
+   Float_t         bPogSF_CMVAreshape_up_cferr1;
+   Float_t         bPogSF_CMVAreshape_down_cferr1;
+   Float_t         bPogSF_CMVAreshape_up_cferr2;
+   Float_t         bPogSF_CMVAreshape_down_cferr2;
+   Float_t         bPogSF_CSVL;
+   Float_t         bPogSF_CSVL_Up;
+   Float_t         bPogSF_CSVL_Down;
+   Float_t         bPogSF_CSVM;
+   Float_t         bPogSF_CSVM_Up;
+   Float_t         bPogSF_CSVM_Down;
+   Float_t         bPogSF_CSVT;
+   Float_t         bPogSF_CSVT_Up;
+   Float_t         bPogSF_CSVT_Down;
+   Float_t         bPogSF_CSVreshape;
+   Float_t         bPogSF_CSVreshape_up_jes;
+   Float_t         bPogSF_CSVreshape_down_jes;
+   Float_t         bPogSF_CSVreshape_up_lf;
+   Float_t         bPogSF_CSVreshape_down_lf;
+   Float_t         bPogSF_CSVreshape_up_hf;
+   Float_t         bPogSF_CSVreshape_down_hf;
+   Float_t         bPogSF_CSVreshape_up_hfstats1;
+   Float_t         bPogSF_CSVreshape_down_hfstats1;
+   Float_t         bPogSF_CSVreshape_up_hfstats2;
+   Float_t         bPogSF_CSVreshape_down_hfstats2;
+   Float_t         bPogSF_CSVreshape_up_lfstats1;
+   Float_t         bPogSF_CSVreshape_down_lfstats1;
+   Float_t         bPogSF_CSVreshape_up_lfstats2;
+   Float_t         bPogSF_CSVreshape_down_lfstats2;
+   Float_t         bPogSF_CSVreshape_up_cferr1;
+   Float_t         bPogSF_CSVreshape_down_cferr1;
+   Float_t         bPogSF_CSVreshape_up_cferr2;
+   Float_t         bPogSF_CSVreshape_down_cferr2;
    Float_t         effTrigW_Down;
    Float_t         effTrigW_Up;
    Float_t         effTrigW;
@@ -733,21 +774,62 @@ public :
    TBranch        *b_bPogSF;   //!
    TBranch        *b_bPogSFUp;   //!
    TBranch        *b_bPogSFDown;   //!
-   TBranch        *b_bTPSF;   //!
-   TBranch        *b_bTPSFUp;   //!
-   TBranch        *b_bTPSFDown;   //!
-   TBranch        *b_bPogSF1Jet;   //!
-   TBranch        *b_bPogSF1JetUp;   //!
-   TBranch        *b_bPogSF1JetDown;   //!
-   TBranch        *b_bTPSF1Jet;   //!
-   TBranch        *b_bTPSF1JetUp;   //!
-   TBranch        *b_bTPSF1JetDown;   //!
-   TBranch        *b_bPogSF2Jet;   //!
-   TBranch        *b_bPogSF2JetUp;   //!
-   TBranch        *b_bPogSF2JetDown;   //!
-   TBranch        *b_bTPSF2Jet;   //!
-   TBranch        *b_bTPSF2JetUp;   //!
-   TBranch        *b_bTPSF2JetDown;   //!
+   TBranch        *b_bPogSF_CMVAL;   //!
+   TBranch        *b_bPogSF_CMVAL_Up;   //!
+   TBranch        *b_bPogSF_CMVAL_Down;   //!
+   TBranch        *b_bPogSF_CMVAM;   //!
+   TBranch        *b_bPogSF_CMVAM_Up;   //!
+   TBranch        *b_bPogSF_CMVAM_Down;   //!
+   TBranch        *b_bPogSF_CMVAT;   //!
+   TBranch        *b_bPogSF_CMVAT_Up;   //!
+   TBranch        *b_bPogSF_CMVAT_Down;   //!
+   TBranch        *b_bPogSF_CMVAreshape;   //!
+   TBranch        *b_bPogSF_CMVAreshape_up_jes;   //!
+   TBranch        *b_bPogSF_CMVAreshape_down_jes;   //!
+   TBranch        *b_bPogSF_CMVAreshape_up_lf;   //!
+   TBranch        *b_bPogSF_CMVAreshape_down_lf;   //!
+   TBranch        *b_bPogSF_CMVAreshape_up_hf;   //!
+   TBranch        *b_bPogSF_CMVAreshape_down_hf;   //!
+   TBranch        *b_bPogSF_CMVAreshape_up_hfstats1;   //!
+   TBranch        *b_bPogSF_CMVAreshape_down_hfstats1;   //!
+   TBranch        *b_bPogSF_CMVAreshape_up_hfstats2;   //!
+   TBranch        *b_bPogSF_CMVAreshape_down_hfstats2;   //!
+   TBranch        *b_bPogSF_CMVAreshape_up_lfstats1;   //!
+   TBranch        *b_bPogSF_CMVAreshape_down_lfstats1;   //!
+   TBranch        *b_bPogSF_CMVAreshape_up_lfstats2;   //!
+   TBranch        *b_bPogSF_CMVAreshape_down_lfstats2;   //!
+   TBranch        *b_bPogSF_CMVAreshape_up_cferr1;   //!
+   TBranch        *b_bPogSF_CMVAreshape_down_cferr1;   //!
+   TBranch        *b_bPogSF_CMVAreshape_up_cferr2;   //!
+   TBranch        *b_bPogSF_CMVAreshape_down_cferr2;   //!
+   TBranch        *b_bPogSF_CSVL;   //!
+   TBranch        *b_bPogSF_CSVL_Up;   //!
+   TBranch        *b_bPogSF_CSVL_Down;   //!
+   TBranch        *b_bPogSF_CSVM;   //!
+   TBranch        *b_bPogSF_CSVM_Up;   //!
+   TBranch        *b_bPogSF_CSVM_Down;   //!
+   TBranch        *b_bPogSF_CSVT;   //!
+   TBranch        *b_bPogSF_CSVT_Up;   //!
+   TBranch        *b_bPogSF_CSVT_Down;   //!
+   TBranch        *b_bPogSF_CSVreshape;   //!
+   TBranch        *b_bPogSF_CSVreshape_up_jes;   //!
+   TBranch        *b_bPogSF_CSVreshape_down_jes;   //!
+   TBranch        *b_bPogSF_CSVreshape_up_lf;   //!
+   TBranch        *b_bPogSF_CSVreshape_down_lf;   //!
+   TBranch        *b_bPogSF_CSVreshape_up_hf;   //!
+   TBranch        *b_bPogSF_CSVreshape_down_hf;   //!
+   TBranch        *b_bPogSF_CSVreshape_up_hfstats1;   //!
+   TBranch        *b_bPogSF_CSVreshape_down_hfstats1;   //!
+   TBranch        *b_bPogSF_CSVreshape_up_hfstats2;   //!
+   TBranch        *b_bPogSF_CSVreshape_down_hfstats2;   //!
+   TBranch        *b_bPogSF_CSVreshape_up_lfstats1;   //!
+   TBranch        *b_bPogSF_CSVreshape_down_lfstats1;   //!
+   TBranch        *b_bPogSF_CSVreshape_up_lfstats2;   //!
+   TBranch        *b_bPogSF_CSVreshape_down_lfstats2;   //!
+   TBranch        *b_bPogSF_CSVreshape_up_cferr1;   //!
+   TBranch        *b_bPogSF_CSVreshape_down_cferr1;   //!
+   TBranch        *b_bPogSF_CSVreshape_up_cferr2;   //!
+   TBranch        *b_bPogSF_CSVreshape_down_cferr2;   //!
    TBranch        *b_effTrigW_Down;   //!
    TBranch        *b_effTrigW_Up;   //!
    TBranch        *b_effTrigW;   //!
@@ -1345,21 +1427,62 @@ void latino::Init(TTree *tree)
    fChain->SetBranchAddress("bPogSF", &bPogSF, &b_bPogSF);
    fChain->SetBranchAddress("bPogSFUp", &bPogSFUp, &b_bPogSFUp);
    fChain->SetBranchAddress("bPogSFDown", &bPogSFDown, &b_bPogSFDown);
-   fChain->SetBranchAddress("bTPSF", &bTPSF, &b_bTPSF);
-   fChain->SetBranchAddress("bTPSFUp", &bTPSFUp, &b_bTPSFUp);
-   fChain->SetBranchAddress("bTPSFDown", &bTPSFDown, &b_bTPSFDown);
-   fChain->SetBranchAddress("bPogSF1Jet", &bPogSF1Jet, &b_bPogSF1Jet);
-   fChain->SetBranchAddress("bPogSF1JetUp", &bPogSF1JetUp, &b_bPogSF1JetUp);
-   fChain->SetBranchAddress("bPogSF1JetDown", &bPogSF1JetDown, &b_bPogSF1JetDown);
-   fChain->SetBranchAddress("bTPSF1Jet", &bTPSF1Jet, &b_bTPSF1Jet);
-   fChain->SetBranchAddress("bTPSF1JetUp", &bTPSF1JetUp, &b_bTPSF1JetUp);
-   fChain->SetBranchAddress("bTPSF1JetDown", &bTPSF1JetDown, &b_bTPSF1JetDown);
-   fChain->SetBranchAddress("bPogSF2Jet", &bPogSF2Jet, &b_bPogSF2Jet);
-   fChain->SetBranchAddress("bPogSF2JetUp", &bPogSF2JetUp, &b_bPogSF2JetUp);
-   fChain->SetBranchAddress("bPogSF2JetDown", &bPogSF2JetDown, &b_bPogSF2JetDown);
-   fChain->SetBranchAddress("bTPSF2Jet", &bTPSF2Jet, &b_bTPSF2Jet);
-   fChain->SetBranchAddress("bTPSF2JetUp", &bTPSF2JetUp, &b_bTPSF2JetUp);
-   fChain->SetBranchAddress("bTPSF2JetDown", &bTPSF2JetDown, &b_bTPSF2JetDown);
+   fChain->SetBranchAddress("bPogSF_CMVAL", &bPogSF_CMVAL, &b_bPogSF_CMVAL);
+   fChain->SetBranchAddress("bPogSF_CMVAL_Up", &bPogSF_CMVAL_Up, &b_bPogSF_CMVAL_Up);
+   fChain->SetBranchAddress("bPogSF_CMVAL_Down", &bPogSF_CMVAL_Down, &b_bPogSF_CMVAL_Down);
+   fChain->SetBranchAddress("bPogSF_CMVAM", &bPogSF_CMVAM, &b_bPogSF_CMVAM);
+   fChain->SetBranchAddress("bPogSF_CMVAM_Up", &bPogSF_CMVAM_Up, &b_bPogSF_CMVAM_Up);
+   fChain->SetBranchAddress("bPogSF_CMVAM_Down", &bPogSF_CMVAM_Down, &b_bPogSF_CMVAM_Down);
+   fChain->SetBranchAddress("bPogSF_CMVAT", &bPogSF_CMVAT, &b_bPogSF_CMVAT);
+   fChain->SetBranchAddress("bPogSF_CMVAT_Up", &bPogSF_CMVAT_Up, &b_bPogSF_CMVAT_Up);
+   fChain->SetBranchAddress("bPogSF_CMVAT_Down", &bPogSF_CMVAT_Down, &b_bPogSF_CMVAT_Down);
+   fChain->SetBranchAddress("bPogSF_CMVAreshape", &bPogSF_CMVAreshape, &b_bPogSF_CMVAreshape);
+   fChain->SetBranchAddress("bPogSF_CMVAreshape_up_jes", &bPogSF_CMVAreshape_up_jes, &b_bPogSF_CMVAreshape_up_jes);
+   fChain->SetBranchAddress("bPogSF_CMVAreshape_down_jes", &bPogSF_CMVAreshape_down_jes, &b_bPogSF_CMVAreshape_down_jes);
+   fChain->SetBranchAddress("bPogSF_CMVAreshape_up_lf", &bPogSF_CMVAreshape_up_lf, &b_bPogSF_CMVAreshape_up_lf);
+   fChain->SetBranchAddress("bPogSF_CMVAreshape_down_lf", &bPogSF_CMVAreshape_down_lf, &b_bPogSF_CMVAreshape_down_lf);
+   fChain->SetBranchAddress("bPogSF_CMVAreshape_up_hf", &bPogSF_CMVAreshape_up_hf, &b_bPogSF_CMVAreshape_up_hf);
+   fChain->SetBranchAddress("bPogSF_CMVAreshape_down_hf", &bPogSF_CMVAreshape_down_hf, &b_bPogSF_CMVAreshape_down_hf);
+   fChain->SetBranchAddress("bPogSF_CMVAreshape_up_hfstats1", &bPogSF_CMVAreshape_up_hfstats1, &b_bPogSF_CMVAreshape_up_hfstats1);
+   fChain->SetBranchAddress("bPogSF_CMVAreshape_down_hfstats1", &bPogSF_CMVAreshape_down_hfstats1, &b_bPogSF_CMVAreshape_down_hfstats1);
+   fChain->SetBranchAddress("bPogSF_CMVAreshape_up_hfstats2", &bPogSF_CMVAreshape_up_hfstats2, &b_bPogSF_CMVAreshape_up_hfstats2);
+   fChain->SetBranchAddress("bPogSF_CMVAreshape_down_hfstats2", &bPogSF_CMVAreshape_down_hfstats2, &b_bPogSF_CMVAreshape_down_hfstats2);
+   fChain->SetBranchAddress("bPogSF_CMVAreshape_up_lfstats1", &bPogSF_CMVAreshape_up_lfstats1, &b_bPogSF_CMVAreshape_up_lfstats1);
+   fChain->SetBranchAddress("bPogSF_CMVAreshape_down_lfstats1", &bPogSF_CMVAreshape_down_lfstats1, &b_bPogSF_CMVAreshape_down_lfstats1);
+   fChain->SetBranchAddress("bPogSF_CMVAreshape_up_lfstats2", &bPogSF_CMVAreshape_up_lfstats2, &b_bPogSF_CMVAreshape_up_lfstats2);
+   fChain->SetBranchAddress("bPogSF_CMVAreshape_down_lfstats2", &bPogSF_CMVAreshape_down_lfstats2, &b_bPogSF_CMVAreshape_down_lfstats2);
+   fChain->SetBranchAddress("bPogSF_CMVAreshape_up_cferr1", &bPogSF_CMVAreshape_up_cferr1, &b_bPogSF_CMVAreshape_up_cferr1);
+   fChain->SetBranchAddress("bPogSF_CMVAreshape_down_cferr1", &bPogSF_CMVAreshape_down_cferr1, &b_bPogSF_CMVAreshape_down_cferr1);
+   fChain->SetBranchAddress("bPogSF_CMVAreshape_up_cferr2", &bPogSF_CMVAreshape_up_cferr2, &b_bPogSF_CMVAreshape_up_cferr2);
+   fChain->SetBranchAddress("bPogSF_CMVAreshape_down_cferr2", &bPogSF_CMVAreshape_down_cferr2, &b_bPogSF_CMVAreshape_down_cferr2);
+   fChain->SetBranchAddress("bPogSF_CSVL", &bPogSF_CSVL, &b_bPogSF_CSVL);
+   fChain->SetBranchAddress("bPogSF_CSVL_Up", &bPogSF_CSVL_Up, &b_bPogSF_CSVL_Up);
+   fChain->SetBranchAddress("bPogSF_CSVL_Down", &bPogSF_CSVL_Down, &b_bPogSF_CSVL_Down);
+   fChain->SetBranchAddress("bPogSF_CSVM", &bPogSF_CSVM, &b_bPogSF_CSVM);
+   fChain->SetBranchAddress("bPogSF_CSVM_Up", &bPogSF_CSVM_Up, &b_bPogSF_CSVM_Up);
+   fChain->SetBranchAddress("bPogSF_CSVM_Down", &bPogSF_CSVM_Down, &b_bPogSF_CSVM_Down);
+   fChain->SetBranchAddress("bPogSF_CSVT", &bPogSF_CSVT, &b_bPogSF_CSVT);
+   fChain->SetBranchAddress("bPogSF_CSVT_Up", &bPogSF_CSVT_Up, &b_bPogSF_CSVT_Up);
+   fChain->SetBranchAddress("bPogSF_CSVT_Down", &bPogSF_CSVT_Down, &b_bPogSF_CSVT_Down);
+   fChain->SetBranchAddress("bPogSF_CSVreshape", &bPogSF_CSVreshape, &b_bPogSF_CSVreshape);
+   fChain->SetBranchAddress("bPogSF_CSVreshape_up_jes", &bPogSF_CSVreshape_up_jes, &b_bPogSF_CSVreshape_up_jes);
+   fChain->SetBranchAddress("bPogSF_CSVreshape_down_jes", &bPogSF_CSVreshape_down_jes, &b_bPogSF_CSVreshape_down_jes);
+   fChain->SetBranchAddress("bPogSF_CSVreshape_up_lf", &bPogSF_CSVreshape_up_lf, &b_bPogSF_CSVreshape_up_lf);
+   fChain->SetBranchAddress("bPogSF_CSVreshape_down_lf", &bPogSF_CSVreshape_down_lf, &b_bPogSF_CSVreshape_down_lf);
+   fChain->SetBranchAddress("bPogSF_CSVreshape_up_hf", &bPogSF_CSVreshape_up_hf, &b_bPogSF_CSVreshape_up_hf);
+   fChain->SetBranchAddress("bPogSF_CSVreshape_down_hf", &bPogSF_CSVreshape_down_hf, &b_bPogSF_CSVreshape_down_hf);
+   fChain->SetBranchAddress("bPogSF_CSVreshape_up_hfstats1", &bPogSF_CSVreshape_up_hfstats1, &b_bPogSF_CSVreshape_up_hfstats1);
+   fChain->SetBranchAddress("bPogSF_CSVreshape_down_hfstats1", &bPogSF_CSVreshape_down_hfstats1, &b_bPogSF_CSVreshape_down_hfstats1);
+   fChain->SetBranchAddress("bPogSF_CSVreshape_up_hfstats2", &bPogSF_CSVreshape_up_hfstats2, &b_bPogSF_CSVreshape_up_hfstats2);
+   fChain->SetBranchAddress("bPogSF_CSVreshape_down_hfstats2", &bPogSF_CSVreshape_down_hfstats2, &b_bPogSF_CSVreshape_down_hfstats2);
+   fChain->SetBranchAddress("bPogSF_CSVreshape_up_lfstats1", &bPogSF_CSVreshape_up_lfstats1, &b_bPogSF_CSVreshape_up_lfstats1);
+   fChain->SetBranchAddress("bPogSF_CSVreshape_down_lfstats1", &bPogSF_CSVreshape_down_lfstats1, &b_bPogSF_CSVreshape_down_lfstats1);
+   fChain->SetBranchAddress("bPogSF_CSVreshape_up_lfstats2", &bPogSF_CSVreshape_up_lfstats2, &b_bPogSF_CSVreshape_up_lfstats2);
+   fChain->SetBranchAddress("bPogSF_CSVreshape_down_lfstats2", &bPogSF_CSVreshape_down_lfstats2, &b_bPogSF_CSVreshape_down_lfstats2);
+   fChain->SetBranchAddress("bPogSF_CSVreshape_up_cferr1", &bPogSF_CSVreshape_up_cferr1, &b_bPogSF_CSVreshape_up_cferr1);
+   fChain->SetBranchAddress("bPogSF_CSVreshape_down_cferr1", &bPogSF_CSVreshape_down_cferr1, &b_bPogSF_CSVreshape_down_cferr1);
+   fChain->SetBranchAddress("bPogSF_CSVreshape_up_cferr2", &bPogSF_CSVreshape_up_cferr2, &b_bPogSF_CSVreshape_up_cferr2);
+   fChain->SetBranchAddress("bPogSF_CSVreshape_down_cferr2", &bPogSF_CSVreshape_down_cferr2, &b_bPogSF_CSVreshape_down_cferr2);
    fChain->SetBranchAddress("effTrigW_Down", &effTrigW_Down, &b_effTrigW_Down);
    fChain->SetBranchAddress("effTrigW_Up", &effTrigW_Up, &b_effTrigW_Up);
    fChain->SetBranchAddress("effTrigW_DbleEle", &effTrigW_DbleEle, &b_effTrigW_DbleEle);

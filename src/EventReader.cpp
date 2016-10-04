@@ -3,7 +3,7 @@
 #include "TChain.h"
 
 EventReader::EventReader(EventContainer& eventCont, const ConfigContainer& cfgContainer)
-: eventContainer(eventCont), configContainer(cfgContainer), treeReader(nullptr), nLeptons(0), nJets(0), needJets(false), needGenJets(false), needPuppiJets(false), needGenLeptons(false), needElectronId(false), needTrackJets(false), triggerSelection(false), hasNegWeight(false), isDY(false), sampleType(SampleType::DATA), maxEventsWeight(1.) 
+: eventContainer(eventCont), configContainer(cfgContainer), treeReader(nullptr), nLeptons(0), nJets(0), needJets(false), needGenJets(false), needPuppiJets(false), needGenLeptons(false), needElectronId(false), needTrackJets(false), triggerSelection(false), hasNegWeight(false), isDY(false), applybPogSF(false), sampleType(SampleType::DATA), maxEventsWeight(1.) 
 { 
     bool firstGenJet = true, firstPuppiJet = true, firstJet = true, firstgenLepton = true, firstElectronID = true, firstTrackJet = true, firstLooseLepton=true;
     vector<const vector<string>*> variableNames = {&configContainer.variableContainer.variableNames, &configContainer.cutContainer.variableNames};
@@ -121,6 +121,13 @@ EventReader::EventReader(EventContainer& eventCont, const ConfigContainer& cfgCo
     if( configContainer.cutContainer.triggerVector.size() > 0 )
     {
         triggerSelection = true;
+    }
+    
+    // b SF
+    for( const string& iString : configContainer.cutContainer.variableNames )
+    {
+        if( iString.find("bjetveto") != string::npos )
+            applybPogSF = true;
     }
 }
 
@@ -253,6 +260,9 @@ bool EventReader::setSample(unsigned int iSample, unsigned int iSubSample)
             sampleBranches.push_back("effTrigW_EleMu");
 //             sampleBranches.push_back("bPogSF");
         }
+        
+        if( applybPogSF )
+            sampleBranches.push_back("bPogSF_CMVAT");
         
         if( configContainer.sampleContainer.sampleNames[iSample][iSubSample].find("WW_DoubleScattering") == string::npos )
             sampleBranches.insert(sampleBranches.end(), genBranches.begin(), genBranches.end());
@@ -532,7 +542,9 @@ bool EventReader::fillNextEvent()
              weight *= treeReader->baseW;
         if( !triggerSelection ) 
             weight *= ( (treeReader->effTrigW_DbleEle +  treeReader->effTrigW_DbleMu + treeReader->effTrigW_EleMu)
-                        * (*treeReader->std_vector_lepton_idisoW)[0] * (*treeReader->std_vector_lepton_idisoW)[1] /* * treeReader->bPogSF*/ );
+                        * (*treeReader->std_vector_lepton_idisoW)[0] * (*treeReader->std_vector_lepton_idisoW)[1]);
+        if( applybPogSF )
+            weight *= treeReader->bPogSF_CMVAT; 
         if( hasNegWeight ) 
             weight *= (treeReader->GEN_weight_SM/abs(treeReader->GEN_weight_SM));
         

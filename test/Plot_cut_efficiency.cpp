@@ -39,7 +39,8 @@ int main (int argc, char ** argv) {
     WeightCalc weightCalc(eventContainer);
 
     
-    int totTT = 0, totTL = 0, totLL =0;
+    int totTT = 0, totTL = 0, totLL =0, totSingle = 0;
+    float totNeg = 0;
     for( unsigned int iSample = 0; iSample < cfgContainer.sampleContainer.reducedNames.size(); ++iSample) 
     {
         // Init fake weights
@@ -76,7 +77,9 @@ int main (int argc, char ** argv) {
                     {
 //                         if( &cfgContainer.fakeContainer)
 //                             weightCalc.setFakeWeight();
-                            
+                        
+                        
+                        
                         int nTightLept = 0;
                         for( auto iLepton : eventContainer.goodLeptons ) {
                             if( eventContainer.leptons[iLepton].passesMedium() ) 
@@ -84,7 +87,24 @@ int main (int argc, char ** argv) {
                         }
                         if( nTightLept  == 0 ) totLL++;
                         else if( nTightLept  == 1 ) totTL++;
-                        else totTT++;
+                        else {
+                            totTT++;
+                        }
+                        if( eventContainer.weight() < 0 )
+                        {
+                            cout << "negative weight: " << eventContainer.weight() << endl;
+                            totNeg += eventContainer.weight();
+                        }
+                        
+//                         // Pass single lepton trigger
+//                         if( reader.treeReader->trigger == 1 && ((*reader.treeReader->std_vector_trigger)[5] != 1 &&  (*reader.treeReader->std_vector_trigger)[10] != 1 && (*reader.treeReader->std_vector_trigger)[12] != 1 && (*reader.treeReader->std_vector_trigger)[7] != 1 && (*reader.treeReader->std_vector_trigger)[9] != 1) )
+//                         {
+//                             cout << "Pass only single lepton trigger: " << nTightLept << endl;
+//                             if( nTightLept  == 0 )
+//                                 totSingle++;
+                            
+                                
+//                         }
                         
 //                         // Print soft mu
 //                         if( nTightLept  > 0 )
@@ -123,6 +143,8 @@ int main (int argc, char ** argv) {
     plotter.writeEfficiency("png");
     plotter.writeStacked("png");
     cout /*<< "TT: " << totTT */<< "\tTL: " << totTL << "\tLL: " << totLL << endl;
+    cout << "Tot single trigger: " << totSingle << endl;
+    cout << "Total negative weight contribution: " << totNeg << endl;
     
     delete cHandler;
 }
