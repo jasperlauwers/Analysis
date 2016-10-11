@@ -18,7 +18,7 @@ FakeReader::FakeReader(const string& fileName, FakeContainer& fakeContainer)
     }
     
     string fileTemp, histTemp;
-    float maxPtTemp;
+    float maxPtTemp=0;
     for( unsigned int iFake=0; iFake < nFake; ++iFake ) 
     {
         int remainder = iFake%4;
