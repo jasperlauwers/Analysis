@@ -48,8 +48,8 @@ int main (int argc, char ** argv) {
                 {
 //                     cleaner.doCleaning();
                     cleaner.doFakeLeptonCleaning();
-		    if( cfgContainer.sampleContainer.sampleType[iSample] != SampleType::DATA )
-			cleaner.doLooseLeptonIsoCleaning();
+// 		    if( cfgContainer.sampleContainer.sampleType[iSample] != SampleType::DATA )
+// 			cleaner.doLooseLeptonIsoCleaning();
                     if( selecter.passCuts() )
                         plotter.fill(iSample, iSubSample);
                 }
