@@ -224,7 +224,7 @@ bool EventReader::setSample(unsigned int iSample, unsigned int iSubSample)
     sampleType = configContainer.sampleContainer.sampleType[iSample];
     if( sampleType == SampleType::DATA || sampleType == SampleType::FAKELEPTON )
     {
-        sampleBranches.push_back("trigger"); 
+//         sampleBranches.push_back("trigger"); 
         
         if( sampleType == SampleType::FAKELEPTON )
         {
@@ -334,7 +334,7 @@ bool EventReader::fillNextEvent()
         if( sampleType == SampleType::DATA || sampleType == SampleType::FAKELEPTON)
         {
 //             skipEvent = ( treeReader->trigger != 1 );
-            skipEvent = ( treeReader->trigger != 1 || ((*treeReader->std_vector_trigger)[5] != 1 &&  (*treeReader->std_vector_trigger)[10] != 1 && (*treeReader->std_vector_trigger)[12] != 1 && (*treeReader->std_vector_trigger)[7] != 1 && (*treeReader->std_vector_trigger)[9] != 1) );
+            skipEvent = ( /*treeReader->trigger != 1 ||*/ ((*treeReader->std_vector_trigger)[5] != 1 &&  (*treeReader->std_vector_trigger)[10] != 1 && (*treeReader->std_vector_trigger)[12] != 1 && (*treeReader->std_vector_trigger)[7] != 1 && (*treeReader->std_vector_trigger)[9] != 1) );
             
             if( triggerSelection ) 
             {

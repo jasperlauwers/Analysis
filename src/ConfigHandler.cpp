@@ -367,7 +367,13 @@ void ConfigHandler::writeConfig()
     ifstream ifStream(fileName, ios::binary);
     
     system(("mkdir -p " + cfgContainer.outputDir).c_str());   
-    ofstream ofStream(cfgContainer.outputDir+"Config_"+fileName, ios::binary);
+        
+    string outConfigName = fileName;
+    if( fileName.find('/') != std::string::npos )
+    {
+        outConfigName = fileName.substr(fileName.find_last_of("/")+1);
+    }
+    ofstream ofStream(cfgContainer.outputDir+"Config_"+outConfigName, ios::binary);
 
     ofStream << ifStream.rdbuf();
     

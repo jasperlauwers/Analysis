@@ -76,7 +76,7 @@ void WeightCalc::setWeight(SampleType sampleType, const string& sampleName)
     {
         if ( eventContainer.looseLeptons[1].pt() < 0 ) 
         {
-            cerr << "Not enought leptons for fake weight calculation." << endl;
+            cerr << "Not enough leptons for fake weight calculation." << endl;
             throw 1;
         }
         
@@ -85,6 +85,7 @@ void WeightCalc::setWeight(SampleType sampleType, const string& sampleName)
         float promptProbability[2], fakeProbability[2];
         for( unsigned int iLep=0; iLep < 2; ++iLep ) 
         {        
+//      cout << "Lept pt: " << eventContainer.looseleptonpt(iLep) << ", abs(eta): " << eventContainer.looseleptonabseta(iLep) << endl;
             if( eventContainer.looseLeptons[iLep].isElectron() )
             {
                 // Fix for electrons with |eta| > 2.4
@@ -94,13 +95,13 @@ void WeightCalc::setWeight(SampleType sampleType, const string& sampleName)
                 }
                 
                 p = hPromptElectron->GetBinContent(hPromptElectron->FindBin(min(eventContainer.looseleptonpt(iLep), fakeContainer->maxPtElectronPrompt), abs(eventContainer.looseleptonabseta(iLep))));
-                f = hFakeElectron->GetBinContent(hFakeElectron->FindBin(min(eventContainer.looseleptoncorrectedpt(iLep), fakeContainer->maxPtElectronFake), abs(eventContainer.looseleptonabseta(iLep))));
-    //             cout << "p:\t" << p << "\tf:\t" << f  << "\tabseta:\t" << eventContainer.looseleptonabseta(iLep) << endl;
+                f = hFakeElectron->GetBinContent(hFakeElectron->FindBin(min(eventContainer.looseleptonpt(iLep), fakeContainer->maxPtElectronFake), abs(eventContainer.looseleptonabseta(iLep))));
+    //             cout << "p:\t" << p << "\tf:\t" << f << endl;
             }
             else
             {
                 p = hPromptMuon->GetBinContent(hPromptMuon->FindBin(min(eventContainer.looseleptonpt(iLep), fakeContainer->maxPtMuonPrompt), abs(eventContainer.looseleptonabseta(iLep))));
-                f = hFakeMuon->GetBinContent(hFakeMuon->FindBin(min(eventContainer.looseleptoncorrectedpt(iLep), fakeContainer->maxPtMuonFake), abs(eventContainer.looseleptonabseta(iLep))));
+                f = hFakeMuon->GetBinContent(hFakeMuon->FindBin(min(eventContainer.looseleptonpt(iLep), fakeContainer->maxPtMuonFake), abs(eventContainer.looseleptonabseta(iLep))));
             }
             
             if( eventContainer.looseLeptons[iLep].passesMedium() )
@@ -129,7 +130,9 @@ void WeightCalc::setWeight(SampleType sampleType, const string& sampleName)
             PF *= -1.;
             FP *= -1.;
         }
-
+        
+//      cout << "Central weight: " << eventContainer.weight() << endl;
+//      cout << "New weight: " << PF + FP + FF << endl;
         eventContainer.setWeight(PF + FP + FF);
     }
     
