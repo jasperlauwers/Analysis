@@ -19,6 +19,8 @@ public:
     float pId() const; 
     bool passesMedium() const;
     float charge() const;
+    bool tripleChargeAgreement() const;
+    void setTripleChargeAgreement(float);
     
     // gen parameters
     void setGenFlags(bool isPrompt, bool fromTau);
@@ -63,7 +65,7 @@ public:
     
 private:
     float _pId;
-    bool passMedium, _isPrompt, _fromTau; 
+    bool passMedium, _isPrompt, _fromTau, _tripleChargeAgreement; 
     float _d0, _dEtaIn, _dPhiIn, _dz, _effArea, _missHits, _sIetaIeta, _hOverE, _ooEmoop, _convVeto, _scEta, _isolation, _trackIso;
     float _closestJetPt, _closestJetDr, _closestJetPartonFlavour;
 };

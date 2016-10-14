@@ -3,10 +3,10 @@
 Lepton::Lepton() { }
 
 Lepton::Lepton(float pt, float eta, float phi, float pId) 
-: Particle( pt, eta, phi, 0), _pId(pId) { }
+: Particle( pt, eta, phi, 0), _pId(pId), _tripleChargeAgreement(false) { }
 
 Lepton::Lepton(const TLorentzVector&  p4, float pId) 
-: Particle( p4 ), _pId(pId) { }
+: Particle( p4 ), _pId(pId), _tripleChargeAgreement(false) { }
 
 Lepton::~Lepton() { }
 
@@ -51,6 +51,16 @@ bool Lepton::passesMedium() const
 float Lepton::charge() const 
 {
     return (_pId < 0) - (_pId > 0);
+}
+
+bool Lepton::tripleChargeAgreement() const
+{
+    return _tripleChargeAgreement;
+}
+
+void Lepton::setTripleChargeAgreement(float tripleChargeAgreement)
+{
+    _tripleChargeAgreement = tripleChargeAgreement;
 }
 
 void Lepton::setGenFlags(bool isPrompt, bool fromTau)

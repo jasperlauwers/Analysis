@@ -66,6 +66,7 @@ public:
     float flavourleptonpt(float) const;
     float leptoncorrectedpt(unsigned int) const;
     float leptonisolation(unsigned int) const;
+    bool leptontriplechargeagreement(unsigned int) const;
     
     // Loose leptons
     float looseleptonpt(unsigned int) const;

@@ -126,7 +126,7 @@ EventReader::EventReader(EventContainer& eventCont, const ConfigContainer& cfgCo
     // b SF
     for( const string& iString : configContainer.cutContainer.variableNames )
     {
-        if( iString.find("bjetveto") != string::npos )
+        if( iString.find("bjetveto") != string::npos || iString.find("bveto") != string::npos || iString.find("btag") != string::npos || iString.find("bjettag") != string::npos )
             applybPogSF = true;
     }
 }

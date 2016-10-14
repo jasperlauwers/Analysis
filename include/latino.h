@@ -299,6 +299,7 @@ public :
    vector<float>   *std_vector_jet_HadronFlavour;
    vector<float>   *std_vector_electron_scEta;
    vector<float>   *std_vector_electron_expectedMissingInnerHits;
+   vector<float>   *std_vector_electron_tripleChargeAgreement;
    Float_t         metFilter;
    Float_t         jetpt1;
    Float_t         jetpt2;
@@ -726,6 +727,7 @@ public :
    TBranch        *b_std_vector_jet_HadronFlavour;   //!
    TBranch        *b_std_vector_electron_scEta;   //!
    TBranch        *b_std_vector_electron_expectedMissingInnerHits;   //!
+   TBranch        *b_std_vector_electron_tripleChargeAgreement;   //!
    TBranch        *b_metFilter;   //!
    TBranch        *b_jetpt1;   //!
    TBranch        *b_jetpt2;   //!
@@ -1061,6 +1063,7 @@ void latino::Init(TTree *tree)
    std_vector_jet_HadronFlavour = 0;
    std_vector_electron_scEta = 0;
    std_vector_electron_expectedMissingInnerHits = 0;
+   std_vector_electron_tripleChargeAgreement = 0;
    std_vector_lepton_chargedHadronIso = 0;
    std_vector_lepton_photonIso = 0;
    std_vector_lepton_closejet_PartonFlavour = 0;
@@ -1379,6 +1382,7 @@ void latino::Init(TTree *tree)
    fChain->SetBranchAddress("std_vector_jet_HadronFlavour", &std_vector_jet_HadronFlavour, &b_std_vector_jet_HadronFlavour);
    fChain->SetBranchAddress("std_vector_electron_scEta", &std_vector_electron_scEta, &b_std_vector_electron_scEta);
    fChain->SetBranchAddress("std_vector_electron_expectedMissingInnerHits", &std_vector_electron_expectedMissingInnerHits, &b_std_vector_electron_expectedMissingInnerHits);
+   fChain->SetBranchAddress("std_vector_electron_tripleChargeAgreement", &std_vector_electron_tripleChargeAgreement, &b_std_vector_electron_tripleChargeAgreement);
    fChain->SetBranchAddress("metFilter", &metFilter, &b_metFilter);
    fChain->SetBranchAddress("jetpt1", &jetpt1, &b_jetpt1);
    fChain->SetBranchAddress("jetpt2", &jetpt2, &b_jetpt2);

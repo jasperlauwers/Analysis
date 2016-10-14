@@ -394,6 +394,19 @@ float EventContainer::leptonisolation(unsigned int i) const
     else
         return -9999.9;
 }
+bool EventContainer::leptontriplechargeagreement(unsigned int i) const
+{
+    if( i < goodLeptons.size() )
+    {
+        if( leptons[goodLeptons[i]].isElectron() )        
+            return leptons[goodLeptons[i]].tripleChargeAgreement();
+        else
+            return true;
+    }
+    else
+        return false;
+}
+
 
 // Loose leptons
 float EventContainer::looseleptonpt(unsigned int i) const
