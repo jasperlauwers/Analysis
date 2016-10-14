@@ -103,6 +103,7 @@ EventReader::EventReader(EventContainer& eventCont, const ConfigContainer& cfgCo
                 branches.push_back("std_vector_lepton_photonIso");
                 branches.push_back("jetRho");
                 branches.push_back("std_vector_electron_effectiveArea");
+                branches.push_back("std_vector_electron_tripleChargeAgreement");
 //                 genBranches.push_back("std_vector_looseLepton_eta");
 //                 genBranches.push_back("std_vector_looseLepton_pt");
 //                 genBranches.push_back("std_vector_looseLepton_phi");
@@ -446,6 +447,7 @@ bool EventReader::fillNextEvent()
                 eventContainer.leptons[iLepton].setClosestJetPt((*treeReader->std_vector_lepton_closejet_pt)[iLepton]);
                 eventContainer.leptons[iLepton].setClosestJetDr((*treeReader->std_vector_lepton_closejet_drlj)[iLepton]);
                 eventContainer.leptons[iLepton].setClosestJetPartonFlavour((*treeReader->std_vector_lepton_closejet_PartonFlavour)[iLepton]);
+                eventContainer.leptons[iLepton].setTripleChargeAgreement((*treeReader->std_vector_electron_tripleChargeAgreement)[iLepton]);
                 
                 if( abs((*treeReader->std_vector_lepton_flavour)[iLepton]) == 11 )
                 {
