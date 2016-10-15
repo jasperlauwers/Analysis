@@ -74,7 +74,7 @@ void EventCleaner::doFakeLeptonCleaning()
     // Lepton cleaning
     unsigned int nGoodLeptons = eventContainer.goodLeptons.size();
     for( unsigned int iLepton=0; iLepton < nGoodLeptons; ++iLepton ) {        
-        if( ! eventContainer.leptons[eventContainer.goodLeptons[iLepton]].passesMedium() )
+        if( !(eventContainer.leptons[eventContainer.goodLeptons[iLepton]].passesMedium() && eventContainer.leptons[eventContainer.goodLeptons[iLepton]].tripleChargeAgreement()) )
         {
             eventContainer.goodLeptons.erase(eventContainer.goodLeptons.begin()+iLepton);
             iLepton--;
