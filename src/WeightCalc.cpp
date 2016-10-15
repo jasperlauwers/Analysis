@@ -65,8 +65,8 @@ void WeightCalc::initDYWeight(const EventReader& reader)
 //     maxVal = 3.9;
     
     // lepton eta weight
-    TFile* f = new TFile("DYWeight/DY_SSoverOS_2Dweight.root","READ");
-    hDYshapeWeight = (TH2F*) f->Get("DY_leptoneta2D_weight"); //contains shape + normalization
+    TFile* f = new TFile("DYWeight/DY_SSoverOS_2Dweight_2jet_tripleCharge.root","READ");
+    hDYshapeWeight = (TH2F*) f->Get("data_leptonabseta2D_weight"); //contains shape + normalization
 }
 
 void WeightCalc::setWeight(SampleType sampleType, const string& sampleName) 
@@ -148,7 +148,7 @@ void WeightCalc::setWeight(SampleType sampleType, const string& sampleName)
 //             weight *= hDYshapeWeight->GetBinContent(hDYshapeWeight->FindBin(min(eventContainer.detajj(), maxVal)));
         if( eventContainer.channel() == 1 ) 
         {
-            weight *= hDYshapeWeight->GetBinContent(hDYshapeWeight->FindBin( eventContainer.leptons[eventContainer.goodLeptons[0]].eta(),eventContainer.leptons[eventContainer.goodLeptons[1]].eta())); 
+            weight *= hDYshapeWeight->GetBinContent(hDYshapeWeight->FindBin( eventContainer.leptonabseta(0), eventContainer.leptonabseta(1))); 
             eventContainer.setWeight(weight); 
         }
     }
