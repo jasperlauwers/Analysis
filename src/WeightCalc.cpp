@@ -2,7 +2,7 @@
 #include "WeightCalc.hpp"
 
 WeightCalc::WeightCalc(EventContainer& evContainer)
-: eventContainer(evContainer), applyDYWeight(false), applyFakeWeight(false) { }
+: eventContainer(evContainer), applyDYWeight(false), applyFakeWeight(false), useElectronCorrectedPt(false), useMuonCorrectedPt(false) { }
 
 WeightCalc::~WeightCalc() 
 {
@@ -47,6 +47,21 @@ void WeightCalc::initFakeWeight(FakeContainer* fContainer)
     hPromptMuon->SetDirectory(0); // "detach" the histogram from the file
     if (fakeContainer->maxPtMuonPrompt <= 0.)
         fakeContainer->maxPtMuonPrompt = hPromptMuon->GetXaxis()->GetBinCenter(hPromptMuon->GetNbinsX());
+    
+    if( fakeContainer->fakeElectronHist.find("correctedpt") != string::npos )
+    {
+        useElectronCorrectedPt = true;
+        cout << "Fake electron estimation from corrected pt" << endl;
+    }
+    else
+        cout << "Fake electron estimation from pt" << endl;
+    if( fakeContainer->fakeMuonHist.find("correctedpt") != string::npos )
+    {
+        useMuonCorrectedPt = true;
+        cout << "Fake muon estimation from corrected pt" << endl;
+    }
+    else
+        cout << "Fake muon estimation from pt" << endl;
     
     applyFakeWeight = true;
 }
@@ -95,13 +110,19 @@ void WeightCalc::setWeight(SampleType sampleType, const string& sampleName)
                 }
                 
                 p = hPromptElectron->GetBinContent(hPromptElectron->FindBin(min(eventContainer.looseleptonpt(iLep), fakeContainer->maxPtElectronPrompt), abs(eventContainer.looseleptonabseta(iLep))));
-                f = hFakeElectron->GetBinContent(hFakeElectron->FindBin(min(eventContainer.looseleptonpt(iLep), fakeContainer->maxPtElectronFake), abs(eventContainer.looseleptonabseta(iLep))));
+                if( useElectronCorrectedPt )
+                    f = hFakeElectron->GetBinContent(hFakeElectron->FindBin(min(eventContainer.looseleptoncorrectedpt(iLep), fakeContainer->maxPtElectronFake), abs(eventContainer.looseleptonabseta(iLep))));
+                else
+                    f = hFakeElectron->GetBinContent(hFakeElectron->FindBin(min(eventContainer.looseleptonpt(iLep), fakeContainer->maxPtElectronFake), abs(eventContainer.looseleptonabseta(iLep))));
     //             cout << "p:\t" << p << "\tf:\t" << f << endl;
             }
             else
             {
                 p = hPromptMuon->GetBinContent(hPromptMuon->FindBin(min(eventContainer.looseleptonpt(iLep), fakeContainer->maxPtMuonPrompt), abs(eventContainer.looseleptonabseta(iLep))));
-                f = hFakeMuon->GetBinContent(hFakeMuon->FindBin(min(eventContainer.looseleptonpt(iLep), fakeContainer->maxPtMuonFake), abs(eventContainer.looseleptonabseta(iLep))));
+                if( useMuonCorrectedPt )
+                    f = hFakeMuon->GetBinContent(hFakeMuon->FindBin(min(eventContainer.looseleptoncorrectedpt(iLep), fakeContainer->maxPtMuonFake), abs(eventContainer.looseleptonabseta(iLep))));
+                else
+                    f = hFakeMuon->GetBinContent(hFakeMuon->FindBin(min(eventContainer.looseleptonpt(iLep), fakeContainer->maxPtMuonFake), abs(eventContainer.looseleptonabseta(iLep))));
             }
             
             if( eventContainer.looseLeptons[iLep].passesMedium() )

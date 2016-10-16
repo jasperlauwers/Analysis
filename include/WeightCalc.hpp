@@ -28,6 +28,6 @@ private:
     vector<float> DYweights;
     TH2F *hDYshapeWeight;
     float maxVal;
-    bool applyDYWeight, applyFakeWeight;
+    bool applyDYWeight, applyFakeWeight, useElectronCorrectedPt, useMuonCorrectedPt;
 };
 #endif
