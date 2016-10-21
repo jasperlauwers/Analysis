@@ -153,7 +153,7 @@ void EventPlotter::writePlots(string extension)
         {
             histogramContainers[iVar].addUnderflow();
         }
-        BasePlotter::writeStacked(histogramContainers[iVar], extension);        
+        BasePlotter::writeStacked("Stack_plots.root", histogramContainers[iVar], extension);        
     }
 }
 

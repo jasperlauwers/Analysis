@@ -44,7 +44,7 @@ void BasePlotter::writeHist(string filename, const vector<TH1*>& histVector, str
     f->Close();
 }
 
-void BasePlotter::writeStacked(const HistogramContainer& histContainer, string extension) const
+void BasePlotter::writeStacked(string filename, const HistogramContainer& histContainer, string extension) const
 {
     // Check histContainer consistency
     if( ! histContainer.check() ) 
@@ -53,8 +53,11 @@ void BasePlotter::writeStacked(const HistogramContainer& histContainer, string e
     if( extension[0] == '.' )
         extension.erase(0,1);
     
+    if( filename.find(".root") == string::npos )
+    filename.append( ".root" );
+    
     system(("mkdir -p " + configContainer.outputDir).c_str()); 
-    TFile* f = new TFile((configContainer.outputDir + "Plots.root").c_str(), "UPDATE");
+    TFile* f = new TFile((configContainer.outputDir + filename).c_str(), "UPDATE");
     
     unsigned int nSamples = histContainer.reducedNames.size();
     TCanvas *c = new TCanvas(("Canv_stacked_" + histContainer.containerName).c_str(), "", 600, 600 + (120 * configContainer.plotRatio));

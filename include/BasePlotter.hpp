@@ -27,7 +27,7 @@ public:
     BasePlotter(const EventContainer&, const ConfigContainer&);
     virtual ~BasePlotter();
     void writeHist(string filename, const vector<TH1*>& histVector, string option) const;
-    void writeStacked(const HistogramContainer& histContainer, string extension) const;
+    void writeStacked(string filename, const HistogramContainer& histContainer, string extension) const;
     void writeEfficiency(const HistogramContainer& numeratorContainer, const vector<TH1*>& denominatorHistograms, string extension) const;
     void writeEfficiency(const HistogramContainer& numeratorContainer, const vector<TH1*>& denominatorHistograms, string extension, const vector<string>& binNames) const;
         

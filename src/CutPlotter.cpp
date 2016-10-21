@@ -76,7 +76,7 @@ void CutPlotter::writeStacked(string extension)
         histogramContainer.containerName.append("_");
         histogramContainer.containerName.append(configContainer.plotString);
     }
-    BasePlotter::writeStacked(histogramContainer, extension);
+    BasePlotter::writeStacked("Cut_plots.root", histogramContainer, extension);
 }
 
 void CutPlotter::writeEfficiency(string extension)
