@@ -92,8 +92,14 @@ int main (int argc, char ** argv) {
                         }
                         if( eventContainer.weight() < 0 )
                         {
-                            cout << "negative weight: " << eventContainer.weight() << endl;
+//                             cout << "negative weight: " << eventContainer.weight() << endl;
                             totNeg += eventContainer.weight();
+                        }
+                        
+                        float mjj = eventContainer.mjj();
+                        if( mjj > 1100 && mjj < 1600 )
+                        {
+                            cout << "mjj: " << mjj << "\tnTightLept: " << nTightLept << "\tweight: " << eventContainer.weight() << endl;
                         }
                         
 //                         // Pass single lepton trigger
