@@ -2,7 +2,7 @@
 #include "WeightCalc.hpp"
 
 WeightCalc::WeightCalc(EventContainer& evContainer)
-: eventContainer(evContainer), applyDYWeight(false), applyFakeWeight(false), useElectronCorrectedPt(false), useMuonCorrectedPt(false) { }
+: eventContainer(evContainer), applyDYWeight(false), applyFakeWeight(false), useElectronCorrectedPt(false), useMuonCorrectedPt(false), useTwoMuonFR(false) { }
 
 WeightCalc::~WeightCalc() 
 {
@@ -11,6 +11,8 @@ WeightCalc::~WeightCalc()
     {
         hFakeElectron->Delete();
         hFakeMuon->Delete();
+        if(useTwoMuonFR) 
+            hFakeMuon2->Delete();
         hPromptElectron->Delete();
         hPromptMuon->Delete();
     }
@@ -21,6 +23,9 @@ void WeightCalc::initFakeWeight(FakeContainer* fContainer)
     // Only one time
     if( applyFakeWeight )
         return;
+    
+    if( fakeContainer->fakeMuonFile2.size() > 0 ) 
+        useTwoMuonFR = true;
     
     fakeContainer = fContainer;
     
@@ -35,6 +40,15 @@ void WeightCalc::initFakeWeight(FakeContainer* fContainer)
     hFakeMuon->SetDirectory(0); // "detach" the histogram from the file
     if (fakeContainer->maxPtMuonFake <= 0.)
         fakeContainer->maxPtMuonFake = hFakeMuon->GetXaxis()->GetBinCenter(hFakeMuon->GetNbinsX());
+    
+    if( useTwoMuonFR )
+    {
+        TFile* fFakeMuon2 = new TFile(fakeContainer->fakeMuonFile2.c_str(),"READ");
+        hFakeMuon2 = (TH2F*) fFakeMuon2->Get(fakeContainer->fakeMuonHist2.c_str());
+        hFakeMuon2->SetDirectory(0); // "detach" the histogram from the file
+        if (fakeContainer->maxPtMuonFake2 <= 0.)
+            fakeContainer->maxPtMuonFake2 = hFakeMuon2->GetXaxis()->GetBinCenter(hFakeMuon2->GetNbinsX());
+    }
     
     TFile* fPromptElectron = new TFile(fakeContainer->promptElectronFile.c_str(),"READ");
     hPromptElectron = (TH2F*) fPromptElectron->Get(fakeContainer->promptElectronHist.c_str());
@@ -118,11 +132,18 @@ void WeightCalc::setWeight(SampleType sampleType, const string& sampleName)
             }
             else
             {
+                TH2F* hFakeMuonFinal = hFakeMuon;
+                float maxPt = fakeContainer->maxPtMuonFake;
+                if( useTwoMuonFR && iLep )
+                {
+                    hFakeMuonFinal = hFakeMuon2;
+                    maxPt = fakeContainer->maxPtMuonFake2;
+                }
                 p = hPromptMuon->GetBinContent(hPromptMuon->FindBin(min(eventContainer.looseleptonpt(iLep), fakeContainer->maxPtMuonPrompt), abs(eventContainer.looseleptonabseta(iLep))));
                 if( useMuonCorrectedPt )
-                    f = hFakeMuon->GetBinContent(hFakeMuon->FindBin(min(eventContainer.looseleptoncorrectedpt(iLep), fakeContainer->maxPtMuonFake), abs(eventContainer.looseleptonabseta(iLep))));
+                    f = hFakeMuonFinal->GetBinContent(hFakeMuonFinal->FindBin(min(eventContainer.looseleptoncorrectedpt(iLep), maxPt), abs(eventContainer.looseleptonabseta(iLep))));
                 else
-                    f = hFakeMuon->GetBinContent(hFakeMuon->FindBin(min(eventContainer.looseleptonpt(iLep), fakeContainer->maxPtMuonFake), abs(eventContainer.looseleptonabseta(iLep))));
+                    f = hFakeMuonFinal->GetBinContent(hFakeMuonFinal->FindBin(min(eventContainer.looseleptonpt(iLep), maxPt), abs(eventContainer.looseleptonabseta(iLep))));
             }
             
             if( eventContainer.looseLeptons[iLep].passesMedium() )

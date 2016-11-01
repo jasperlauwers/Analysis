@@ -24,10 +24,10 @@ public:
 private:
     EventContainer& eventContainer;  
     FakeContainer *fakeContainer;
-    TH2F *hFakeElectron, *hFakeMuon, *hPromptElectron, *hPromptMuon;
+    TH2F *hFakeElectron, *hFakeMuon, *hFakeMuon2, *hPromptElectron, *hPromptMuon;
     vector<float> DYweights;
     TH2F *hDYshapeWeight;
     float maxVal;
-    bool applyDYWeight, applyFakeWeight, useElectronCorrectedPt, useMuonCorrectedPt;
+    bool applyDYWeight, applyFakeWeight, useElectronCorrectedPt, useMuonCorrectedPt, useTwoMuonFR;
 };
 #endif

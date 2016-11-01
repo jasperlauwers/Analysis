@@ -55,6 +55,12 @@ FakeReader::FakeReader(const string& fileName, FakeContainer& fakeContainer)
                 fakeContainer.fakeMuonHist = histTemp;
                 fakeContainer.maxPtMuonFake = maxPtTemp;
             }
+            else if( type == "mfr2" )
+            {
+                fakeContainer.fakeMuonFile2 = fileTemp;
+                fakeContainer.fakeMuonHist2 = histTemp;
+                fakeContainer.maxPtMuonFake2 = maxPtTemp;
+            }
             else if( type == "epr" )
             {
                 fakeContainer.promptElectronFile = fileTemp;
@@ -69,7 +75,7 @@ FakeReader::FakeReader(const string& fileName, FakeContainer& fakeContainer)
             }
             else
             {
-                cerr << "Type unknown in fakes configuration file, options: \"eFR\"/\"mFR\"/\"ePR\"/\"mPR\"" << endl;
+                cerr << "Type unknown in fakes configuration file, options: \"eFR\"/\"mFR\"/\"mFR2\"/\"ePR\"/\"mPR\"" << endl;
                 throw 1;
             }
         }
