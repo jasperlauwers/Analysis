@@ -11,9 +11,14 @@ FakeReader::FakeReader(const string& fileName, FakeContainer& fakeContainer)
     const unsigned int nFake = fakes.getLength();
     
     // Check # arguments
-    if( nFake != 16 ) 
+    if( nFake < 16 ) 
     {
-        cerr << "Number of elements in fakes list not correct. Need 4 files to calculate Fake Weights." << endl;
+        cerr << "Number of elements in fakes list not correct. Need at least 4 files to calculate Fake Weights." << endl;
+        throw 1;
+    }
+    if((nFake%4) != 0 ) 
+    {
+        cerr << "Number of elements in fakes list not correct, as it is not divisible by 4" << endl;
         throw 1;
     }
     
