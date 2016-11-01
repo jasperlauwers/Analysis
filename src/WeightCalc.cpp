@@ -24,10 +24,10 @@ void WeightCalc::initFakeWeight(FakeContainer* fContainer)
     if( applyFakeWeight )
         return;
     
+    fakeContainer = fContainer;
+    
     if( fakeContainer->fakeMuonFile2.size() > 0 ) 
         useTwoMuonFR = true;
-    
-    fakeContainer = fContainer;
     
     TFile* fFakeElectron = new TFile(fakeContainer->fakeElectronFile.c_str(),"READ");
     hFakeElectron = (TH2F*) fFakeElectron->Get(fakeContainer->fakeElectronHist.c_str());
