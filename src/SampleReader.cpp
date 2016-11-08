@@ -99,9 +99,13 @@ SampleReader::SampleReader(const string& fileName, SampleContainer& sampleContai
                 {
                     sampleContainer.sampleType.push_back(SampleType::FAKELEPTON);
                 }
+                else if( type == "mcfakelepton" )
+                {
+                    sampleContainer.sampleType.push_back(SampleType::MCFAKELEPTON);
+                }
                 else
                 {
-                    cerr << "Type unknown in samples configuration file, options: \"data\"/\"signal\"/\"mc\"/\"fakelepton\"" << endl;
+                    cerr << "Type unknown in samples configuration file, options: \"data\"/\"signal\"/\"mc\"/\"fakelepton\"/\"mcfakelepton\"" << endl;
                     throw 1;
                 }
             }

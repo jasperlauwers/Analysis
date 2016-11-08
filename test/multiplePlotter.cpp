@@ -67,7 +67,7 @@ int main (int argc, char ** argv) {
         for( unsigned int iSample = 0; iSample < cfgContainers[iCfg].sampleContainer.reducedNames.size(); ++iSample) 
         {
             // Init fake weights
-            if( cfgContainers[iCfg].sampleContainer.sampleType[iSample] == SampleType::FAKELEPTON && mainCfgContainer.fakeContainer.fakeElectronFile != "" )
+            if( (cfgContainers[iCfg].sampleContainer.sampleType[iSample] == SampleType::FAKELEPTON || cfgContainers[iCfg].sampleContainer.sampleType[iSample] == SampleType::MCFAKELEPTON) && mainCfgContainer.fakeContainer.fakeElectronFile != "" )
                 weightCalc.initFakeWeight(&(mainCfgContainer.fakeContainer));
             
             for( unsigned int iSubSample = 0; iSubSample < cfgContainers[iCfg].sampleContainer.sampleNames[iSample].size(); ++iSubSample) 

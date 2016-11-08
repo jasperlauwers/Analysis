@@ -101,7 +101,7 @@ void WeightCalc::initDYWeight(const EventReader& reader)
 void WeightCalc::setWeight(SampleType sampleType, const string& sampleName) 
 {
     // Fake weigth
-    if( applyFakeWeight && sampleType == SampleType::FAKELEPTON )
+    if( applyFakeWeight && (sampleType == SampleType::FAKELEPTON || sampleType == SampleType::MCFAKELEPTON) )
     {
         if ( eventContainer.looseLeptons[1].pt() < 0 ) 
         {
@@ -175,7 +175,12 @@ void WeightCalc::setWeight(SampleType sampleType, const string& sampleName)
         
 //      cout << "Central weight: " << eventContainer.weight() << endl;
 //      cout << "New weight: " << PF + FP + FF << endl;
-        eventContainer.setWeight(PF + FP + FF);
+        float newWeight = eventContainer.weight();
+        if( sampleType == SampleType::MCFAKELEPTON )
+            newWeight *= (PF + FP + FF);
+        else
+            newWeight = PF + FP + FF;
+        eventContainer.setWeight(newWeight);
     }
     
     // DY   

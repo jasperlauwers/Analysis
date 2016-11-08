@@ -44,7 +44,7 @@ int main (int argc, char ** argv) {
     for( unsigned int iSample = 0; iSample < cfgContainer.sampleContainer.reducedNames.size(); ++iSample) 
     {
         // Init fake weights
-        if( cfgContainer.sampleContainer.sampleType[iSample] == SampleType::FAKELEPTON && cfgContainer.fakeContainer.fakeElectronFile != "" )
+        if( (cfgContainer.sampleContainer.sampleType[iSample] == SampleType::FAKELEPTON || cfgContainer.sampleContainer.sampleType[iSample] == SampleType::MCFAKELEPTON) && cfgContainer.fakeContainer.fakeElectronFile != "" )
             weightCalc.initFakeWeight(&(cfgContainer.fakeContainer));
         
         for( unsigned int iSubSample = 0; iSubSample < cfgContainer.sampleContainer.sampleNames[iSample].size(); ++iSubSample) 
@@ -97,9 +97,9 @@ int main (int argc, char ** argv) {
                         }
                         
                         float mjj = eventContainer.mjj();
-                        if( mjj > 1100 && mjj < 1600 )
+                        if( eventContainer.weight() > 0.3 )
                         {
-                            cout << "mjj: " << mjj << "\tnTightLept: " << nTightLept << "\tweight: " << eventContainer.weight() << endl;
+                            cout << "mjj: " << mjj << "\tnTightLept: " << nTightLept << "\tweight: " << eventContainer.weight() << "\nl1 pt:" << eventContainer.looseleptonpt(0) << "\tl1 pt_corr:" << eventContainer.looseleptoncorrectedpt(0) << "\tl1 abs(eta):" << eventContainer.looseleptonabseta(0) << "\nl2 pt:" << eventContainer.looseleptonpt(1) << "\tl2 pt_corr:" << eventContainer.looseleptoncorrectedpt(1) << "\tl1 abs(eta):" << eventContainer.looseleptonabseta(1) << endl;
                         }
                         
 //                         // Pass single lepton trigger

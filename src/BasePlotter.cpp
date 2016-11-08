@@ -80,7 +80,7 @@ void BasePlotter::writeStacked(string filename, const HistogramContainer& histCo
     // Add backgrounds to stack
     for( int iSample = nSamples-1; iSample > -1; --iSample )
     {
-        if( histContainer.sampleType[iSample] == SampleType::MC || histContainer.sampleType[iSample] == SampleType::FAKELEPTON )
+        if( histContainer.sampleType[iSample] == SampleType::MC || histContainer.sampleType[iSample] == SampleType::FAKELEPTON || histContainer.sampleType[iSample] == SampleType::MCFAKELEPTON )
         {
             TH1F *temp = (TH1F*) histContainer.histograms[iSample]->Clone(("stack_hist_"+histContainer.reducedNames[iSample]).c_str());
             if( hStack.size() > 0 ) temp->Add(hStack[hStack.size()-1]);

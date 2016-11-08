@@ -95,7 +95,7 @@ void CutPlotter::writeEfficiency(string extension)
         float totEvents = histogramContainer.histograms[iSample]->GetBinContent(0);
         
         // Check negative values for fake lepton samples
-        if( histogramContainer.sampleType[iSample] == SampleType::FAKELEPTON ) 
+        if( histogramContainer.sampleType[iSample] == SampleType::FAKELEPTON || histogramContainer.sampleType[iSample] == SampleType::MCFAKELEPTON ) 
         {
             float maximum = histogramContainer.histograms[iSample]->GetMaximum();
             if( maximum > totEvents || isnan(totEvents) ) totEvents = maximum;
