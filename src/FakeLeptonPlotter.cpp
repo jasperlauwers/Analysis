@@ -153,14 +153,37 @@ void FakeLeptonPlotter::writeFakeRate(string extension)
     {
         if( fakeHistogramContainers[iFake].histograms[0]->GetDimension() == 1 )
         {
+            // Write Data FR
             TGraphAsymmErrors* tgraph = new TGraphAsymmErrors(fakeHistogramContainers[iFake].histograms[0], hDenomVector[iFake][0], "cl=0.683 b(1,1) mode");
             tgraph->Write();
+            
+            // Write MC signal FR
+            for( unsigned int iHist = 0; iHist < fakeHistogramContainers[iFake].histograms.size(); ++iHist )
+            {
+                if( fakeHistogramContainers[iFake].sampleType[iHist] == SampleType::SIGNAL )
+                {
+                    TGraphAsymmErrors* tgraph = new TGraphAsymmErrors(fakeHistogramContainers[iFake].histograms[iHist], hDenomVector[iFake][iHist], "cl=0.683 b(1,1) mode");
+                    tgraph->Write();;
+                }
+            }
         }
         else
         {
+            // Write Data FR
             TH1* hTemp = (TH1*) fakeHistogramContainers[iFake].histograms[0]->Clone();
             hTemp->Divide(hDenomVector[iFake][0]);
             hTemp->Write();
+            
+            // Write MC signal FR
+            for( unsigned int iHist = 0; iHist < fakeHistogramContainers[iFake].histograms.size(); ++iHist )
+            {
+                if( fakeHistogramContainers[iFake].sampleType[iHist] == SampleType::SIGNAL )
+                {
+                    TH1* hTemp = (TH1*) fakeHistogramContainers[iFake].histograms[iHist]->Clone();
+                    hTemp->Divide(hDenomVector[iFake][iHist]);
+                    hTemp->Write();
+                }
+            }
         }
     }  
     f->Close();

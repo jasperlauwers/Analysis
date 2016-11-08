@@ -371,6 +371,10 @@ void BasePlotter::writeEfficiency(const HistogramContainer& numeratorContainer, 
                 hEff[iSample]->GetXaxis()->SetBinLabel( hEff[iSample]->GetXaxis()->FindBin(iCut+0.5), (binNames[iCut]).c_str() );
             }
         }
+        else
+        {
+            hEff[iSample]->GetXaxis()->SetTitle(numeratorContainer.histograms[iSample]->GetXaxis()->GetTitle());
+        }
     }
     
     // Set y-range
