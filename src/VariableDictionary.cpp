@@ -560,6 +560,18 @@ void VariableDictionary::stringToFunction(const vector<string>& variableNames, v
                 else
                     ComparisonTypes.push_back( ComparisonType::EQUAL );
             }
+            else if( iSubString.find("charge") != string::npos ) 
+            {
+                string::size_type varPosition = iSubString.find("charge");
+                iSubString.erase(varPosition, 6);
+                eventFunctions.push_back( bind(&EventContainer::leptoncharge, &eventContainer, getIndex(iSubString, iString)) );
+                if( maxFlag )
+                    ComparisonTypes.push_back( ComparisonType::SMALLER_THAN );
+                else if( minFlag )
+                    ComparisonTypes.push_back( ComparisonType::GREATER_THAN );
+                else
+                    ComparisonTypes.push_back( ComparisonType::EQUAL );
+            }
             else if( iSubString.find("isolation") != string::npos ) 
             {
                 string::size_type varPosition = iSubString.find("isolation");
