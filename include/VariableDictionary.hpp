@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <functional>
+#include <regex>
 #include "EventContainer.hpp"
 
 using namespace std;

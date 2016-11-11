@@ -560,18 +560,6 @@ void VariableDictionary::stringToFunction(const vector<string>& variableNames, v
                 else
                     ComparisonTypes.push_back( ComparisonType::EQUAL );
             }
-            else if( iSubString.find("charge") != string::npos ) 
-            {
-                string::size_type varPosition = iSubString.find("charge");
-                iSubString.erase(varPosition, 6);
-                eventFunctions.push_back( bind(&EventContainer::leptoncharge, &eventContainer, getIndex(iSubString, iString)) );
-                if( maxFlag )
-                    ComparisonTypes.push_back( ComparisonType::SMALLER_THAN );
-                else if( minFlag )
-                    ComparisonTypes.push_back( ComparisonType::GREATER_THAN );
-                else
-                    ComparisonTypes.push_back( ComparisonType::EQUAL );
-            }
             else if( iSubString.find("isolation") != string::npos ) 
             {
                 string::size_type varPosition = iSubString.find("isolation");
@@ -588,6 +576,18 @@ void VariableDictionary::stringToFunction(const vector<string>& variableNames, v
                 iSubString.erase(varPosition, 21);
                 eventFunctions.push_back( bind(&EventContainer::leptontriplechargeagreement, &eventContainer, getIndex(iSubString, iString)) );
                 ComparisonTypes.push_back( ComparisonType::EQUAL );
+            }
+            else if( iSubString.find("charge") != string::npos ) 
+            {
+                string::size_type varPosition = iSubString.find("charge");
+                iSubString.erase(varPosition, 6);
+                eventFunctions.push_back( bind(&EventContainer::leptoncharge, &eventContainer, getIndex(iSubString, iString)) );
+                if( maxFlag )
+                    ComparisonTypes.push_back( ComparisonType::SMALLER_THAN );
+                else if( minFlag )
+                    ComparisonTypes.push_back( ComparisonType::GREATER_THAN );
+                else
+                    ComparisonTypes.push_back( ComparisonType::EQUAL );
             }
             else
             {
@@ -993,10 +993,16 @@ float VariableDictionary::getFloat(const string& indexString, const string& full
         throw 1;
     }
     
+    if( regex_search(indexString, regex("[A-Za-z]")) )
+    {
+        cerr << "float still contains letters, probably wrong dictionary match for: " << fullString << endl;
+        throw 1;
+    }
+    
     float value = 0;
     try
     {
-        value = (unsigned) stof(indexString);
+        value = stof(indexString);
     }
     catch(...)
     {
