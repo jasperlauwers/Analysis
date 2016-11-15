@@ -184,7 +184,7 @@ void WeightCalc::setWeight(SampleType sampleType, const string& sampleName)
     }
     
     // DY   
-    if( applyDYWeight && sampleName.find("DY") != string::npos /*&& sampleName.find("M-10") == string::npos*/ )
+    if( applyDYWeight && (sampleName.find("DY") != string::npos || sampleName.find("TTTo2L2Nu") != string::npos) /*&& sampleName.find("M-10") == string::npos*/ )
     {    
         float weight = eventContainer.weight();
         

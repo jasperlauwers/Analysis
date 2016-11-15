@@ -52,7 +52,7 @@ int main (int argc, char ** argv) {
             if( reader.setSample(iSample, iSubSample) )
             {
                 // Init DY weights
-                if( cfgContainer.flipChargeDY && cfgContainer.sampleContainer.sampleNames[iSample][iSubSample].find("DY") != string::npos )
+                if( cfgContainer.flipChargeDY && (cfgContainer.sampleContainer.sampleNames[iSample][iSubSample].find("DY") != string::npos || cfgContainer.sampleContainer.sampleNames[iSample][iSubSample].find("TTTo2L2Nu") != string::npos) )
                     weightCalc.initDYWeight(reader);
                 
                 while( reader.fillNextEvent() )
