@@ -54,7 +54,7 @@ FakeReader::FakeReader(const string& fileName, FakeContainer& fakeContainer)
                 fakeContainer.fakeElectronHist = histTemp;
                 fakeContainer.maxPtElectronFake = maxPtTemp;
             }
-            if( type == "efr2" )
+            else if( type == "efr2" )
             {
                 fakeContainer.fakeElectronFile2 = fileTemp;
                 fakeContainer.fakeElectronHist2 = histTemp;
