@@ -2,7 +2,7 @@
 #include "WeightCalc.hpp"
 
 WeightCalc::WeightCalc(EventContainer& evContainer)
-: eventContainer(evContainer), applyDYWeight(false), applyFakeWeight(false), useElectronCorrectedPt(false), useMuonCorrectedPt(false), useTwoMuonFR(false) { }
+: eventContainer(evContainer), applyDYWeight(false), applyFakeWeight(false), useElectronCorrectedPt(false), useMuonCorrectedPt(false), useTwoMuonFR(false), useTwoElectronFR(false) { }
 
 WeightCalc::~WeightCalc() 
 {
@@ -13,6 +13,8 @@ WeightCalc::~WeightCalc()
         hFakeMuon->Delete();
         if(useTwoMuonFR) 
             hFakeMuon2->Delete();
+        if(useTwoElectronFR) 
+            hFakeElectron2->Delete();
         hPromptElectron->Delete();
         hPromptMuon->Delete();
     }
@@ -28,12 +30,23 @@ void WeightCalc::initFakeWeight(FakeContainer* fContainer)
     
     if( fakeContainer->fakeMuonFile2.size() > 0 ) 
         useTwoMuonFR = true;
+    if( fakeContainer->fakeElectronFile2.size() > 0 ) 
+        useTwoElectronFR = true;
     
     TFile* fFakeElectron = new TFile(fakeContainer->fakeElectronFile.c_str(),"READ");
     hFakeElectron = (TH2F*) fFakeElectron->Get(fakeContainer->fakeElectronHist.c_str());
     hFakeElectron->SetDirectory(0); // "detach" the histogram from the file
     if (fakeContainer->maxPtElectronFake <= 0.)
         fakeContainer->maxPtElectronFake = hFakeElectron->GetXaxis()->GetBinCenter(hFakeElectron->GetNbinsX());
+    
+    if( useTwoElectronFR )
+    {
+        TFile* fFakeElectron2 = new TFile(fakeContainer->fakeElectronFile2.c_str(),"READ");
+        hFakeElectron2 = (TH2F*) fFakeElectron2->Get(fakeContainer->fakeElectronHist2.c_str());
+        hFakeElectron2->SetDirectory(0); // "detach" the histogram from the file
+        if (fakeContainer->maxPtElectronFake2 <= 0.)
+            fakeContainer->maxPtElectronFake2 = hFakeElectron2->GetXaxis()->GetBinCenter(hFakeElectron2->GetNbinsX());
+    }
     
     TFile* fFakeMuon = new TFile(fakeContainer->fakeMuonFile.c_str(),"READ");
     hFakeMuon = (TH2F*) fFakeMuon->Get(fakeContainer->fakeMuonHist.c_str());
@@ -123,11 +136,19 @@ void WeightCalc::setWeight(SampleType sampleType, const string& sampleName)
                     return;
                 }
                 
+                TH2F* hFakeElectronFinal = hFakeElectron;
+                float maxPt = fakeContainer->maxPtElectronFake;
+                if( useTwoElectronFR && iLep )
+                {
+                    hFakeElectronFinal = hFakeElectron2;
+                    maxPt = fakeContainer->maxPtElectronFake2;
+                }
+                
                 p = hPromptElectron->GetBinContent(hPromptElectron->FindBin(min(eventContainer.looseleptonpt(iLep), fakeContainer->maxPtElectronPrompt), abs(eventContainer.looseleptonabseta(iLep))));
                 if( useElectronCorrectedPt )
-                    f = hFakeElectron->GetBinContent(hFakeElectron->FindBin(min(eventContainer.looseleptoncorrectedpt(iLep), fakeContainer->maxPtElectronFake), abs(eventContainer.looseleptonabseta(iLep))));
+                    f = hFakeElectronFinal->GetBinContent(hFakeElectronFinal->FindBin(min(eventContainer.looseleptoncorrectedpt(iLep), maxPt), abs(eventContainer.looseleptonabseta(iLep))));
                 else
-                    f = hFakeElectron->GetBinContent(hFakeElectron->FindBin(min(eventContainer.looseleptonpt(iLep), fakeContainer->maxPtElectronFake), abs(eventContainer.looseleptonabseta(iLep))));
+                    f = hFakeElectronFinal->GetBinContent(hFakeElectronFinal->FindBin(min(eventContainer.looseleptonpt(iLep), maxPt), abs(eventContainer.looseleptonabseta(iLep))));
     //             cout << "p:\t" << p << "\tf:\t" << f << endl;
             }
             else

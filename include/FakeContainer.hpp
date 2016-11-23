@@ -7,8 +7,8 @@
 using namespace std;
 
 struct FakeContainer {
-    string fakeElectronFile, fakeMuonFile, fakeMuonFile2, promptElectronFile, promptMuonFile;
-    string fakeElectronHist, fakeMuonHist, fakeMuonHist2, promptElectronHist, promptMuonHist;
-    float maxPtElectronPrompt, maxPtMuonPrompt, maxPtElectronFake, maxPtMuonFake, maxPtMuonFake2;
+    string fakeElectronFile, fakeElectronFile2, fakeMuonFile, fakeMuonFile2, promptElectronFile, promptMuonFile;
+    string fakeElectronHist, fakeElectronHist2, fakeMuonHist, fakeMuonHist2, promptElectronHist, promptMuonHist;
+    float maxPtElectronPrompt, maxPtMuonPrompt, maxPtElectronFake, maxPtElectronFake2, maxPtMuonFake, maxPtMuonFake2;
 };
 #endif
