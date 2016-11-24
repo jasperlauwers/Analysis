@@ -102,6 +102,8 @@ public:
     float detajj() const;
     float dphill() const;
     float dphijj() const;
+    float dphilj() const;
+    float ptloverj() const;
     float channel() const;
     float productleptoncharge() const;
     float genmll() const;

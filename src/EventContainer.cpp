@@ -663,6 +663,20 @@ float EventContainer::dphijj() const
     else
         return -9999.9;
 }
+float EventContainer::dphilj() const
+{
+    if( goodJets.size() > 0 && goodLeptons.size() > 0 )
+        return jets[goodJets[0]].dPhi(leptons[goodLeptons[0]]);
+    else
+        return -9999.9;
+}
+float EventContainer::ptloverj() const
+{
+    if( goodJets.size() > 0 && goodLeptons.size() > 0 )
+        return leptons[goodLeptons[0]].pt() / jets[goodJets[0]].pt();
+    else
+        return -9999.9;
+}
 float EventContainer::channel() const
 {
     if( goodLeptons.size() > 1 )

@@ -861,6 +861,22 @@ void VariableDictionary::stringToFunction(const vector<string>& variableNames, v
             else
                 ComparisonTypes.push_back( ComparisonType::ABS_GREATER_THAN ); 
         }
+        else if( iSubString == "dphilj" ) 
+        {
+            eventFunctions.push_back( bind(&EventContainer::dphilj, &eventContainer) );
+            if( maxFlag )
+                ComparisonTypes.push_back( ComparisonType::ABS_SMALLER_THAN );
+            else
+                ComparisonTypes.push_back( ComparisonType::ABS_GREATER_THAN ); 
+        }
+        else if( iSubString == "ptloverj" ) 
+        {
+            eventFunctions.push_back( bind(&EventContainer::ptloverj, &eventContainer) );
+            if( maxFlag )
+                ComparisonTypes.push_back( ComparisonType::SMALLER_THAN );
+            else
+                ComparisonTypes.push_back( ComparisonType::GREATER_THAN ); 
+        }
         
         // Special variables
         else if( iSubString == "genchannel" ) 
