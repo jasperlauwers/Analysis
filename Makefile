@@ -52,7 +52,7 @@ obj/VariableDictionary.o: VariableDictionary.cpp VariableDictionary.hpp EventCon
 
 obj/EventSelecter.o: EventSelecter.cpp EventSelecter.hpp VariableDictionary.hpp EventContainer.hpp Lepton.hpp Jet.hpp Met.hpp Particle.hpp CutContainer.hpp
 
-obj/WeightCalc.o: EventContainer.hpp Lepton.hpp Jet.hpp Met.hpp Particle.hpp FakeContainer.hpp SampleContainer.hpp obj/EventReader.o
+obj/WeightCalc.o: WeightCalc.cpp WeightCalc.hpp EventContainer.hpp Lepton.hpp Jet.hpp Met.hpp Particle.hpp FakeContainer.hpp SampleContainer.hpp
 
 obj/BasePlotter.o: BasePlotter.cpp BasePlotter.hpp HistogramContainer.hpp EventContainer.hpp Lepton.hpp Jet.hpp Met.hpp Particle.hpp ConfigContainer.hpp VariableContainer.hpp SampleContainer.hpp CutContainer.hpp LatinoStyle2.h
 
