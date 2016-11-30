@@ -35,7 +35,7 @@ int main (int argc, char ** argv) {
 
     EventContainer eventContainer;
     EventReader reader(eventContainer, cfgContainer);
-    EventCleaner cleaner(eventContainer);
+//     EventCleaner cleaner(eventContainer);
     EventSelecter selecter(eventContainer, cfgContainer.cutContainer);
     WeightCalc weightCalc(eventContainer);
     EventPlotter plotter(eventContainer, cfgContainer);
@@ -57,7 +57,7 @@ int main (int argc, char ** argv) {
                 while( reader.fillNextEvent() )
                 {
 //                     cleaner.doCleaning();
-                    cleaner.doTrackJetsCleaning();
+//                     cleaner.doTrackJetsCleaning();
                     if( selecter.passCuts() )
                     {
                         weightCalc.setWeight(cfgContainer.sampleContainer.sampleType[iSample], cfgContainer.sampleContainer.sampleNames[iSample][iSubSample]);
