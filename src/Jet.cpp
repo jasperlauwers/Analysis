@@ -4,10 +4,10 @@
 Jet::Jet() { }
 
 Jet::Jet(float pt, float eta, float phi, float mass, float puId, float qgLikelihood, float CSV) 
-    : Particle( pt, eta, phi, mass), _puId(puId), qgLikelihood(qgLikelihood), CSV(CSV) { }
+    : Particle( pt, eta, phi, mass), _puId(puId), _qgLikelihood(qgLikelihood), CSV(CSV) { }
 
 Jet::Jet(const TLorentzVector& p4, float puId, float qgLikelihood, float CSV) 
-: Particle( p4 ), _puId(puId), qgLikelihood(qgLikelihood), CSV(CSV) { }
+: Particle( p4 ), _puId(puId), _qgLikelihood(qgLikelihood), CSV(CSV) { }
 
 Jet::~Jet() { }
 
@@ -15,7 +15,7 @@ void Jet::set(float pt, float eta, float phi, float mass, float puId, float qgLi
 {
     Particle::set( pt, eta, phi, mass);
     _puId = puId;
-    this->qgLikelihood = qgLikelihood;
+    _qgLikelihood = qgLikelihood;
     this->CSV = CSV;
 }
 
@@ -31,6 +31,10 @@ void Jet::setCsv( float csv )
 void Jet::setPuId( float puId )
 {
     _puId = puId;
+}
+void Jet::setQgLikelihood( float qg )
+{
+    _qgLikelihood = qg;
 }
 void Jet::setIsHardProcess( float isHardProcess )
 {
@@ -51,6 +55,10 @@ float Jet::csv() const
 float Jet::puId() const
 {
     return _puId;
+}
+float Jet::qgLikelihood() const
+{
+    return _qgLikelihood;
 }
 bool Jet::isHardProcess() const
 {

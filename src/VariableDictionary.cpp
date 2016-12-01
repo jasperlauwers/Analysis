@@ -339,6 +339,16 @@ void VariableDictionary::stringToFunction(const vector<string>& variableNames, v
                 else
                     ComparisonTypes.push_back( ComparisonType::GREATER_THAN );
             }
+            else if( iSubString.find("gqlikelihood") != string::npos ) 
+            {
+                string::size_type varPosition = iSubString.find("gqlikelihood");
+                iSubString.erase(varPosition, 12);
+                eventFunctions.push_back( bind(&EventContainer::jetgqlikelihood, &eventContainer, getIndex(iSubString, iString)) );
+                if( maxFlag )
+                    ComparisonTypes.push_back( ComparisonType::SMALLER_THAN );
+                else
+                    ComparisonTypes.push_back( ComparisonType::GREATER_THAN );
+            }
             else
             {
                 cerr << "Variable '" << iString << "' in cuts or variables list not known." << endl;

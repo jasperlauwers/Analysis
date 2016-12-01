@@ -16,17 +16,19 @@ public:
     void set(float pt, float eta, float phi, float mass = 0);
     void setCsv( float csv );
     void setPuId( float puId );
+    void setQgLikelihood( float qg );
     void setIsHardProcess( float isHardProcess );
     void setSoftMu(float pt, float eta, float phi);
 //     void setSoftMuPt( float softMuPt );
     float csv() const;
     float puId() const;
+    float qgLikelihood() const;
     bool isHardProcess() const;
     float softMuPt() const;
     float softMuDr() const;
     
 private:
-    float _puId, qgLikelihood, CSV, _softMuPt;
+    float _puId, _qgLikelihood, CSV, _softMuPt;
     bool _isHardProcess; 
     Lepton softMuon;
     

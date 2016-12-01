@@ -53,6 +53,7 @@ EventReader::EventReader(EventContainer& eventCont, const ConfigContainer& cfgCo
                 branches.push_back("std_vector_jet_softMuPt");
                 branches.push_back("std_vector_jet_softMuEta");
                 branches.push_back("std_vector_jet_softMuPhi");
+                branches.push_back("std_vector_jet_QGlikelihood");
                 firstJet = false; 
             } 
             
@@ -397,6 +398,7 @@ bool EventReader::fillNextEvent()
                     eventContainer.jets[iJet].setSoftMu((*treeReader->std_vector_jet_softMuPt)[iJet], (*treeReader->std_vector_jet_softMuEta)[iJet], (*treeReader->std_vector_jet_softMuPhi)[iJet]);
                 else
                     eventContainer.jets[iJet].setSoftMu(0,0,0);
+                eventContainer.jets[iJet].setQgLikelihood((*treeReader->std_vector_jet_QGlikelihood)[iJet]);
                 eventContainer.goodJets.push_back(iJet);
             }
             else
