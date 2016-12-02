@@ -339,11 +339,11 @@ void VariableDictionary::stringToFunction(const vector<string>& variableNames, v
                 else
                     ComparisonTypes.push_back( ComparisonType::GREATER_THAN );
             }
-            else if( iSubString.find("gqlikelihood") != string::npos ) 
+            else if( iSubString.find("qglikelihood") != string::npos ) 
             {
-                string::size_type varPosition = iSubString.find("gqlikelihood");
+                string::size_type varPosition = iSubString.find("qglikelihood");
                 iSubString.erase(varPosition, 12);
-                eventFunctions.push_back( bind(&EventContainer::jetgqlikelihood, &eventContainer, getIndex(iSubString, iString)) );
+                eventFunctions.push_back( bind(&EventContainer::jetqglikelihood, &eventContainer, getIndex(iSubString, iString)) );
                 if( maxFlag )
                     ComparisonTypes.push_back( ComparisonType::SMALLER_THAN );
                 else

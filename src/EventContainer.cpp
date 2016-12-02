@@ -83,7 +83,7 @@ float EventContainer::jetcsv(unsigned int i) const
     else
         return -9999.9;
 }
-float EventContainer::jetgqlikelihood(unsigned int i) const
+float EventContainer::jetqglikelihood(unsigned int i) const
 {
     if( i < goodJets.size() )
         return jets[goodJets[i]].qgLikelihood();

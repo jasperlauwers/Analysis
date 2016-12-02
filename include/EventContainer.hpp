@@ -26,7 +26,7 @@ public:
     float jetphi(unsigned int) const;
     float jetmass(unsigned int) const;
     float jetcsv(unsigned int) const;
-    float jetgqlikelihood(unsigned int) const;
+    float jetqglikelihood(unsigned int) const;
     unsigned int nJets( float minPt ) const;
     float jetmaxcsv( float minPt ) const;
     float jetmaxSoftMuonPt( float minPt ) const;
