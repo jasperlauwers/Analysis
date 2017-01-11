@@ -381,9 +381,11 @@ float EventContainer::leptoncorrectedpt(unsigned int i) const
     {
         if( leptons[goodLeptons[i]].isElectron() )
         {
-            double isoCut = 0.0354;
+//             double isoCut = 0.0354;  // 2015 value
+            double isoCut = 0.0588;  // 2016 value
             if( abs(leptons[goodLeptons[i]].eta()) > 1.479 )
-                isoCut = 0.0646;
+//                 isoCut = 0.0646;   // 2015 value
+                isoCut = 0.0571;  // 2016 value
             return leptons[goodLeptons[i]].pt() * ( 1. + max(0., leptons[goodLeptons[i]].isolation() - isoCut) );
         }
         else if( leptons[goodLeptons[i]].isMuon() )
@@ -517,11 +519,11 @@ float EventContainer::looseleptoncorrectedpt(unsigned int i) const
     {
         if( looseLeptons[i].isElectron() )
         {
-            double isoCut = 0.0354;  // 2015 value
-//             double isoCut = 0.0588;  // 2016 value
+//             double isoCut = 0.0354;  // 2015 value
+            double isoCut = 0.0588;  // 2016 value
             if( abs(looseLeptons[i].eta()) > 1.479 )
-                isoCut = 0.0646;   // 2015 value
-//                 isoCut = 0.0571;  // 2016 value
+//                 isoCut = 0.0646;   // 2015 value
+                isoCut = 0.0571;  // 2016 value
             return looseLeptons[i].pt() * ( 1. + max(0., looseLeptons[i].isolation() - isoCut) );
         }
         else if( looseLeptons[i].isMuon() )
