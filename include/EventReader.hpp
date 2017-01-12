@@ -16,6 +16,8 @@ using namespace std;
 
 typedef function<void ()> setFunction;
 
+enum class DataType { MuonEG, DoubleMuon, SingleMuon, DoubleEG, SingleElectron};
+
 class EventReader {
 
 public:
@@ -36,6 +38,7 @@ private:
     unsigned int nLeptons, nJets;  
     bool needJets, needGenJets, needPuppiJets, needGenLeptons, needElectronId, firstLooseLepton, needLooseLeptons, needTrackJets, triggerSelection, hasNegWeight, isDY, applybPogSF;
     SampleType sampleType;
+    DataType dataType;
     vector<setFunction> functionVector;
     vector<string> branches, genBranches;
     float maxEventsWeight;

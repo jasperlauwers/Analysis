@@ -236,10 +236,22 @@ bool EventReader::setSample(unsigned int iSample, unsigned int iSubSample)
         }
         
 //         if( triggerSelection )
-            sampleBranches.push_back("std_vector_trigger");
+        sampleBranches.push_back("std_vector_trigger");
         
         // Debug eventNo info
         sampleBranches.push_back("event"); 
+        
+        // Data type  iString.find("genjet") != string::npo
+        if( configContainer.sampleContainer.sampleNames[iSample][0].find("MuonEG") != string::npos )
+            dataType = DataType::MuonEG;
+        else if (configContainer.sampleContainer.sampleNames[iSample][0].find("DoubleMuon") != string::npos )
+            dataType = DataType::DoubleMuon;
+        else if (configContainer.sampleContainer.sampleNames[iSample][0].find("SingleMuon") != string::npos )
+            dataType = DataType::SingleMuon;
+        else if (configContainer.sampleContainer.sampleNames[iSample][0].find("DoubleEG") != string::npos )
+            dataType = DataType::DoubleEG;
+        else if (configContainer.sampleContainer.sampleNames[iSample][0].find("SingleElectron") != string::npos )
+            dataType = DataType::SingleElectron;
     }
     else
     {
@@ -334,10 +346,7 @@ bool EventReader::fillNextEvent()
         eventContainer.iEvent++;
         
         if( sampleType == SampleType::DATA || sampleType == SampleType::FAKELEPTON)
-        {
-//             skipEvent = ( treeReader->trigger != 1 );
-            skipEvent = ( /*treeReader->trigger != 1 ||*/ ((*treeReader->std_vector_trigger)[5] != 1 &&  (*treeReader->std_vector_trigger)[10] != 1 && (*treeReader->std_vector_trigger)[12] != 1 && (*treeReader->std_vector_trigger)[7] != 1 && (*treeReader->std_vector_trigger)[9] != 1) );
-            
+        {            
             if( triggerSelection ) 
             {
                 skipEvent = true;
@@ -351,6 +360,18 @@ bool EventReader::fillNextEvent()
                         skipEvent = false;
                     }
                 }
+            }
+            else
+            {
+//                skipEvent = ( treeReader->trigger != 1 );
+//                 skipEvent = ( /*treeReader->trigger != 1 ||*/ ((*treeReader->std_vector_trigger)[5] != 1 &&  (*treeReader->std_vector_trigger)[10] != 1 && (*treeReader->std_vector_trigger)[12] != 1 && (*treeReader->std_vector_trigger)[7] != 1 && (*treeReader->std_vector_trigger)[9] != 1) );
+                bool keepEvent = ((dataType == DataType::MuonEG) && ((*treeReader->std_vector_trigger)[6] == 1 || (*treeReader->std_vector_trigger)[8] == 1 || 
+                            (*treeReader->std_vector_trigger)[41] == 1 || (*treeReader->std_vector_trigger)[57] == 1 || (*treeReader->std_vector_trigger)[58] == 1 || (*treeReader->std_vector_trigger)[96] == 1 || (*treeReader->std_vector_trigger)[97] == 1 || (*treeReader->std_vector_trigger)[98] == 1)) ||
+                            ((dataType == DataType::DoubleMuon) && ((*treeReader->std_vector_trigger)[11] == 1 || (*treeReader->std_vector_trigger)[13] == 1 || (*treeReader->std_vector_trigger)[100] == 1)) ||
+                            ((dataType == DataType::SingleMuon) && ((*treeReader->std_vector_trigger)[42] == 1 || (*treeReader->std_vector_trigger)[43] == 1 || (*treeReader->std_vector_trigger)[44] == 1 || (*treeReader->std_vector_trigger)[45] == 1)) ||
+                            ((dataType == DataType::DoubleEG) && (*treeReader->std_vector_trigger)[46] == 1) ||
+                            ((dataType == DataType::SingleElectron) && (*treeReader->std_vector_trigger)[39] == 1);
+                skipEvent = !keepEvent;
             }
         }
     }
@@ -544,9 +565,9 @@ bool EventReader::fillNextEvent()
         float weight = treeReader->puW * maxEventsWeight;
         if( ! isDY ) 
              weight *= treeReader->baseW;
-        if( !triggerSelection ) 
-            weight *= ( (treeReader->effTrigW_DbleEle +  treeReader->effTrigW_DbleMu + treeReader->effTrigW_EleMu)
-                        * (*treeReader->std_vector_lepton_idisoW)[0] * (*treeReader->std_vector_lepton_idisoW)[1]);
+//         if( !triggerSelection ) 
+//             weight *= ( (treeReader->effTrigW_DbleEle +  treeReader->effTrigW_DbleMu + treeReader->effTrigW_EleMu)
+//                         * (*treeReader->std_vector_lepton_idisoW)[0] * (*treeReader->std_vector_lepton_idisoW)[1]);
         if( applybPogSF )
             weight *= treeReader->bPogSF_CMVAT; 
         if( hasNegWeight ) 
