@@ -242,15 +242,15 @@ bool EventReader::setSample(unsigned int iSample, unsigned int iSubSample)
         sampleBranches.push_back("event"); 
         
         // Data type  iString.find("genjet") != string::npo
-        if( configContainer.sampleContainer.sampleNames[iSample][0].find("MuonEG") != string::npos )
+        if( configContainer.sampleContainer.sampleNames[iSample][iSubSample].find("MuonEG") != string::npos )
             dataType = DataType::MuonEG;
-        else if (configContainer.sampleContainer.sampleNames[iSample][0].find("DoubleMuon") != string::npos )
+        else if (configContainer.sampleContainer.sampleNames[iSample][iSubSample].find("DoubleMuon") != string::npos )
             dataType = DataType::DoubleMuon;
-        else if (configContainer.sampleContainer.sampleNames[iSample][0].find("SingleMuon") != string::npos )
+        else if (configContainer.sampleContainer.sampleNames[iSample][iSubSample].find("SingleMuon") != string::npos )
             dataType = DataType::SingleMuon;
-        else if (configContainer.sampleContainer.sampleNames[iSample][0].find("DoubleEG") != string::npos )
+        else if (configContainer.sampleContainer.sampleNames[iSample][iSubSample].find("DoubleEG") != string::npos )
             dataType = DataType::DoubleEG;
-        else if (configContainer.sampleContainer.sampleNames[iSample][0].find("SingleElectron") != string::npos )
+        else if (configContainer.sampleContainer.sampleNames[iSample][iSubSample].find("SingleElectron") != string::npos )
             dataType = DataType::SingleElectron;
     }
     else
