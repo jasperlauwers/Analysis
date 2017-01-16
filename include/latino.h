@@ -410,6 +410,7 @@ public :
    Float_t         effTrigW_DbleEle;
    Float_t         effTrigW_DbleMu;
    Float_t         effTrigW_EleMu;
+   vector<float>   *std_vector_lepton_recoW;
    vector<float>   *std_vector_lepton_idisoW;
    vector<float>   *std_vector_lepton_idisoW_Up;
    vector<float>   *std_vector_lepton_idisoW_Down;
@@ -839,6 +840,7 @@ public :
    TBranch        *b_effTrigW_DbleEle;   //!
    TBranch        *b_effTrigW_DbleMu;   //!
    TBranch        *b_effTrigW_EleMu;   //!
+   TBranch        *b_std_vector_lepton_recoW;   //!
    TBranch        *b_std_vector_lepton_idisoW;   //!
    TBranch        *b_std_vector_lepton_idisoW_Up;   //!
    TBranch        *b_std_vector_lepton_idisoW_Down;   //!
@@ -1095,6 +1097,7 @@ void latino::Init(TTree *tree)
    std_vector_lepton_eleIdTight = 0;
    std_vector_lepton_d0 = 0;
    std_vector_lepton_isTightMuon = 0;
+   std_vector_lepton_recoW = 0;
    std_vector_lepton_idisoW = 0;
    std_vector_lepton_idisoW_Up = 0;
    std_vector_lepton_idisoW_Down = 0;
@@ -1495,6 +1498,7 @@ void latino::Init(TTree *tree)
    fChain->SetBranchAddress("effTrigW_DbleMu", &effTrigW_DbleMu, &b_effTrigW_DbleMu);
    fChain->SetBranchAddress("effTrigW_EleMu", &effTrigW_EleMu, &b_effTrigW_EleMu);
    fChain->SetBranchAddress("effTrigW", &effTrigW, &b_effTrigW);
+   fChain->SetBranchAddress("std_vector_lepton_recoW", &std_vector_lepton_recoW, &b_std_vector_lepton_recoW);
    fChain->SetBranchAddress("std_vector_lepton_idisoW", &std_vector_lepton_idisoW, &b_std_vector_lepton_idisoW);
    fChain->SetBranchAddress("std_vector_lepton_idisoW_Up", &std_vector_lepton_idisoW_Up, &b_std_vector_lepton_idisoW_Up);
    fChain->SetBranchAddress("std_vector_lepton_idisoW_Down", &std_vector_lepton_idisoW_Down, &b_std_vector_lepton_idisoW_Down);

@@ -268,6 +268,7 @@ bool EventReader::setSample(unsigned int iSample, unsigned int iSubSample)
         if( !triggerSelection ) 
         {
             sampleBranches.push_back("std_vector_lepton_idisoW"); 
+            sampleBranches.push_back("std_vector_lepton_recoW");
 //             sampleBranches.push_back("effTrigW");
             sampleBranches.push_back("effTrigW_DbleEle");
             sampleBranches.push_back("effTrigW_DbleMu");
@@ -581,7 +582,10 @@ bool EventReader::fillNextEvent()
              weight *= treeReader->baseW;
 //         if( !triggerSelection ) 
 //             weight *= ( (treeReader->effTrigW_DbleEle +  treeReader->effTrigW_DbleMu + treeReader->effTrigW_EleMu)
-//                         * (*treeReader->std_vector_lepton_idisoW)[0] * (*treeReader->std_vector_lepton_idisoW)[1]);
+//                         * (*treeReader->std_vector_lepton_idisoW)[0] * (*treeReader->std_vector_lepton_idisoW)[1]
+//                         * (*treeReader->std_vector_lepton_recoW)[0] * (*treeReader->std_vector_lepton_recoW)[1]);
+        else
+            weight *= (*treeReader->std_vector_lepton_idisoW)[0] * (*treeReader->std_vector_lepton_recoW)[0];
         if( applybPogSF )
             weight *= treeReader->bPogSF_CMVAT; 
         if( hasNegWeight ) 
