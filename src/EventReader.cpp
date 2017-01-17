@@ -578,12 +578,12 @@ bool EventReader::fillNextEvent()
     else if( sampleType != SampleType::DATA )
     {
         float weight = treeReader->puW * maxEventsWeight;
-        if( ! isDY ) 
-             weight *= treeReader->baseW;
-//         if( !triggerSelection ) 
-//             weight *= ( (treeReader->effTrigW_DbleEle +  treeReader->effTrigW_DbleMu + treeReader->effTrigW_EleMu)
-//                         * (*treeReader->std_vector_lepton_idisoW)[0] * (*treeReader->std_vector_lepton_idisoW)[1]
-//                         * (*treeReader->std_vector_lepton_recoW)[0] * (*treeReader->std_vector_lepton_recoW)[1]);
+//         if( ! isDY ) 
+//              weight *= treeReader->baseW;
+        if( !triggerSelection ) 
+            weight *= ( (treeReader->effTrigW_DbleEle +  treeReader->effTrigW_DbleMu + treeReader->effTrigW_EleMu)
+                        * (*treeReader->std_vector_lepton_idisoW)[0] * (*treeReader->std_vector_lepton_idisoW)[1]
+                        * (*treeReader->std_vector_lepton_recoW)[0] * (*treeReader->std_vector_lepton_recoW)[1]);
         else
             weight *= (*treeReader->std_vector_lepton_idisoW)[0] * (*treeReader->std_vector_lepton_recoW)[0];
         if( applybPogSF )
