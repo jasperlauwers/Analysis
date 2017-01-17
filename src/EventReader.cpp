@@ -257,6 +257,8 @@ bool EventReader::setSample(unsigned int iSample, unsigned int iSubSample)
     {
         sampleBranches.push_back("baseW");        
         sampleBranches.push_back("puW");
+        sampleBranches.push_back("std_vector_lepton_idisoW"); 
+        sampleBranches.push_back("std_vector_lepton_recoW");
         hasNegWeight = false;
         
         if(  treeReader->fChain->FindBranch("GEN_weight_SM") )
@@ -267,8 +269,6 @@ bool EventReader::setSample(unsigned int iSample, unsigned int iSubSample)
         
         if( !triggerSelection ) 
         {
-            sampleBranches.push_back("std_vector_lepton_idisoW"); 
-            sampleBranches.push_back("std_vector_lepton_recoW");
 //             sampleBranches.push_back("effTrigW");
             sampleBranches.push_back("effTrigW_DbleEle");
             sampleBranches.push_back("effTrigW_DbleMu");
@@ -579,7 +579,7 @@ bool EventReader::fillNextEvent()
     {
         float weight = treeReader->puW * maxEventsWeight;
 //         if( ! isDY ) 
-//              weight *= treeReader->baseW;
+        weight *= treeReader->baseW;
         if( !triggerSelection ) 
             weight *= ( (treeReader->effTrigW_DbleEle +  treeReader->effTrigW_DbleMu + treeReader->effTrigW_EleMu)
                         * (*treeReader->std_vector_lepton_idisoW)[0] * (*treeReader->std_vector_lepton_idisoW)[1]
