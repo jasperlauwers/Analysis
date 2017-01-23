@@ -376,16 +376,21 @@ bool EventReader::fillNextEvent()
                 
                 
                 bool keepEvent = false;
-                if( dataType == DataType::MuonEG ) 
+                if( dataType == DataType::MuonEG ) {
                     if( passMuonEG) keepEvent = true;
-                else if( dataType == DataType::DoubleMuon )
+                }
+                else if( dataType == DataType::DoubleMuon ) {
                     if( passDoubleMuon && !passMuonEG ) keepEvent = true;
-                else if( dataType == DataType::DoubleEG)
-                    if( passDoubleEG && !passMuonEG && !passDoubleMuon ) keepEvent = true;    
-                else if( dataType == DataType::SingleMuon )
+                }
+                else if( dataType == DataType::DoubleEG) {
+                    if( passDoubleEG && !passMuonEG && !passDoubleMuon ) keepEvent = true;   
+                }
+                else if( dataType == DataType::SingleMuon ) {
                     if( passSingleMuon && !passMuonEG && !passDoubleMuon && !passDoubleEG ) keepEvent = true;
-                else if( dataType == DataType::SingleElectron )
+                }
+                else if( dataType == DataType::SingleElectron ) {
                     if( passSingleElectron && !passMuonEG && !passDoubleMuon && !passDoubleEG && !passSingleMuon ) keepEvent = true;
+                }
 
                 skipEvent = !keepEvent;
             }
