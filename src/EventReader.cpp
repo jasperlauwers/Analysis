@@ -369,7 +369,8 @@ bool EventReader::fillNextEvent()
                 bool passMuonEG = (*treeReader->std_vector_trigger)[6] == 1 || (*treeReader->std_vector_trigger)[8] == 1 || 
                             (*treeReader->std_vector_trigger)[41] == 1 || (*treeReader->std_vector_trigger)[57] == 1 || (*treeReader->std_vector_trigger)[58] == 1/* || (*treeReader->std_vector_trigger)[96] == 1 || (*treeReader->std_vector_trigger)[97] == 1 || (*treeReader->std_vector_trigger)[98] == 1*/;
                 bool passDoubleMuon = (*treeReader->std_vector_trigger)[11] == 1 || (*treeReader->std_vector_trigger)[13] == 1 /*|| (*treeReader->std_vector_trigger)[100] == 1*/;
-                bool passSingleMuon = (*treeReader->std_vector_trigger)[42] == 1 || (*treeReader->std_vector_trigger)[43] == 1 || (*treeReader->std_vector_trigger)[44] == 1 ||         (*treeReader->std_vector_trigger)[45] == 1;
+                bool passSingleMuon = (*treeReader->std_vector_trigger)[42] == 1 || (*treeReader->std_vector_trigger)[43] == 1 
+                                       || (*treeReader->std_vector_trigger)[44] == 1 ||         (*treeReader->std_vector_trigger)[45] == 1;
                 bool passDoubleEG = (*treeReader->std_vector_trigger)[46] == 1;
                 bool passSingleElectron = (*treeReader->std_vector_trigger)[93] == 1;
                 
@@ -377,13 +378,13 @@ bool EventReader::fillNextEvent()
                 bool keepEvent = false;
                 if( dataType == DataType::MuonEG ) 
                     if( passMuonEG) keepEvent = true;
-                if( dataType == DataType::DoubleMuon )
+                else if( dataType == DataType::DoubleMuon )
                     if( passDoubleMuon && !passMuonEG ) keepEvent = true;
-                if( dataType == DataType::DoubleEG)
-                    if( passDoubleEG && !passMuonEG && !passDoubleMuon ) keepEvent = true;
-                if( dataType == DataType::SingleMuon )
+                else if( dataType == DataType::DoubleEG)
+                    if( passDoubleEG && !passMuonEG && !passDoubleMuon ) keepEvent = true;    
+                else if( dataType == DataType::SingleMuon )
                     if( passSingleMuon && !passMuonEG && !passDoubleMuon && !passDoubleEG ) keepEvent = true;
-                if( dataType == DataType::SingleElectron )
+                else if( dataType == DataType::SingleElectron )
                     if( passSingleElectron && !passMuonEG && !passDoubleMuon && !passDoubleEG && !passSingleMuon ) keepEvent = true;
 
                 skipEvent = !keepEvent;
@@ -524,8 +525,8 @@ bool EventReader::fillNextEvent()
                         eventContainer.leptons[iLepton].seteffectiveArea((*treeReader->std_vector_electron_effectiveArea)[iLepton]);
                         eventContainer.leptons[iLepton].setmissingHits((*treeReader->std_vector_electron_expectedMissingInnerHits)[iLepton]);
                         eventContainer.leptons[iLepton].setsigmaIetaIeta((*treeReader->std_vector_electron_full5x5_sigmaIetaIeta)[iLepton]);
-                        eventContainer.leptons[iLepton].sethOverE((*treeReader->std_vector_electron_full5x5_sigmaIetaIeta)[iLepton]);
-                        eventContainer.leptons[iLepton].setooEmoop((*treeReader->std_vector_electron_full5x5_sigmaIetaIeta)[iLepton]);
+                        eventContainer.leptons[iLepton].sethOverE((*treeReader->std_vector_electron_hOverE)[iLepton]);
+                        eventContainer.leptons[iLepton].setooEmoop((*treeReader->std_vector_electron_ooEmooP)[iLepton]);
                         eventContainer.leptons[iLepton].setconversionVeto((*treeReader->std_vector_electron_passConversionVeto)[iLepton]);
                         eventContainer.leptons[iLepton].setscEta((*treeReader->std_vector_electron_scEta)[iLepton]);
     //                     eventContainer.leptons[iLepton].setIsolation( ((*treeReader->std_vector_lepton_chargedHadronIso)[iLepton] + TMath::Max((*treeReader->std_vector_lepton_neutralHadronIso)[iLepton] + (*treeReader->std_vector_lepton_photonIso)[iLepton] - (*treeReader->jetRho)*(*treeReader->std_vector_electron_effectiveArea)[iLepton])) / (*treeReader->std_vector_lepton_pt)[iLepton] );

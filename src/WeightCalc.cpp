@@ -167,7 +167,7 @@ void WeightCalc::setWeight(SampleType sampleType, const string& sampleName)
                     f = hFakeMuonFinal->GetBinContent(hFakeMuonFinal->FindBin(min(eventContainer.looseleptonpt(iLep), maxPt), abs(eventContainer.looseleptonabseta(iLep))));
             }
             
-            if( eventContainer.looseLeptons[iLep].passesMedium() )
+            if( eventContainer.looseLeptons[iLep].passesMedium() && (eventContainer.looseLeptons[iLep].isMuon() || eventContainer.looseLeptons[iLep].tripleChargeAgreement()) )
             {
                 nTight++;
     //             cout << "Tight lepton" << endl;
