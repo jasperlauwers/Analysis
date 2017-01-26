@@ -90,6 +90,11 @@ public:
     float genleptoneta(unsigned int) const;
     float genleptonphi(unsigned int) const;
     
+    // LHE leptons
+    float lheleptonpt(unsigned int) const;
+    float lheleptoneta(unsigned int) const;
+    float lheleptonphi(unsigned int) const;
+    
     // Di-particle varibles
     float mll() const;
     float dmll(float subtractMass) const;
@@ -152,8 +157,8 @@ public:
     
     // Data members
     unsigned int iEvent;
-    vector<Lepton> leptons, genLeptons, looseLeptons;
-    vector<unsigned int> goodLeptons, goodGenLeptons;
+    vector<Lepton> leptons, genLeptons, lheLeptons, looseLeptons;
+    vector<unsigned int> goodLeptons, goodGenLeptons, goodLHELeptons;
     vector<Jet> jets, genJets, puppiJets, trackJets;
     vector<unsigned int> goodJets, goodGenJets, goodPuppiJets, goodTrackJets;
     Met met;

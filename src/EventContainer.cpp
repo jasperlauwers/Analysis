@@ -17,6 +17,7 @@ void EventContainer::init(const unsigned int leptonSize, const unsigned int jetS
 {
     leptons.resize(leptonSize);
     genLeptons.resize(leptonSize);
+    lheLeptons.resize(leptonSize);
     looseLeptons.resize(leptonSize);
     jets.resize(jetSize);
     genJets.resize(jetSize);
@@ -38,6 +39,8 @@ void EventContainer::reset()
     goodJets.clear();
     genLeptons.clear();
     goodGenLeptons.clear();
+    lheLeptons.clear();
+    goodLHELeptons.clear();
     looseLeptons.clear();
     genJets.clear();
     goodGenJets.clear();
@@ -568,6 +571,29 @@ float EventContainer::genleptonphi(unsigned int i) const
 {
     if( i < goodGenLeptons.size() )
         return genLeptons[goodGenLeptons[i]].phi();
+    else
+        return -9999.9;
+}
+
+// LHE leptons
+float EventContainer::lheleptonpt(unsigned int i) const
+{
+    if( i < goodLHELeptons.size() )
+        return lheLeptons[goodLHELeptons[i]].pt();
+    else
+        return -9999.9;
+}
+float EventContainer::lheleptoneta(unsigned int i) const
+{
+    if( i < goodLHELeptons.size() )
+        return lheLeptons[goodLHELeptons[i]].eta();
+    else
+        return -9999.9;
+}
+float EventContainer::lheleptonphi(unsigned int i) const
+{
+    if( i < goodLHELeptons.size() )
+        return lheLeptons[goodLHELeptons[i]].phi();
     else
         return -9999.9;
 }
