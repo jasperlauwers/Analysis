@@ -489,10 +489,10 @@ bool EventReader::fillNextEvent()
     if( needLHELeptons && (sampleType != SampleType::DATA && sampleType != SampleType::FAKELEPTON) )
     {
         for( unsigned int iLepton=0; iLepton < nLeptons; ++iLepton ) {
-            if( (*treeReader->std_vector_leptonLHE_pt)[iLepton] > 0)
+            if( (*treeReader->std_vector_LHElepton_pt)[iLepton] > 0)
             {                
                 eventContainer.goodLHELeptons.push_back(iLepton);
-                eventContainer.lheLeptons[iLepton].set((*treeReader->std_vector_LHElepton_pt)[iLepton],(*treeReader->std_vector_LHElepton_eta)[iLepton],(*treeReader->std_vector_LHElepton_phi)[iLepton],(*treeReader->std_vector_LHElepton_pid)[iLepton] );
+                eventContainer.lheLeptons[iLepton].set((*treeReader->std_vector_LHElepton_pt)[iLepton],(*treeReader->std_vector_LHElepton_eta)[iLepton],(*treeReader->std_vector_LHElepton_phi)[iLepton],(*treeReader->std_vector_LHElepton_id)[iLepton] );
             }
         }
     }
