@@ -3,9 +3,9 @@
 #include "TChain.h"
 
 EventReader::EventReader(EventContainer& eventCont, const ConfigContainer& cfgContainer)
-: eventContainer(eventCont), configContainer(cfgContainer), treeReader(nullptr), nLeptons(0), nJets(0), needJets(false), needGenJets(false), needPuppiJets(false), needGenLeptons(false), needElectronId(false), needTrackJets(false), triggerSelection(false), hasNegWeight(false), isDY(false), applybPogSF(false), sampleType(SampleType::DATA), maxEventsWeight(1.) 
+: eventContainer(eventCont), configContainer(cfgContainer), treeReader(nullptr), nLeptons(0), nJets(0), needJets(false), needGenJets(false), needPuppiJets(false), needGenLeptons(false), needLHELeptons(false), needElectronId(false), needTrackJets(false), triggerSelection(false), hasNegWeight(false), isDY(false), applybPogSF(false), sampleType(SampleType::DATA), maxEventsWeight(1.) 
 { 
-    bool firstGenJet = true, firstPuppiJet = true, firstJet = true, firstgenLepton = true, firstElectronID = true, firstTrackJet = true, firstLooseLepton=true;
+    bool firstGenJet = true, firstPuppiJet = true, firstJet = true, firstgenLepton = true, firstLHELepton = true, firstElectronID = true, firstTrackJet = true, firstLooseLepton=true;
     vector<const vector<string>*> variableNames = {&configContainer.variableContainer.variableNames, &configContainer.cutContainer.variableNames};
     
     for( const auto* varNames : variableNames ) 
@@ -69,6 +69,17 @@ EventReader::EventReader(EventContainer& eventCont, const ConfigContainer& cfgCo
                 genBranches.push_back("std_vector_leptonGen_isPrompt");
                 genBranches.push_back("std_vector_leptonGen_isDirectPromptTauDecayProduct");
                 firstgenLepton = false;
+            }
+            
+            // Gen leptons
+            if( iString.find("lhelepton") != string::npos && firstLHELepton )
+            {
+                needLHELeptons = true;
+                genBranches.push_back("std_vector_LHElepton_eta");
+                genBranches.push_back("std_vector_LHElepton_pt");
+                genBranches.push_back("std_vector_LHElepton_phi");
+                genBranches.push_back("std_vector_LHElepton_id");
+                firstLHELepton = false;
             }
             
             // Electrons
@@ -269,10 +280,10 @@ bool EventReader::setSample(unsigned int iSample, unsigned int iSubSample)
         
         if( !triggerSelection ) 
         {
-//             sampleBranches.push_back("effTrigW");
-            sampleBranches.push_back("effTrigW_DbleEle");
-            sampleBranches.push_back("effTrigW_DbleMu");
-            sampleBranches.push_back("effTrigW_EleMu");
+            sampleBranches.push_back("effTrigW");
+//             sampleBranches.push_back("effTrigW_DbleEle");
+//             sampleBranches.push_back("effTrigW_DbleMu");
+//             sampleBranches.push_back("effTrigW_EleMu");
 //             sampleBranches.push_back("bPogSF");
         }
         
@@ -330,6 +341,7 @@ bool EventReader::fillNextEvent()
     eventContainer.goodLeptons.clear();
     eventContainer.goodJets.clear();
     eventContainer.goodGenLeptons.clear();
+    eventContainer.goodLHELeptons.clear();
     eventContainer.goodGenJets.clear();
     eventContainer.goodPuppiJets.clear();
     eventContainer.goodTrackJets.clear();
@@ -473,6 +485,18 @@ bool EventReader::fillNextEvent()
         }
     }
     
+        // Fill gen leptons
+    if( needLHELeptons && (sampleType != SampleType::DATA && sampleType != SampleType::FAKELEPTON) )
+    {
+        for( unsigned int iLepton=0; iLepton < nLeptons; ++iLepton ) {
+            if( (*treeReader->std_vector_leptonLHE_pt)[iLepton] > 0)
+            {                
+                eventContainer.goodLHELeptons.push_back(iLepton);
+                eventContainer.lheLeptons[iLepton].set((*treeReader->std_vector_LHElepton_pt)[iLepton],(*treeReader->std_vector_LHElepton_eta)[iLepton],(*treeReader->std_vector_LHElepton_phi)[iLepton],(*treeReader->std_vector_LHElepton_pid)[iLepton] );
+            }
+        }
+    }
+    
     
     // Fill loose leptons
     if( needLooseLeptons )
@@ -588,7 +612,7 @@ bool EventReader::fillNextEvent()
 //         if( ! isDY ) 
         weight *= treeReader->baseW;
         if( !triggerSelection ) 
-            weight *= ( (treeReader->effTrigW_DbleEle +  treeReader->effTrigW_DbleMu + treeReader->effTrigW_EleMu)
+            weight *= ( treeReader->effTrigW
                         * (*treeReader->std_vector_lepton_idisoW)[0] * (*treeReader->std_vector_lepton_idisoW)[1]
                         * (*treeReader->std_vector_lepton_recoW)[0] * (*treeReader->std_vector_lepton_recoW)[1]);
         else
