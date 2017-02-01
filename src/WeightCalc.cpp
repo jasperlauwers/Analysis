@@ -131,9 +131,9 @@ void WeightCalc::setWeight(SampleType sampleType, const string& sampleName)
             if( eventContainer.looseLeptons[iLep].isElectron() )
             {
                 // Fix for electrons with |eta| > 2.4
-                if( eventContainer.looseleptonabseta(iLep) > 2.4 ) {
-                    eventContainer.setWeight(0);
-                    return;
+                float abseta = eventContainer.looseleptonabseta(iLep) ;
+                if( abseta > 2.4 ) {
+                    abseta = 2.39;
                 }
                 
                 TH2F* hFakeElectronFinal = hFakeElectron;
@@ -144,11 +144,11 @@ void WeightCalc::setWeight(SampleType sampleType, const string& sampleName)
                     maxPt = fakeContainer->maxPtElectronFake2;
                 }
                 
-                p = hPromptElectron->GetBinContent(hPromptElectron->FindBin(min(eventContainer.looseleptonpt(iLep), fakeContainer->maxPtElectronPrompt), abs(eventContainer.looseleptonabseta(iLep))));
+                p = hPromptElectron->GetBinContent(hPromptElectron->FindBin(min(eventContainer.looseleptonpt(iLep), fakeContainer->maxPtElectronPrompt), abseta));
                 if( useElectronCorrectedPt )
-                    f = hFakeElectronFinal->GetBinContent(hFakeElectronFinal->FindBin(min(eventContainer.looseleptoncorrectedpt(iLep), maxPt), abs(eventContainer.looseleptonabseta(iLep))));
+                    f = hFakeElectronFinal->GetBinContent(hFakeElectronFinal->FindBin(min(eventContainer.looseleptoncorrectedpt(iLep), maxPt), abseta));
                 else
-                    f = hFakeElectronFinal->GetBinContent(hFakeElectronFinal->FindBin(min(eventContainer.looseleptonpt(iLep), maxPt), abs(eventContainer.looseleptonabseta(iLep))));
+                    f = hFakeElectronFinal->GetBinContent(hFakeElectronFinal->FindBin(min(eventContainer.looseleptonpt(iLep), maxPt), abseta));
     //             cout << "p:\t" << p << "\tf:\t" << f << endl;
             }
             else
