@@ -155,6 +155,14 @@ public:
     float eventNo() const;
     void setEventNo(float); 
     
+    // New vetos
+    void setTauVeto(bool);
+    void setZveto(bool);
+    void setZvetoMuon(bool);
+    bool passTauVeto() const;
+    bool passZrecoVeto() const;
+    bool passZrecoVetoMuon() const;
+    
     // Data members
     unsigned int iEvent;
     vector<Lepton> leptons, genLeptons, lheLeptons, looseLeptons;
@@ -167,6 +175,7 @@ private:
     float _weight, _reweight, _upWeight, _downWeight;
     float _nVertices;
     unsigned int _eventNo;
+    bool passTauV, passZrecoV, passZrecoVMuon;
 };
 
 

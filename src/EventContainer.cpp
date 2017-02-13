@@ -1087,3 +1087,29 @@ void EventContainer::setEventNo(float eventNo)
 {
     _eventNo = eventNo;
 }
+
+// New vetos
+void EventContainer::setTauVeto(bool b)
+{
+    passTauV = b;
+}
+void EventContainer::setZveto(bool b)
+{
+    passZrecoV = b;
+}
+void EventContainer::setZvetoMuon(bool b)
+{
+    passZrecoVMuon = b;
+}
+bool EventContainer::passTauVeto() const
+{
+    return passTauV;
+}
+bool EventContainer::passZrecoVeto() const
+{
+    return passZrecoV;
+}
+bool EventContainer::passZrecoVetoMuon() const
+{
+    return passZrecoVMuon;
+}

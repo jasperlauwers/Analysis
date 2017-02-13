@@ -229,6 +229,7 @@ public :
    vector<float>   *std_vector_tau_eta;
    vector<float>   *std_vector_tau_phi;
    vector<float>   *std_vector_tau_pt;
+   vector<float>   *std_vector_tau_looseIso_dbeta;
    vector<float>   *std_vector_trackjet_eta;
    vector<float>   *std_vector_trackjet_phi;
    vector<float>   *std_vector_trackjet_probabilityB;
@@ -237,6 +238,13 @@ public :
    vector<float>   *std_vector_trigger;
    Float_t         tightmu;
    Float_t         triggW;
+   Float_t         trig_EleMu;
+   Float_t         trig_DbleMu;
+   Float_t         trig_SnglMu;
+   Float_t         trig_DbleEle;
+   Float_t         trig_SnglEle;
+   Float_t         dmZllReco;
+   Float_t         dmZllRecoMuon;
    Float_t         trigger;
    Float_t         triggerFakeRate;
    Float_t         itpu;
@@ -659,6 +667,7 @@ public :
    TBranch        *b_std_vector_tau_eta;   //!
    TBranch        *b_std_vector_tau_phi;   //!
    TBranch        *b_std_vector_tau_pt;   //!
+   TBranch        *b_std_vector_tau_looseIso_dbeta;   //!
    TBranch        *b_std_vector_trackjet_eta;   //!
    TBranch        *b_std_vector_trackjet_phi;   //!
    TBranch        *b_std_vector_trackjet_probabilityB;   //!
@@ -667,6 +676,13 @@ public :
    TBranch        *b_std_vector_trigger;
    TBranch        *b_tightmu;   //!
    TBranch        *b_triggW;   //!
+   TBranch        *b_dmZllReco;   //!
+   TBranch        *b_dmZllRecoMuon;   //!
+   TBranch        *b_trig_EleMu;   //!
+   TBranch        *b_trig_DbleMu;   //!
+   TBranch        *b_trig_SnglMu;   //!
+   TBranch        *b_trig_DbleEle;   //!
+   TBranch        *b_trig_SnglEle;   //!
    TBranch        *b_trigger;   //!
    TBranch        *b_triggerFakeRate;   //!
    TBranch        *b_itpu;   //!
@@ -1013,6 +1029,7 @@ void latino::Init(TTree *tree)
    std_vector_tau_eta = 0;
    std_vector_tau_phi = 0;
    std_vector_tau_pt = 0;
+   std_vector_tau_looseIso_dbeta = 0;
    std_vector_trackjet_eta = 0;
    std_vector_trackjet_phi = 0;
    std_vector_trackjet_probabilityB = 0;
@@ -1317,6 +1334,7 @@ void latino::Init(TTree *tree)
    fChain->SetBranchAddress("std_vector_tau_eta", &std_vector_tau_eta, &b_std_vector_tau_eta);
    fChain->SetBranchAddress("std_vector_tau_phi", &std_vector_tau_phi, &b_std_vector_tau_phi);
    fChain->SetBranchAddress("std_vector_tau_pt", &std_vector_tau_pt, &b_std_vector_tau_pt);
+   fChain->SetBranchAddress("std_vector_tau_looseIso_dbeta", &std_vector_tau_looseIso_dbeta, &b_std_vector_tau_looseIso_dbeta);
    fChain->SetBranchAddress("std_vector_trackjet_eta", &std_vector_trackjet_eta, &b_std_vector_trackjet_eta);
    fChain->SetBranchAddress("std_vector_trackjet_phi", &std_vector_trackjet_phi, &b_std_vector_trackjet_phi);
    fChain->SetBranchAddress("std_vector_trackjet_probabilityB", &std_vector_trackjet_probabilityB, &b_std_vector_trackjet_probabilityB);
@@ -1325,6 +1343,13 @@ void latino::Init(TTree *tree)
    fChain->SetBranchAddress("std_vector_trigger", &std_vector_trigger, &b_std_vector_trigger);
    fChain->SetBranchAddress("tightmu", &tightmu, &b_tightmu);
    fChain->SetBranchAddress("triggW", &triggW, &b_triggW);
+   fChain->SetBranchAddress("dmZllReco", &dmZllReco, &b_dmZllReco);
+   fChain->SetBranchAddress("dmZllRecoMuon", &dmZllRecoMuon, &b_dmZllRecoMuon);
+   fChain->SetBranchAddress("trig_EleMu", &trig_EleMu, &b_trig_EleMu);
+   fChain->SetBranchAddress("trig_DbleMu", &trig_DbleMu, &b_trig_DbleMu);
+   fChain->SetBranchAddress("trig_SnglMu", &trig_SnglMu, &b_trig_SnglMu);
+   fChain->SetBranchAddress("trig_DbleEle", &trig_DbleEle, &b_trig_DbleEle);
+   fChain->SetBranchAddress("trig_SnglEle", &trig_SnglEle, &b_trig_SnglEle);
    fChain->SetBranchAddress("trigger", &trigger, &b_trigger);
    fChain->SetBranchAddress("triggerFakeRate", &triggerFakeRate, &b_triggerFakeRate);
    fChain->SetBranchAddress("itpu", &itpu, &b_itpu);

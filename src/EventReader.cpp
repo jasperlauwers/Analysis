@@ -230,7 +230,7 @@ bool EventReader::setSample(unsigned int iSample, unsigned int iSubSample)
     treeReader = new TreeReader(t);
     
     // Set Branch statusses
-    vector<string> sampleBranches= {"std_vector_lepton_eta","std_vector_lepton_pt","std_vector_lepton_phi","std_vector_lepton_flavour", "metPfType1","metPfType1Phi","nvtx" /*,"std_vector_lepton_idisoW","effTrigW"*/};
+    vector<string> sampleBranches= {"std_vector_lepton_eta","std_vector_lepton_pt","std_vector_lepton_phi","std_vector_lepton_flavour", "metPfType1","metPfType1Phi","nvtx","std_vector_tau_looseIso_dbeta","dmZllRecoMuon","dmZllReco" /*,"std_vector_lepton_idisoW","effTrigW"*/};
     sampleBranches.insert(sampleBranches.end(), branches.begin(), branches.end());
     
     // Set data/MC weight branches       
@@ -248,6 +248,11 @@ bool EventReader::setSample(unsigned int iSample, unsigned int iSubSample)
         
 //         if( triggerSelection )
         sampleBranches.push_back("std_vector_trigger");
+        sampleBranches.push_back("trig_DbleEle");
+        sampleBranches.push_back("trig_EleMu");
+        sampleBranches.push_back("trig_SnglMu");
+        sampleBranches.push_back("trig_DbleMu");
+        sampleBranches.push_back("trig_SnglEle");
         
         // Debug eventNo info
         sampleBranches.push_back("event"); 
@@ -378,14 +383,18 @@ bool EventReader::fillNextEvent()
             {
 //                skipEvent = ( treeReader->trigger != 1 );
 //                 skipEvent = ( /*treeReader->trigger != 1 ||*/ ((*treeReader->std_vector_trigger)[5] != 1 &&  (*treeReader->std_vector_trigger)[10] != 1 && (*treeReader->std_vector_trigger)[12] != 1 && (*treeReader->std_vector_trigger)[7] != 1 && (*treeReader->std_vector_trigger)[9] != 1) );
-                bool passMuonEG = (*treeReader->std_vector_trigger)[6] == 1 || (*treeReader->std_vector_trigger)[8] == 1 || 
-                            (*treeReader->std_vector_trigger)[41] == 1 || (*treeReader->std_vector_trigger)[57] == 1 || (*treeReader->std_vector_trigger)[58] == 1/* || (*treeReader->std_vector_trigger)[96] == 1 || (*treeReader->std_vector_trigger)[97] == 1 || (*treeReader->std_vector_trigger)[98] == 1*/;
-                bool passDoubleMuon = (*treeReader->std_vector_trigger)[11] == 1 || (*treeReader->std_vector_trigger)[13] == 1 /*|| (*treeReader->std_vector_trigger)[100] == 1*/;
-                bool passSingleMuon = (*treeReader->std_vector_trigger)[42] == 1 || (*treeReader->std_vector_trigger)[43] == 1 
-                                       || (*treeReader->std_vector_trigger)[44] == 1 ||         (*treeReader->std_vector_trigger)[45] == 1;
-                bool passDoubleEG = (*treeReader->std_vector_trigger)[46] == 1;
-                bool passSingleElectron = (*treeReader->std_vector_trigger)[93] == 1;
-                
+//                 bool passMuonEG = (*treeReader->std_vector_trigger)[6] == 1 || (*treeReader->std_vector_trigger)[8] == 1 || 
+//                             (*treeReader->std_vector_trigger)[41] == 1 || (*treeReader->std_vector_trigger)[57] == 1 || (*treeReader->std_vector_trigger)[58] == 1/* || (*treeReader->std_vector_trigger)[96] == 1 || (*treeReader->std_vector_trigger)[97] == 1 || (*treeReader->std_vector_trigger)[98] == 1*/;
+//                 bool passDoubleMuon = (*treeReader->std_vector_trigger)[11] == 1 || (*treeReader->std_vector_trigger)[13] == 1 /*|| (*treeReader->std_vector_trigger)[100] == 1*/;
+//                 bool passSingleMuon = (*treeReader->std_vector_trigger)[42] == 1 || (*treeReader->std_vector_trigger)[43] == 1 
+//                                        || (*treeReader->std_vector_trigger)[44] == 1 ||         (*treeReader->std_vector_trigger)[45] == 1;
+//                 bool passDoubleEG = (*treeReader->std_vector_trigger)[46] == 1;
+//                 bool passSingleElectron = (*treeReader->std_vector_trigger)[93] == 1;
+                bool passMuonEG = treeReader->trig_EleMu;
+                bool passDoubleMuon = treeReader->trig_DbleMu;
+                bool passSingleMuon = treeReader->trig_SnglMu;
+                bool passDoubleEG = treeReader->trig_DbleEle;
+                bool passSingleElectron = treeReader->trig_SnglEle;
                 
                 bool keepEvent = false;
                 if( dataType == DataType::MuonEG ) {
@@ -590,6 +599,11 @@ bool EventReader::fillNextEvent()
     
     // Fill number of vertices
     eventContainer.setNvertices( treeReader->nvtx );
+    
+    // Fill new Veto's
+    eventContainer.setTauVeto( (*treeReader->std_vector_tau_looseIso_dbeta)[0]>0. );
+    eventContainer.setZveto(treeReader->dmZllRecoMuon < 15.);
+    eventContainer.setZvetoMuon(treeReader->dmZllReco < 15.);
     
     // Fill weight
     if( sampleType == SampleType::FAKELEPTON )

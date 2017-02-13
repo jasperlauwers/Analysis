@@ -980,6 +980,24 @@ void VariableDictionary::stringToFunction(const vector<string>& variableNames, v
             else
                 ComparisonTypes.push_back( ComparisonType::GREATER_THAN ); 
         }
+        
+        // new Vetos
+        else if( iSubString == "passZrecoVeto" ) 
+        {
+            eventFunctions.push_back( bind(&EventContainer::passZrecoVeto, &eventContainer) );
+            ComparisonTypes.push_back( ComparisonType::EQUAL );
+        }
+        else if( iSubString == "passZrecoVetoMuon" ) 
+        {
+            eventFunctions.push_back( bind(&EventContainer::passZrecoVetoMuon, &eventContainer) );
+            ComparisonTypes.push_back( ComparisonType::EQUAL );
+        }
+        else if( iSubString == "tauveto" ) 
+        {
+            eventFunctions.push_back( bind(&EventContainer::passTauVeto, &eventContainer) );
+            ComparisonTypes.push_back( ComparisonType::EQUAL );
+        }
+        
         else
         {
             cerr << "Variable '" << iString << "' in cuts or variables list not known." << endl;
