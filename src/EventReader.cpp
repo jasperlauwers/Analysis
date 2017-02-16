@@ -49,7 +49,7 @@ EventReader::EventReader(EventContainer& eventCont, const ConfigContainer& cfgCo
                 branches.push_back("std_vector_jet_pt");
                 branches.push_back("std_vector_jet_phi");
                 branches.push_back("std_vector_jet_mass");
-                branches.push_back("std_vector_jet_cmvav2");
+                branches.push_back("std_vector_jet_csvv2ivf");
                 branches.push_back("std_vector_jet_softMuPt");
                 branches.push_back("std_vector_jet_softMuEta");
                 branches.push_back("std_vector_jet_softMuPhi");
@@ -273,7 +273,7 @@ bool EventReader::setSample(unsigned int iSample, unsigned int iSubSample)
     {
         sampleBranches.push_back("baseW");        
         sampleBranches.push_back("puW");
-        sampleBranches.push_back("std_vector_lepton_idisoW"); 
+        sampleBranches.push_back("std_vector_lepton_idisoWcut_WP_Tight80X"); 
         sampleBranches.push_back("std_vector_lepton_recoW");
         hasNegWeight = false;
         
@@ -293,7 +293,7 @@ bool EventReader::setSample(unsigned int iSample, unsigned int iSubSample)
         }
         
         if( applybPogSF )
-            sampleBranches.push_back("bPogSF_CMVAT");
+            sampleBranches.push_back("bPogSF_CSVM");
         
         if( configContainer.sampleContainer.sampleNames[iSample][iSubSample].find("WW_DoubleScattering") == string::npos )
             sampleBranches.insert(sampleBranches.end(), genBranches.begin(), genBranches.end());
@@ -627,12 +627,12 @@ bool EventReader::fillNextEvent()
         weight *= treeReader->baseW;
         if( !triggerSelection ) 
             weight *= ( treeReader->effTrigW
-                        * (*treeReader->std_vector_lepton_idisoW)[0] * (*treeReader->std_vector_lepton_idisoW)[1]
+                        * (*treeReader->std_vector_lepton_idisoWcut_WP_Tight80X)[0] * (*treeReader->std_vector_lepton_idisoWcut_WP_Tight80X)[1]
                         * (*treeReader->std_vector_lepton_recoW)[0] * (*treeReader->std_vector_lepton_recoW)[1]);
         else
-            weight *= (*treeReader->std_vector_lepton_idisoW)[0] * (*treeReader->std_vector_lepton_recoW)[0];
+            weight *= (*treeReader->std_vector_lepton_idisoWcut_WP_Tight80X)[0] * (*treeReader->std_vector_lepton_recoW)[0];
         if( applybPogSF )
-            weight *= treeReader->bPogSF_CMVAT; 
+            weight *= treeReader->bPogSF_CSVM; 
         if( hasNegWeight ) 
             weight *= (treeReader->GEN_weight_SM/abs(treeReader->GEN_weight_SM));
         
