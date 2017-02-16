@@ -456,7 +456,7 @@ bool EventReader::fillNextEvent()
             if( (*treeReader->std_vector_jet_pt)[iJet] >= configContainer.minJetPt )
             {
                 eventContainer.jets[iJet].set((*treeReader->std_vector_jet_pt)[iJet],(*treeReader->std_vector_jet_eta)[iJet],(*treeReader->std_vector_jet_phi)[iJet],(*treeReader->std_vector_jet_mass)[iJet]);
-                eventContainer.jets[iJet].setCsv((*treeReader->std_vector_jet_cmvav2)[iJet]);
+                eventContainer.jets[iJet].setCsv((*treeReader->std_vector_jet_csvv2ivf)[iJet]);
                 if( (*treeReader->std_vector_jet_softMuPt)[iJet] > 0 )
                     eventContainer.jets[iJet].setSoftMu((*treeReader->std_vector_jet_softMuPt)[iJet], (*treeReader->std_vector_jet_softMuEta)[iJet], (*treeReader->std_vector_jet_softMuPhi)[iJet]);
                 else
