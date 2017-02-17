@@ -982,12 +982,12 @@ void VariableDictionary::stringToFunction(const vector<string>& variableNames, v
         }
         
         // new Vetos
-        else if( iSubString == "passZrecoVeto" ) 
+        else if( iSubString == "passzrecoveto" ) 
         {
             eventFunctions.push_back( bind(&EventContainer::passZrecoVeto, &eventContainer) );
             ComparisonTypes.push_back( ComparisonType::EQUAL );
         }
-        else if( iSubString == "passZrecoVetoMuon" ) 
+        else if( iSubString == "passzrecovetomuon" ) 
         {
             eventFunctions.push_back( bind(&EventContainer::passZrecoVetoMuon, &eventContainer) );
             ComparisonTypes.push_back( ComparisonType::EQUAL );
