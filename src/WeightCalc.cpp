@@ -107,7 +107,7 @@ void WeightCalc::initDYWeight(const EventReader& reader)
 //     maxVal = 3.9;
     
     // lepton eta weight
-    TFile* f = new TFile("DYWeight/DY_SSoverOS_2Dweight_2jet_tripleCharge_MCsubtr.root","READ");
+    TFile* f = new TFile("DYWeight/DY_SSoverOS_2Dweight_2jet_Rereco.root","READ");
     hDYshapeWeight = (TH2F*) f->Get("data_leptonabseta2D_weight"); //contains shape + normalization
 }
 
