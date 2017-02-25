@@ -75,14 +75,14 @@ void BasePlotter::writeStacked(string filename, const HistogramContainer& histCo
     vector<TLatex*> latexVector;
     setCanvasAttributes( nSamples, leg, latexVector);
     
-    vector<TH1F*> hStack;
+    vector<TH1D*> hStack;
     TH1* hData = nullptr, *hSignal = nullptr;
     // Add backgrounds to stack
     for( int iSample = nSamples-1; iSample > -1; --iSample )
     {
         if( histContainer.sampleType[iSample] == SampleType::MC || histContainer.sampleType[iSample] == SampleType::FAKELEPTON || histContainer.sampleType[iSample] == SampleType::MCFAKELEPTON )
         {
-            TH1F *temp = (TH1F*) histContainer.histograms[iSample]->Clone(("stack_hist_"+histContainer.reducedNames[iSample]).c_str());
+            TH1D *temp = (TH1D*) histContainer.histograms[iSample]->Clone(("stack_hist_"+histContainer.reducedNames[iSample]).c_str());
             if( hStack.size() > 0 ) temp->Add(hStack[hStack.size()-1]);
             temp->SetLineColor(histContainer.color[iSample]);
             temp->SetFillColor(histContainer.color[iSample]);
@@ -105,7 +105,7 @@ void BasePlotter::writeStacked(string filename, const HistogramContainer& histCo
             replace(legendEntry.begin(), legendEntry.end(), '_', ' ');
             if( configContainer.signalStacked )
             {
-                TH1F *temp = (TH1F*) histContainer.histograms[iSample]->Clone(("stack_hist_"+histContainer.reducedNames[iSample]).c_str());
+                TH1D *temp = (TH1D*) histContainer.histograms[iSample]->Clone(("stack_hist_"+histContainer.reducedNames[iSample]).c_str());
                 if( hStack.size() > 0 ) temp->Add(hStack[hStack.size()-1]);
                 temp->SetFillColor(histContainer.color[iSample]);
                 temp->SetFillStyle(1001);
@@ -193,10 +193,10 @@ void BasePlotter::writeStacked(string filename, const HistogramContainer& histCo
     }
     
     // Draw uncertainty
-    TH1F* hErr;
+    TH1D* hErr;
     if( configContainer.drawUncertainty && hStack.size() > 0 )
     {
-        hErr = (TH1F*) hStack[hStack.size()-1]->Clone("uncertainty") ;
+        hErr = (TH1D*) hStack[hStack.size()-1]->Clone("uncertainty") ;
         hErr->SetFillColor(15);
         hErr->SetLineColor( 0);
         hErr->SetFillStyle(3445);
@@ -247,15 +247,15 @@ void BasePlotter::writeStacked(string filename, const HistogramContainer& histCo
     if( configContainer.plotRatio && hStack.size() > 0 && (hData || (hSignal && !configContainer.signalStacked)) ) {
         ratioPad->cd();
 
-        TH1F* hRatio;
+        TH1D* hRatio;
         if( hData ) 
         {
-           hRatio = (TH1F*) hData->Clone("ratio");
+           hRatio = (TH1D*) hData->Clone("ratio");
            hRatio->GetYaxis()->SetTitle("Data / MC"); 
         }
         else
         {
-            hRatio = (TH1F*) hSignal->Clone("ratio");
+            hRatio = (TH1D*) hSignal->Clone("ratio");
             hRatio->GetYaxis()->SetTitle("Signal / Background"); 
         }
         
@@ -263,7 +263,7 @@ void BasePlotter::writeStacked(string filename, const HistogramContainer& histCo
 //             hRatio->Divide(hStack[hStack.size()-1]);
 //         else
 //         {
-            TH1F* hAllMC = (TH1F*) hStack[hStack.size()-1]->Clone("allMC");
+            TH1D* hAllMC = (TH1D*) hStack[hStack.size()-1]->Clone("allMC");
 //             hAllMC->Add( hSignal );
             hRatio->Divide(hAllMC);
 //         }
@@ -286,7 +286,7 @@ void BasePlotter::writeStacked(string filename, const HistogramContainer& histCo
     //Draw significance plot
     if( configContainer.plotSignificance && !configContainer.plotRatio && hStack.size() > 0 && hSignal && !configContainer.signalStacked ) {
         ratioPad->cd();
-        TH1F* hRatio = (TH1F*) hSignal->Clone("ratio");
+        TH1D* hRatio = (TH1D*) hSignal->Clone("ratio");
         hRatio->GetYaxis()->UnZoom();
         unsigned int nBins = hRatio->GetNbinsX();
         for( unsigned int iBin = 1; iBin <= nBins; ++iBin ) 

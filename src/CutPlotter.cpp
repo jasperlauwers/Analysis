@@ -13,7 +13,7 @@ CutPlotter::CutPlotter(const EventContainer& evContainer, const ConfigContainer&
             histogramContainer.containerName.append(configContainer.plotString);
         }
         
-        histogramContainer.histograms.push_back( new TH1F((configContainer.sampleContainer.reducedNames[iSample] + "_" + histogramContainer.containerName).c_str(), "", nCuts, 0, nCuts) );
+        histogramContainer.histograms.push_back( new TH1D((configContainer.sampleContainer.reducedNames[iSample] + "_" + histogramContainer.containerName).c_str(), "", nCuts, 0, nCuts) );
         histogramContainer.reducedNames.push_back(configContainer.sampleContainer.reducedNames[iSample]);
         histogramContainer.color.push_back(configContainer.sampleContainer.color[iSample]);
         histogramContainer.sampleType.push_back(configContainer.sampleContainer.sampleType[iSample]);
@@ -110,7 +110,7 @@ void CutPlotter::writeEfficiency(string extension)
                 
         if( totEvents > 0. )
         {
-            hDenom.push_back( new TH1F(("eff_denominator_" + configContainer.sampleContainer.reducedNames[iSample]).c_str(),"", nCuts, 0, nCuts) );
+            hDenom.push_back( new TH1D(("eff_denominator_" + configContainer.sampleContainer.reducedNames[iSample]).c_str(),"", nCuts, 0, nCuts) );
             for( unsigned int iCut = 0; iCut <= nCuts+1; ++iCut ) 
             {
                 hDenom[iSample]->SetBinContent(iCut, totEvents);
@@ -118,7 +118,7 @@ void CutPlotter::writeEfficiency(string extension)
         }
         else if( configContainer.sampleContainer.sampleType[iSample] == SampleType::DATA && ! configContainer.unblind )
         {
-            hDenom.push_back( new TH1F(("eff_denominator_" + configContainer.sampleContainer.reducedNames[iSample]).c_str(),"", nCuts, 0, nCuts) );
+            hDenom.push_back( new TH1D(("eff_denominator_" + configContainer.sampleContainer.reducedNames[iSample]).c_str(),"", nCuts, 0, nCuts) );
             for( unsigned int iCut = 0; iCut <= nCuts+1; ++iCut ) 
             {
                 hDenom[iSample]->SetBinContent(iCut, 1);

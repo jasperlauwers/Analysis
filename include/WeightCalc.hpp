@@ -4,7 +4,7 @@
 #include <iostream>
 #include <string>
 #include <algorithm>
-#include "TH2F.h"
+#include "TH2D.h"
 #include "TFile.h"
 #include "EventContainer.hpp"
 #include "FakeContainer.hpp"
@@ -24,9 +24,9 @@ public:
 private:
     EventContainer& eventContainer;  
     FakeContainer *fakeContainer;
-    TH2F *hFakeElectron, *hFakeElectron2, *hFakeMuon, *hFakeMuon2, *hPromptElectron, *hPromptMuon;
+    TH2D *hFakeElectron, *hFakeElectron2, *hFakeMuon, *hFakeMuon2, *hPromptElectron, *hPromptMuon;
     vector<float> DYweights;
-    TH2F *hDYshapeWeight;
+    TH2D *hDYshapeWeight;
     float maxVal;
     bool applyDYWeight, applyFakeWeight, useElectronCorrectedPt, useMuonCorrectedPt, useTwoMuonFR, useTwoElectronFR;
 };

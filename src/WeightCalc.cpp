@@ -34,7 +34,7 @@ void WeightCalc::initFakeWeight(FakeContainer* fContainer)
         useTwoElectronFR = true;
     
     TFile* fFakeElectron = new TFile(fakeContainer->fakeElectronFile.c_str(),"READ");
-    hFakeElectron = (TH2F*) fFakeElectron->Get(fakeContainer->fakeElectronHist.c_str());
+    hFakeElectron = (TH2D*) fFakeElectron->Get(fakeContainer->fakeElectronHist.c_str());
     hFakeElectron->SetDirectory(0); // "detach" the histogram from the file
     if (fakeContainer->maxPtElectronFake <= 0.)
         fakeContainer->maxPtElectronFake = hFakeElectron->GetXaxis()->GetBinCenter(hFakeElectron->GetNbinsX());
@@ -42,14 +42,14 @@ void WeightCalc::initFakeWeight(FakeContainer* fContainer)
     if( useTwoElectronFR )
     {
         TFile* fFakeElectron2 = new TFile(fakeContainer->fakeElectronFile2.c_str(),"READ");
-        hFakeElectron2 = (TH2F*) fFakeElectron2->Get(fakeContainer->fakeElectronHist2.c_str());
+        hFakeElectron2 = (TH2D*) fFakeElectron2->Get(fakeContainer->fakeElectronHist2.c_str());
         hFakeElectron2->SetDirectory(0); // "detach" the histogram from the file
         if (fakeContainer->maxPtElectronFake2 <= 0.)
             fakeContainer->maxPtElectronFake2 = hFakeElectron2->GetXaxis()->GetBinCenter(hFakeElectron2->GetNbinsX());
     }
     
     TFile* fFakeMuon = new TFile(fakeContainer->fakeMuonFile.c_str(),"READ");
-    hFakeMuon = (TH2F*) fFakeMuon->Get(fakeContainer->fakeMuonHist.c_str());
+    hFakeMuon = (TH2D*) fFakeMuon->Get(fakeContainer->fakeMuonHist.c_str());
     hFakeMuon->SetDirectory(0); // "detach" the histogram from the file
     if (fakeContainer->maxPtMuonFake <= 0.)
         fakeContainer->maxPtMuonFake = hFakeMuon->GetXaxis()->GetBinCenter(hFakeMuon->GetNbinsX());
@@ -57,20 +57,20 @@ void WeightCalc::initFakeWeight(FakeContainer* fContainer)
     if( useTwoMuonFR )
     {
         TFile* fFakeMuon2 = new TFile(fakeContainer->fakeMuonFile2.c_str(),"READ");
-        hFakeMuon2 = (TH2F*) fFakeMuon2->Get(fakeContainer->fakeMuonHist2.c_str());
+        hFakeMuon2 = (TH2D*) fFakeMuon2->Get(fakeContainer->fakeMuonHist2.c_str());
         hFakeMuon2->SetDirectory(0); // "detach" the histogram from the file
         if (fakeContainer->maxPtMuonFake2 <= 0.)
             fakeContainer->maxPtMuonFake2 = hFakeMuon2->GetXaxis()->GetBinCenter(hFakeMuon2->GetNbinsX());
     }
     
     TFile* fPromptElectron = new TFile(fakeContainer->promptElectronFile.c_str(),"READ");
-    hPromptElectron = (TH2F*) fPromptElectron->Get(fakeContainer->promptElectronHist.c_str());
+    hPromptElectron = (TH2D*) fPromptElectron->Get(fakeContainer->promptElectronHist.c_str());
     hPromptElectron->SetDirectory(0); // "detach" the histogram from the file
     if (fakeContainer->maxPtElectronPrompt <= 0.)
         fakeContainer->maxPtElectronPrompt = hPromptElectron->GetXaxis()->GetBinCenter(hPromptElectron->GetNbinsX());
     
     TFile* fPromptMuon = new TFile(fakeContainer->promptMuonFile.c_str(),"READ");
-    hPromptMuon = (TH2F*) fPromptMuon->Get(fakeContainer->promptMuonHist.c_str());
+    hPromptMuon = (TH2D*) fPromptMuon->Get(fakeContainer->promptMuonHist.c_str());
     hPromptMuon->SetDirectory(0); // "detach" the histogram from the file
     if (fakeContainer->maxPtMuonPrompt <= 0.)
         fakeContainer->maxPtMuonPrompt = hPromptMuon->GetXaxis()->GetBinCenter(hPromptMuon->GetNbinsX());
@@ -103,12 +103,12 @@ void WeightCalc::initDYWeight(const EventReader& reader)
     
     // detajj weight
 //     TFile* f = new TFile("DYWeight/DY_LOtoNLO_weight.root","READ");
-//     hDYshapeWeight = (TH1F*) f->Get("DY_detajj_weight"); //contains shape + NLO correction
+//     hDYshapeWeight = (TH1D*) f->Get("DY_detajj_weight"); //contains shape + NLO correction
 //     maxVal = 3.9;
     
     // lepton eta weight
     TFile* f = new TFile("DYWeight/DY_SSoverOS_2Dweight_2jet_MCsubtr_Full2016.root","READ");
-    hDYshapeWeight = (TH2F*) f->Get("data_leptonabseta2D_weight"); //contains shape + normalization
+    hDYshapeWeight = (TH2D*) f->Get("data_leptonabseta2D_weight"); //contains shape + normalization
 }
 
 void WeightCalc::setWeight(SampleType sampleType, const string& sampleName) 
@@ -136,7 +136,7 @@ void WeightCalc::setWeight(SampleType sampleType, const string& sampleName)
                     abseta = 2.39;
                 }
                 
-                TH2F* hFakeElectronFinal = hFakeElectron;
+                TH2D* hFakeElectronFinal = hFakeElectron;
                 float maxPt = fakeContainer->maxPtElectronFake;
                 if( useTwoElectronFR && iLep )
                 {
@@ -153,7 +153,7 @@ void WeightCalc::setWeight(SampleType sampleType, const string& sampleName)
             }
             else
             {
-                TH2F* hFakeMuonFinal = hFakeMuon;
+                TH2D* hFakeMuonFinal = hFakeMuon;
                 float maxPt = fakeContainer->maxPtMuonFake;
                 if( useTwoMuonFR && iLep )
                 {

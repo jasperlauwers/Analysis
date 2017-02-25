@@ -7,7 +7,7 @@
 #include "BasePlotter.hpp"
 #include "HistogramContainer.hpp"
 #include "LatinoStyle2.h"
-#include "TH1F.h"
+#include "TH1D.h"
 #include "TFile.h"
 #include "TCanvas.h"
 #include "TLegend.h"

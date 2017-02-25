@@ -17,7 +17,7 @@ void FakeLeptonPlotter::fill(unsigned int iSample, unsigned int iSubSample)
 //             {
 //                 if( configContainer.variableContainer.is2D[iVar] )
 //                 {
-//                     TH2F* h = (TH2F*) histogramContainers[iHist].histograms[iSample];
+//                     TH2D* h = (TH2D*) histogramContainers[iHist].histograms[iSample];
 //                     h->Fill( functionVector[iVar](), functionVector[iVar+1](), globalWeight[iSample][iSubSample] );  // apply global weight for trigger luminosity
 //                     iVar++;
 //                 }
@@ -31,7 +31,7 @@ void FakeLeptonPlotter::fill(unsigned int iSample, unsigned int iSubSample)
             {
                 if( configContainer.variableContainer.is2D[iVar] )
                 {
-                    TH2F* h = (TH2F*) histogramContainers[iHist].histograms[iSample];
+                    TH2D* h = (TH2D*) histogramContainers[iHist].histograms[iSample];
                     h->Fill( functionVector[iVar](), functionVector[iVar+1](), globalWeight[iSample][iSubSample]*eventWeightFunction() );
                     iVar++;
                 }

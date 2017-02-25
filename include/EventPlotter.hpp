@@ -8,8 +8,8 @@
 #include "HistogramContainer.hpp"
 #include "BasePlotter.hpp"
 #include "LatinoStyle2.h"
-#include "TH1F.h"
-#include "TH2F.h"
+#include "TH1D.h"
+#include "TH2D.h"
 #include "TFile.h"
 #include "TCanvas.h"
 #include "TLegend.h"
@@ -44,7 +44,7 @@ protected:
 //     vector<const EventContainer*> eventContainerParallel;
 //     vector<vector<eventContainerFunction>> functionVectorParallel;
 //     vector<eventContainerFunction> eventWeightFunctionParallel;
-//     vector<vector<TH1F*>> histograms;
+//     vector<vector<TH1D*>> histograms;
 };
 
 
