@@ -152,6 +152,9 @@ int main (int argc, char ** argv) {
 
     // Loop over operators
     for( int iOp = 0; iOp < Noperators; ++iOp ) {
+        system(("mkdir -p " + cfgContainer.outputDir).c_str());  
+        TFile* eftFunctionFile = new TFile((cfgContainer.outputDir+"/signal_WWVBS_mll_L"+opName[iOp]+".root").Data(),"RECREATE");
+        eftFunctionFile->cd();
         
         // Loop over bins ( every bin is fitted as a function of the coupling parameters )
         for( int iBin = 0; iBin < cfgContainer.variableContainer.nBins[0]; ++iBin ) //Nbin+1: include overflow
@@ -186,7 +189,6 @@ int main (int argc, char ** argv) {
                 graph->Fit(func,"QRME");
                 c->Write();
                 func->Write();
-                system(("mkdir -p " + cfgContainer.outputDir).c_str());   
                 c->SaveAs((cfgContainer.outputDir+"/operator_"+string(opName[iOp])+"_bin_"+to_string(iBin)+".png").c_str(),"png");
             }
             // 2D grid
@@ -226,6 +228,7 @@ int main (int argc, char ** argv) {
 //                     c->SaveAs(("output/"+outputPlotDirectory+"/operator_"+string(opName[iOp])+"_bin_"+to_string(iBin)+".png").c_str(),"png");
 //                 }
         }// End loop over bins
+    eftFunctionFile->Close();
     }// End loop over operators
     
     delete cHandler;
