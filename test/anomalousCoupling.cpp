@@ -48,12 +48,13 @@ int main (int argc, char ** argv) {
     int nWeights = 99;  
     vector<EventPlotter*> plotterVector;
     string oldPlotString = cfgContainer.plotString;
+    cfgContainer.plotString = "SM"
     plotterVector.push_back( new EventPlotter(eventContainer, cfgContainer) );
     
     for( unsigned int iW = 0; iW < nWeights; ++iW )
     {
         if( oldPlotString == "" )
-            cfgContainer.plotString = to_string(iW);
+            cfgContainer.plotString = "reweight_" + to_string(iW);
         else
             cfgContainer.plotString = oldPlotString + "_" + to_string(iW);
         
@@ -132,13 +133,14 @@ int main (int argc, char ** argv) {
 //     
     
     // Write to file (also adds overflow!)
-    for( unsigned int iW = 0; iW < nWeights; ++iW )
+    for( unsigned int iW = 0; iW < nWeights+1; ++iW )
     {
         if( oldPlotString == "" )
-            cfgContainer.plotString = to_string(iW);
+            cfgContainer.plotString = "reweight_" + to_string(iW);
         else
             cfgContainer.plotString = oldPlotString + "_" + to_string(iW);
-        
+        if( iW == 0 ) 
+            cfgContainer.plotString = "SM";
         plotterVector[iW]->writePlots("png");
         plotterVector[iW]->writeHist("histograms.png");
     }
@@ -166,8 +168,8 @@ int main (int argc, char ** argv) {
                         x.push_back( opValVec[iOp][iEFT]*1e12 ); // factor 1e12 for fit convergence
                         y.push_back( histoEFT->GetBinContent(iBin+1)/hSM->GetBinContent(iBin+1) );
                     }
-                    else
-                        cout << "This should be 1: " << histoEFT->GetBinContent(iBin+1)/hSM->GetBinContent(iBin+1) << endl;
+//                     else
+//                         cout << "This should be 1: " << histoEFT->GetBinContent(iBin+1)/hSM->GetBinContent(iBin+1) << endl;
                 }
                 x.push_back(0);
                 y.push_back(1);
