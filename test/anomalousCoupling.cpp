@@ -142,7 +142,7 @@ int main (int argc, char ** argv) {
         if( iW == 0 ) 
             cfgContainer.plotString = "SM";
         plotterVector[iW]->writePlots("png");
-        plotterVector[iW]->writeHist("histograms.png");
+//         plotterVector[iW]->writeHist("histograms.png");
     }
     
     // Fit TF1 for EFT framework
