@@ -48,7 +48,7 @@ int main (int argc, char ** argv) {
     int nWeights = 99;  
     vector<EventPlotter*> plotterVector;
     string oldPlotString = cfgContainer.plotString;
-    cfgContainer.plotString = "SM"
+    cfgContainer.plotString = "SM";
     plotterVector.push_back( new EventPlotter(eventContainer, cfgContainer) );
     
     for( unsigned int iW = 0; iW < nWeights; ++iW )
