@@ -157,6 +157,15 @@ void EventPlotter::writePlots(string extension)
     }
 }
 
+HistogramContainer* EventPlotter::getHistogramContainer(unsigned int i)
+{
+    if( i < histogramContainers.size() )
+        return &(histogramContainers[i]);
+    else
+        cerr << "No histogram with index: " << i << endl;
+        throw 1;
+}
+
 // parallel running
 // EventPlotter::EventPlotter(const ConfigContainer& cfgContainer)
 // : BasePlotter(EventContainer(), cfgContainer), nSamples(configContainer.sampleContainer.reducedNames.size()), nVariables(configContainer.variableContainer.variableNames.size())

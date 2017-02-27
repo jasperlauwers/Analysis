@@ -29,6 +29,7 @@ public:
     virtual void fill(unsigned int iSample, unsigned int iSubSample);
     void writePlots(string extension);
     void writeHist(string filename);
+    HistogramContainer* getHistogramContainer(unsigned int i);
     
     // parallel running
     EventPlotter(const ConfigContainer&);

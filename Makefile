@@ -8,7 +8,7 @@ CFLAGS_libconfig = -I. -I/home/jlauwers/VBS/Run2/Analysis/libconfig-1.5/lib
 LIBS   = $(shell root-config --libs) -lPhysics -lThread -lMinuit -lHtml -lVMC -lEG -lGeom 
 LIBS_libconfig =  -L/home/jlauwers/VBS/Run2/Analysis/libconfig-1.5/lib/.libs/ -lconfig++
 
-all: testAnalysis Plot_cut_efficiency stackPlotter qcdScalePlotter fakeLepton multiplePlotter
+all: testAnalysis Plot_cut_efficiency stackPlotter qcdScalePlotter fakeLepton multiplePlotter anomalousCoupling
 
 obj/%.o: %.cpp
 	$(CC) -c -o $@ $< $(CFLAGS) $(CFLAGS_libconfig)
@@ -95,6 +95,11 @@ fakeLepton : $(OBJ_FILES) obj/fakeLepton.o obj/latino.o obj/LatinoStyle2.o
 obj/multiplePlotter.o: multiplePlotter.cpp EventReader.hpp TreeReader.hpp latino.h EventContainer.hpp Lepton.hpp Jet.hpp Met.hpp Particle.hpp VariableReader.hpp VariableContainer.hpp ConfigReader.hpp SampleReader.hpp SampleContainer.hpp CutReader.hpp CutContainer.hpp FakeReader.hpp FakeContainer.hpp EventCleaner.hpp ConfigHandler.hpp  EventSelecter.hpp WeightCalc.hpp VariableDictionary.hpp ConfigContainer.hpp EventPlotter.hpp BasePlotter.hpp HistogramContainer.hpp LatinoStyle2.h
 
 multiplePlotter : $(OBJ_FILES) obj/multiplePlotter.o obj/latino.o obj/LatinoStyle2.o
+	$(CC) -o $@ $^ $(CFLAGS) $(CFLAGS_libconfig) $(LIBS) $(LIBS_libconfig)
+
+obj/anomalousCoupling.o: anomalousCoupling.cpp EventReader.hpp TreeReader.hpp latino.h EventContainer.hpp Lepton.hpp Jet.hpp Met.hpp Particle.hpp VariableReader.hpp VariableContainer.hpp ConfigReader.hpp SampleReader.hpp SampleContainer.hpp CutReader.hpp CutContainer.hpp EventCleaner.hpp ConfigHandler.hpp  EventSelecter.hpp VariableDictionary.hpp ConfigContainer.hpp EventPlotter.hpp BasePlotter.hpp HistogramContainer.hpp LatinoStyle2.h
+
+anomalousCoupling : $(OBJ_FILES) obj/anomalousCoupling.o obj/latino.o obj/LatinoStyle2.o
 	$(CC) -o $@ $^ $(CFLAGS) $(CFLAGS_libconfig) $(LIBS) $(LIBS_libconfig)
 
 clean:
