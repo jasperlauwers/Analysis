@@ -190,6 +190,18 @@ int main (int argc, char ** argv) {
                 c->Write();
                 func->Write();
                 c->SaveAs((cfgContainer.outputDir+"/operator_"+string(opName[iOp])+"_bin_"+to_string(iBin)+".png").c_str(),"png");
+                
+                // Write functions to separate bin files for MIT
+                TFile* eftFunctionBinFile = new TFile((cfgContainer.outputDir+"/signal_WWVBS_mll_L"+opName[iOp]+"_bin"+iBin+".root").Data(),"RECREATE");
+                eftFunctionBinFile->cd();
+                if( iBin != 0 )
+                {
+                    TF1* func_bin = (TF1*) func->Clone("bin_function_0");
+                    func_bin->Write;
+                }
+                else 
+                    func->Write();
+                eftFunctionFile->cd();
             }
             // 2D grid
 //                 else {
