@@ -962,10 +962,10 @@ void VariableDictionary::stringToFunction(const vector<string>& variableNames, v
             eventFunctions.push_back( bind(&EventContainer::passSoftMuonVeto, &eventContainer) );
             ComparisonTypes.push_back( ComparisonType::EQUAL );
         }
-        else if( iSubString.find("softmuonjetveto") != string::npos ) 
+        else if( iSubString.find("softmuonjveto") != string::npos ) 
         {
-            string::size_type varPosition = iSubString.find("softmuonjetveto");
-            iSubString.erase(varPosition, 15);
+            string::size_type varPosition = iSubString.find("softmuonjveto");
+            iSubString.erase(varPosition, 13);
             eventFunctions.push_back( bind(&EventContainer::jetmaxSoftMuonPt, &eventContainer, getFloat(iSubString, iString)) );
             ComparisonTypes.push_back( ComparisonType::SMALLER_THAN );
         }
