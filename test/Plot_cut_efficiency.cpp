@@ -34,7 +34,7 @@ int main (int argc, char ** argv) {
     
     EventContainer eventContainer;
     EventReader reader(eventContainer, cfgContainer);
-//     EventCleaner cleaner( eventContainer );
+    EventCleaner cleaner( eventContainer );
     EventSelecter selecter(eventContainer, cfgContainer.cutContainer);
     CutPlotter plotter(eventContainer, cfgContainer);
     WeightCalc weightCalc(eventContainer);
@@ -59,6 +59,7 @@ int main (int argc, char ** argv) {
                 while( reader.fillNextEvent() )
                 {
     //                 cleaner.doCleaning();
+                    cleaner.doLeptonCleaning();
                     weightCalc.setWeight(cfgContainer.sampleContainer.sampleType[iSample], cfgContainer.sampleContainer.sampleNames[iSample][iSubSample]);
                                     
                     plotter.fillTotal(iSample, iSubSample); // total # of events 

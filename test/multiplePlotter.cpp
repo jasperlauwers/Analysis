@@ -56,7 +56,7 @@ int main (int argc, char ** argv) {
     EventContainer eventContainer;
     EventPlotter plotter(eventContainer, mainCfgContainer);
     EventReader reader(eventContainer, mainCfgContainer);
-//     EventCleaner cleaner(eventContainer);
+    EventCleaner cleaner(eventContainer);
     WeightCalc weightCalc(eventContainer);
     
     unsigned int totSample = 0;
@@ -82,6 +82,7 @@ int main (int argc, char ** argv) {
                     {
     //                     cleaner.doCleaning();
 //                         cleaner.doTrackJetsCleaning();
+                        cleaner.doLeptonCleaning();
                         if( selecter.passCuts() )
                         {
                             weightCalc.setWeight(cfgContainers[iCfg].sampleContainer.sampleType[iSample], cfgContainers[iCfg].sampleContainer.sampleNames[iSample][iSubSample]);

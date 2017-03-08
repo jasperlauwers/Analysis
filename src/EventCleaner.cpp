@@ -124,3 +124,44 @@ void EventCleaner::doLooseLeptonIsoCleaning()
         }
     }
 }
+
+void EventCleaner::doLeptonCleaning()
+{
+    // Clean taus
+    unsigned int nGoodTaus = eventContainer.goodTaus.size();
+    for( unsigned int i=0; i < nGoodTaus; ++i ) {
+        
+        bool goodTau = true;
+        for( auto iLepton : eventContainer.goodLeptons ) {
+            if( eventContainer.leptons[iLepton].pt() < 10. )
+                break;
+            if( eventContainer.taus[eventContainer.goodTaus[i]].dR(eventContainer.leptons[iLepton]) < 0.3 ) 
+                goodTau = false;
+        }
+        if( ! goodTau )
+        {
+            eventContainer.goodTaus.erase(eventContainer.goodTaus.begin()+i); 
+            i--;
+            nGoodTaus--;
+        }
+    }
+    
+    // Clean soft muons
+    unsigned int nGoodSoftMuons = eventContainer.goodSoftMuons.size();
+    for( unsigned int i=0; i < nGoodSoftMuons; ++i ) {
+        
+        bool goodSoftMuon = true;
+        for( auto iLepton : eventContainer.goodLeptons ) {
+            if( eventContainer.leptons[iLepton].pt() < 10. )
+                break;
+            if( eventContainer.softMuons[eventContainer.goodSoftMuons[i]].dR(eventContainer.leptons[iLepton]) < 0.3 && eventContainer.leptons[iLepton].isMuon() ) 
+                goodSoftMuon = false;
+        }
+        if( ! goodSoftMuon )
+        {
+            eventContainer.goodSoftMuons.erase(eventContainer.goodSoftMuons.begin()+i); 
+            i--;
+            nGoodSoftMuons--;
+        }
+    }
+}

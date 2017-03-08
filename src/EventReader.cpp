@@ -3,9 +3,9 @@
 #include "TChain.h"
 
 EventReader::EventReader(EventContainer& eventCont, const ConfigContainer& cfgContainer)
-: eventContainer(eventCont), configContainer(cfgContainer), treeReader(nullptr), nLeptons(0), nJets(0), needJets(false), needGenJets(false), needPuppiJets(false), needGenLeptons(false), needLHELeptons(false), needElectronId(false), needTrackJets(false), triggerSelection(false), hasNegWeight(false), isDY(false), applybPogSF(false), sampleType(SampleType::DATA), maxEventsWeight(1.) 
+: eventContainer(eventCont), configContainer(cfgContainer), treeReader(nullptr), nLeptons(0), nJets(0), needJets(false), needGenJets(false), needPuppiJets(false), needGenLeptons(false), needLHELeptons(false), needElectronId(false), needTrackJets(false), needSoftMuons(false), needTaus(false), triggerSelection(false), hasNegWeight(false), isDY(false), applybPogSF(false), sampleType(SampleType::DATA), maxEventsWeight(1.) 
 { 
-    bool firstGenJet = true, firstPuppiJet = true, firstJet = true, firstgenLepton = true, firstLHELepton = true, firstElectronID = true, firstTrackJet = true, firstLooseLepton=true;
+    bool firstGenJet = true, firstPuppiJet = true, firstJet = true, firstgenLepton = true, firstLHELepton = true, firstElectronID = true, firstTrackJet = true, firstLooseLepton=true, firstSoftMuon = true, firstTau = true;
     vector<const vector<string>*> variableNames = {&configContainer.variableContainer.variableNames, &configContainer.cutContainer.variableNames};
     
     for( const auto* varNames : variableNames ) 
@@ -98,6 +98,25 @@ EventReader::EventReader(EventContainer& eventCont, const ConfigContainer& cfgCo
 //                 "std_vector_lepton_d0","std_vector_lepton_dz", "std_vector_lepton_sumPUPt",
 //                       "std_vector_lepton_chargedHadronIso","std_vector_lepton_neutralHadronIso","std_vector_lepton_photonIso", "jetRho",
                 firstElectronID = false;
+            }
+                        
+            else if( iString.find("softmu") != string::npos && firstSoftMuon )
+            {
+                needSoftMuons = true;
+                branches.push_back("std_vector_softMuPt");
+                branches.push_back("std_vector_softMuEta");
+                branches.push_back("std_vector_softMuPhi");
+                firstSoftMuon = false; 
+            }
+            
+            else if( iString.find("tau") != string::npos && firstTau )
+            {
+                needTaus = true;
+                branches.push_back("std_vector_tau_pt");
+                branches.push_back("std_vector_tau_eta");
+                branches.push_back("std_vector_tau_phi");
+                branches.push_back("std_vector_tau_looseIso_dbeta");
+                firstTau = false; 
             }
             
             // Loose lepton
@@ -230,7 +249,7 @@ bool EventReader::setSample(unsigned int iSample, unsigned int iSubSample)
     treeReader = new TreeReader(t);
     
     // Set Branch statusses
-    vector<string> sampleBranches= {"std_vector_lepton_eta","std_vector_lepton_pt","std_vector_lepton_phi","std_vector_lepton_flavour", "metPfType1","metPfType1Phi","nvtx","std_vector_tau_looseIso_dbeta","dmZllRecoMuon","dmZllReco" /*,"std_vector_lepton_idisoW","effTrigW"*/};
+    vector<string> sampleBranches= {"std_vector_lepton_eta","std_vector_lepton_pt","std_vector_lepton_phi","std_vector_lepton_flavour", "metPfType1","metPfType1Phi","nvtx","dmZllRecoMuon","dmZllReco" /*,"std_vector_lepton_idisoW","effTrigW"*/};
     sampleBranches.insert(sampleBranches.end(), branches.begin(), branches.end());
     
     // Set data/MC weight branches       
@@ -506,6 +525,27 @@ bool EventReader::fillNextEvent()
         }
     }
     
+    if( needTaus )
+    {
+        for( unsigned int iLepton=0; iLepton < nLeptons; ++iLepton ) {
+            if( (*treeReader->std_vector_tau_pt)[iLepton] > 0 && (*treeReader->std_vector_tau_looseIso_dbeta)[iLepton] )
+            {                
+                eventContainer.goodTaus.push_back(iLepton);
+                eventContainer.taus[iLepton].set((*treeReader->std_vector_tau_pt)[iLepton],(*treeReader->std_vector_tau_eta)[iLepton],(*treeReader->std_vector_tau_phi)[iLepton], 15 );
+            }
+        }
+    }
+    
+    if( needSoftMuons )
+    {
+        for( unsigned int iLepton=0; iLepton < nLeptons; ++iLepton ) {
+            if( (*treeReader->std_vector_softMuPt)[iLepton] > 0)
+            {                
+                eventContainer.goodSoftMuons.push_back(iLepton);
+                eventContainer.softMuons[iLepton].set((*treeReader->std_vector_softMuPt)[iLepton],(*treeReader->std_vector_softMuEta)[iLepton],(*treeReader->std_vector_softMuPhi)[iLepton], 13 );
+            }
+        }
+    }
     
     // Fill loose leptons
     if( needLooseLeptons )
@@ -601,7 +641,8 @@ bool EventReader::fillNextEvent()
     eventContainer.setNvertices( treeReader->nvtx );
     
     // Fill new Veto's
-    eventContainer.setTauVeto( (*treeReader->std_vector_tau_looseIso_dbeta)[0]>0. );
+//     eventContainer.setTauVeto( (*treeReader->std_vector_tau_looseIso_dbeta)[0]>0. );
+//     eventContainer.setLooseMuonVeto((*treeReader->std_vector_softMuPt)[0]>0. );
     eventContainer.setZveto(treeReader->dmZllRecoMuon < 15.);
     eventContainer.setZvetoMuon(treeReader->dmZllReco < 15.);
     

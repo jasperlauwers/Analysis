@@ -19,6 +19,8 @@ void EventContainer::init(const unsigned int leptonSize, const unsigned int jetS
     genLeptons.resize(leptonSize);
     lheLeptons.resize(leptonSize);
     looseLeptons.resize(leptonSize);
+    softMuons.resize(leptonSize);
+    taus.resize(leptonSize);
     jets.resize(jetSize);
     genJets.resize(jetSize);
     puppiJets.resize(jetSize);
@@ -48,6 +50,10 @@ void EventContainer::reset()
     goodPuppiJets.clear();
     trackJets.clear();
     goodTrackJets.clear();
+    softMuons.clear();
+    taus.clear();
+    goodSoftMuons.clear();
+    goodTaus.clear();
 }
 
 // Jets
@@ -1103,7 +1109,10 @@ void EventContainer::setZvetoMuon(bool b)
 }
 bool EventContainer::passTauVeto() const
 {
-    return passTauV;
+    if( goodTaus.size() > 0 ) 
+        return false;
+    else 
+        return true;
 }
 bool EventContainer::passZrecoVeto() const
 {
@@ -1112,4 +1121,11 @@ bool EventContainer::passZrecoVeto() const
 bool EventContainer::passZrecoVetoMuon() const
 {
     return passZrecoVMuon;
+}
+bool EventContainer::passSoftMuonVeto() const
+{
+    if( goodSoftMuons.size() > 0 ) 
+        return false;
+    else 
+        return true;
 }

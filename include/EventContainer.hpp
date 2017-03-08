@@ -162,11 +162,12 @@ public:
     bool passTauVeto() const;
     bool passZrecoVeto() const;
     bool passZrecoVetoMuon() const;
+    bool passSoftMuonVeto() const;
     
     // Data members
     unsigned int iEvent;
-    vector<Lepton> leptons, genLeptons, lheLeptons, looseLeptons;
-    vector<unsigned int> goodLeptons, goodGenLeptons, goodLHELeptons;
+    vector<Lepton> leptons, genLeptons, lheLeptons, looseLeptons, softMuons, taus;
+    vector<unsigned int> goodLeptons, goodGenLeptons, goodLHELeptons, goodSoftMuons, goodTaus;
     vector<Jet> jets, genJets, puppiJets, trackJets;
     vector<unsigned int> goodJets, goodGenJets, goodPuppiJets, goodTrackJets;
     Met met;

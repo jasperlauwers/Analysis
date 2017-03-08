@@ -957,10 +957,15 @@ void VariableDictionary::stringToFunction(const vector<string>& variableNames, v
             else
                 ComparisonTypes.push_back( ComparisonType::EQUAL );
         }
-        else if( iSubString.find("softmuonveto") != string::npos ) 
+        else if( iSubString.find("passsoftmuonveto") != string::npos ) 
         {
-            string::size_type varPosition = iSubString.find("softmuonveto");
-            iSubString.erase(varPosition, 12);
+            eventFunctions.push_back( bind(&EventContainer::passSoftMuonVeto, &eventContainer) );
+            ComparisonTypes.push_back( ComparisonType::EQUAL );
+        }
+        else if( iSubString.find("softmuonjetveto") != string::npos ) 
+        {
+            string::size_type varPosition = iSubString.find("softmuonjetveto");
+            iSubString.erase(varPosition, 15);
             eventFunctions.push_back( bind(&EventContainer::jetmaxSoftMuonPt, &eventContainer, getFloat(iSubString, iString)) );
             ComparisonTypes.push_back( ComparisonType::SMALLER_THAN );
         }
@@ -992,12 +997,11 @@ void VariableDictionary::stringToFunction(const vector<string>& variableNames, v
             eventFunctions.push_back( bind(&EventContainer::passZrecoVetoMuon, &eventContainer) );
             ComparisonTypes.push_back( ComparisonType::EQUAL );
         }
-        else if( iSubString == "tauveto" ) 
+        else if( iSubString == "passtauveto" ) 
         {
             eventFunctions.push_back( bind(&EventContainer::passTauVeto, &eventContainer) );
             ComparisonTypes.push_back( ComparisonType::EQUAL );
         }
-        
         else
         {
             cerr << "Variable '" << iString << "' in cuts or variables list not known." << endl;

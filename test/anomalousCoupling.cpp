@@ -25,6 +25,7 @@ int main (int argc, char ** argv) {
     {
         cHandler = new ConfigHandler(cfgName, cfgContainer);
         cHandler->readConfig();
+        cHandler->writeConfig();
     }
     catch(...)
     {
