@@ -249,7 +249,7 @@ bool EventReader::setSample(unsigned int iSample, unsigned int iSubSample)
     treeReader = new TreeReader(t);
     
     // Set Branch statusses
-    vector<string> sampleBranches= {"std_vector_lepton_eta","std_vector_lepton_pt","std_vector_lepton_phi","std_vector_lepton_flavour", "metPfType1","metPfType1Phi","nvtx","dmZllRecoMuon","dmZllReco" /*,"std_vector_lepton_idisoW","effTrigW"*/};
+    vector<string> sampleBranches= {"std_vector_lepton_eta","std_vector_lepton_pt","std_vector_lepton_phi","std_vector_lepton_flavour", "metPfType1","metPfType1Phi","nvtx","dmZllRecoMuon","dmZllReco" /*,"std_vector_lepton_idisoW","effTrigW"*/,"veto_EMTFBug"};
     sampleBranches.insert(sampleBranches.end(), branches.begin(), branches.end());
     
     // Set data/MC weight branches       
@@ -645,6 +645,7 @@ bool EventReader::fillNextEvent()
 //     eventContainer.setLooseMuonVeto((*treeReader->std_vector_softMuPt)[0]>0. );
     eventContainer.setZveto(treeReader->dmZllRecoMuon < 15.);
     eventContainer.setZvetoMuon(treeReader->dmZllReco < 15.);
+    eventContainer.setPassEMTF(treeReader->veto_EMTFBug);
     
     // Fill weight
     if( sampleType == SampleType::FAKELEPTON )

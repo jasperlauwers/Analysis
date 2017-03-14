@@ -163,6 +163,8 @@ public:
     bool passZrecoVeto() const;
     bool passZrecoVetoMuon() const;
     bool passSoftMuonVeto() const;
+    void setPassEMTF(bool);
+    bool passEMTF() const;
     
     // Data members
     unsigned int iEvent;
@@ -176,7 +178,7 @@ private:
     float _weight, _reweight, _upWeight, _downWeight;
     float _nVertices;
     unsigned int _eventNo;
-    bool passTauV, passZrecoV, passZrecoVMuon;
+    bool passTauV, passZrecoV, passZrecoVMuon, _passEMTF;
 };
 
 

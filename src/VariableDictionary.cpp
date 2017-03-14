@@ -1002,6 +1002,11 @@ void VariableDictionary::stringToFunction(const vector<string>& variableNames, v
             eventFunctions.push_back( bind(&EventContainer::passTauVeto, &eventContainer) );
             ComparisonTypes.push_back( ComparisonType::EQUAL );
         }
+        else if( iSubString == "passEMTF" ) 
+        {
+            eventFunctions.push_back( bind(&EventContainer::passEMTF, &eventContainer) );
+            ComparisonTypes.push_back( ComparisonType::EQUAL );
+        }
         else
         {
             cerr << "Variable '" << iString << "' in cuts or variables list not known." << endl;

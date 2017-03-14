@@ -461,6 +461,7 @@ public :
    Float_t         fakeW2l2jstatMuUp;
    Float_t         fakeW2l2jstatMuDown;
    Float_t         fakeW3l;
+   Float_t         veto_EMTFBug;
 
    // List of branches
    TBranch        *b_GEN_weight_SM;   //!
@@ -900,6 +901,7 @@ public :
    TBranch        *b_fakeW2l2jstatMuDown;   //!
    TBranch        *b_fakeW2l2j;   //!
    TBranch        *b_fakeW3l;   //!
+   TBranch        *b_veto_EMTFBug;   //!
    
    latino(TTree *tree=0);
    virtual ~latino();
@@ -1569,6 +1571,7 @@ void latino::Init(TTree *tree)
    fChain->SetBranchAddress("fakeW2l2jstatMuUp", &fakeW2l2jstatMuUp, &b_fakeW2l2jstatMuUp);
    fChain->SetBranchAddress("fakeW2l2jstatMuDown", &fakeW2l2jstatMuDown, &b_fakeW2l2jstatMuDown);
    fChain->SetBranchAddress("fakeW3l", &fakeW3l, &b_fakeW3l);
+   fChain->SetBranchAddress("veto_EMTFBug", &veto_EMTFBug, &b_veto_EMTFBug);
 
    Notify();
 }

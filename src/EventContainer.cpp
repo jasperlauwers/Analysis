@@ -1129,3 +1129,12 @@ bool EventContainer::passSoftMuonVeto() const
     else 
         return true;
 }
+
+void EventContainer::setPassEMTF(bool b)
+{
+    _passEMTF = b;
+}
+bool EventContainer::passEMTF() const
+{
+    return _passEMTF;
+}
