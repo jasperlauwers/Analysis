@@ -643,8 +643,8 @@ bool EventReader::fillNextEvent()
     // Fill new Veto's
 //     eventContainer.setTauVeto( (*treeReader->std_vector_tau_looseIso_dbeta)[0]>0. );
 //     eventContainer.setLooseMuonVeto((*treeReader->std_vector_softMuPt)[0]>0. );
-    eventContainer.setZveto(treeReader->dmZllRecoMuon < 15.);
-    eventContainer.setZvetoMuon(treeReader->dmZllReco < 15.);
+    eventContainer.setZveto(treeReader->dmZllReco < 15.);
+    eventContainer.setZvetoMuon(treeReader->dmZllRecoMuon < 15.);
     eventContainer.setPassEMTF(treeReader->veto_EMTFBug);
     
     // Fill weight
