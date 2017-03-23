@@ -932,7 +932,7 @@ void VariableDictionary::stringToFunction(const vector<string>& variableNames, v
             else
                 ComparisonTypes.push_back( ComparisonType::ABS_SMALLER_THAN );
         }
-        else if( iSubString.find("mt") != string::npos ) 
+        else if( iSubString == "mt" ) 
         {
             eventFunctions.push_back( bind(&EventContainer::mt, &eventContainer) );
             if( maxFlag )
