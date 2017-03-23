@@ -1002,7 +1002,7 @@ void VariableDictionary::stringToFunction(const vector<string>& variableNames, v
             eventFunctions.push_back( bind(&EventContainer::passTauVeto, &eventContainer) );
             ComparisonTypes.push_back( ComparisonType::EQUAL );
         }
-        else if( iSubString == "passEMTF" ) 
+        else if( iSubString == "passemtf" ) 
         {
             eventFunctions.push_back( bind(&EventContainer::passEMTF, &eventContainer) );
             ComparisonTypes.push_back( ComparisonType::EQUAL );
