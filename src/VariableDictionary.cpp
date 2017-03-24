@@ -969,6 +969,13 @@ void VariableDictionary::stringToFunction(const vector<string>& variableNames, v
             eventFunctions.push_back( bind(&EventContainer::jetmaxSoftMuonPt, &eventContainer, getFloat(iSubString, iString)) );
             ComparisonTypes.push_back( ComparisonType::SMALLER_THAN );
         }
+        else if( iSubString.find("softmuonjtag") != string::npos ) 
+        {
+            string::size_type varPosition = iSubString.find("softmuonjtag");
+            iSubString.erase(varPosition, 12);
+            eventFunctions.push_back( bind(&EventContainer::jetmaxSoftMuonPt, &eventContainer, getFloat(iSubString, iString)) );
+            ComparisonTypes.push_back( ComparisonType::GREATER_THAN );
+        }
         else if( iSubString == "detametl" ) 
         {
             eventFunctions.push_back( bind(&EventContainer::detametl, &eventContainer) );
