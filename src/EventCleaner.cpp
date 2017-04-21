@@ -131,13 +131,14 @@ void EventCleaner::doLeptonCleaning()
     unsigned int nGoodTaus = eventContainer.goodTaus.size();
     for( unsigned int i=0; i < nGoodTaus; ++i ) {
         
-        bool goodTau = false;
-        for( auto iJet : eventContainer.goodJets ) {
-            if( eventContainer.jets[iJet].pt() < 10. )
-                break;
-            if( eventContainer.taus[eventContainer.goodTaus[i]].dR(eventContainer.jets[iJet]) < 0.3 ) 
-                goodTau = true;
-        }
+//         bool goodTau = false;
+//         for( auto iJet : eventContainer.goodJets ) {
+//             if( eventContainer.jets[iJet].pt() < 10. )
+//                 break;
+//             if( eventContainer.taus[eventContainer.goodTaus[i]].dR(eventContainer.jets[iJet]) < 0.3 ) 
+//                 goodTau = true;
+//         }
+        bool goodTau = true;
         for( auto iLepton : eventContainer.goodLeptons ) {
             if( eventContainer.leptons[iLepton].pt() < 10. )
                 break;
