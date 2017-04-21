@@ -369,6 +369,8 @@ bool EventReader::fillNextEvent()
     eventContainer.goodGenJets.clear();
     eventContainer.goodPuppiJets.clear();
     eventContainer.goodTrackJets.clear();
+    eventContainer.goodSoftMuons.clear();
+    eventContainer.goodTaus.clear();
     
     // Read event (trigger == 1 for data)
     bool skipEvent = false;
