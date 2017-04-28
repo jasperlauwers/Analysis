@@ -1,8 +1,8 @@
 
 #include "WeightCalc.hpp"
 
-WeightCalc::WeightCalc(EventContainer& evContainer)
-: eventContainer(evContainer), applyDYWeight(false), applyFakeWeight(false), useElectronCorrectedPt(false), useMuonCorrectedPt(false), useTwoMuonFR(false), useTwoElectronFR(false) { }
+WeightCalc::WeightCalc(EventContainer& evContainer, bool latinoFakes)
+: eventContainer(evContainer), applyDYWeight(false), applyFakeWeight(false), useElectronCorrectedPt(false), useMuonCorrectedPt(false), useTwoMuonFR(false), useTwoElectronFR(false), latinoFakes(latinoFakes) { }
 
 WeightCalc::~WeightCalc() 
 {
@@ -122,6 +122,7 @@ void WeightCalc::setWeight(SampleType sampleType, const string& sampleName)
             throw 1;
         }
         
+        float fakeWeight, promtFakeWeight = 1;
         float p, f/*, pE, fE*/;
         unsigned int nTight = 0;
         float promptProbability[2], fakeProbability[2];
@@ -178,6 +179,7 @@ void WeightCalc::setWeight(SampleType sampleType, const string& sampleName)
             {
                 promptProbability[iLep] = p * f;
                 fakeProbability[iLep]   = p * f; 
+                promtFakeWeight *= f*(1-f);
             }
             promptProbability[iLep] /= (p - f);
             fakeProbability[iLep]   /= (p - f);
@@ -192,15 +194,22 @@ void WeightCalc::setWeight(SampleType sampleType, const string& sampleName)
         {
             PF *= -1.;
             FP *= -1.;
+            if( nTight == 0 )
+                promtFakeWeight *= -1;
         }
+        
+        if( latinoFakes ) 
+            fakeWeight = PF + FP + FF;
+        else
+            fakeWeight = promtFakeWeight;
         
 //      cout << "Central weight: " << eventContainer.weight() << endl;
 //      cout << "New weight: " << PF + FP + FF << endl;
         float newWeight = eventContainer.weight();
         if( sampleType == SampleType::MCFAKELEPTON )
-            newWeight *= (PF + FP + FF);
+            newWeight *= fakeWeight;
         else
-            newWeight = PF + FP + FF;
+            newWeight = fakeWeight;
         eventContainer.setWeight(newWeight);
     }
     

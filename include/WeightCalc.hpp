@@ -15,7 +15,7 @@ using namespace std;
 
 class WeightCalc {
 public:
-    WeightCalc(EventContainer& evContainer);
+    WeightCalc(EventContainer& evContainer, bool latinoFakes);
     ~WeightCalc();
     void initFakeWeight(FakeContainer* fContainer);
     void initDYWeight(const EventReader& reader);
@@ -28,6 +28,6 @@ private:
     vector<float> DYweights;
     TH2D *hDYshapeWeight;
     float maxVal;
-    bool applyDYWeight, applyFakeWeight, useElectronCorrectedPt, useMuonCorrectedPt, useTwoMuonFR, useTwoElectronFR;
+    bool applyDYWeight, applyFakeWeight, useElectronCorrectedPt, useMuonCorrectedPt, useTwoMuonFR, useTwoElectronFR, latinoFakes;
 };
 #endif

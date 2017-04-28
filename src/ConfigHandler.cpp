@@ -126,6 +126,17 @@ ConfigHandler::ConfigHandler(const string& fileName, ConfigContainer& cContainer
             cfgContainer.flipChargeDY = false;
         }
         
+        // FlipChargeDY
+        try
+        {
+            cfgContainer.latinoFakes = cfg.lookup("LatinoFakes");
+        }
+        catch(const SettingNotFoundException &nfex) 
+        {
+            cout << "LatinoFakes setting not found. Using default: true" << endl;
+            cfgContainer.latinoFakes = true;
+        }
+        
         ////////// Plot Settings ////////// 
         // MaxEvents
         try

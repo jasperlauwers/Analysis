@@ -37,7 +37,7 @@ int main (int argc, char ** argv) {
     EventReader reader(eventContainer, cfgContainer);
     EventCleaner cleaner(eventContainer);
     EventSelecter selecter(eventContainer, cfgContainer.cutContainer);
-    WeightCalc weightCalc(eventContainer);
+    WeightCalc weightCalc(eventContainer, cfgContainer.latinoFakes);
     EventPlotter plotter(eventContainer, cfgContainer);
     
     for( unsigned int iSample = 0; iSample < cfgContainer.sampleContainer.reducedNames.size(); ++iSample) 
