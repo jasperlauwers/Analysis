@@ -126,7 +126,7 @@ ConfigHandler::ConfigHandler(const string& fileName, ConfigContainer& cContainer
             cfgContainer.flipChargeDY = false;
         }
         
-        // FlipChargeDY
+        // LatinoFakes
         try
         {
             cfgContainer.latinoFakes = cfg.lookup("LatinoFakes");

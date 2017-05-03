@@ -57,7 +57,7 @@ int main (int argc, char ** argv) {
     EventPlotter plotter(eventContainer, mainCfgContainer);
     EventReader reader(eventContainer, mainCfgContainer);
     EventCleaner cleaner(eventContainer);
-    WeightCalc weightCalc(eventContainer, cfgContainer.latinoFakes);
+    WeightCalc weightCalc(eventContainer, mainCfgContainer.latinoFakes);
     
     unsigned int totSample = 0;
     for( int iCfg = 0; iCfg < (argc-1); ++iCfg ) 
