@@ -196,6 +196,8 @@ void WeightCalc::setWeight(SampleType sampleType, const string& sampleName)
             FP *= -1.;
             if( nTight == 0 )
                 promtFakeWeight *= -1;
+            if( nTight == 2 )
+                promtFakeWeight = 0;
         }
         
         if( latinoFakes ) 
