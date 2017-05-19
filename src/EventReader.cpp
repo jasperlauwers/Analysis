@@ -250,7 +250,7 @@ bool EventReader::setSample(unsigned int iSample, unsigned int iSubSample)
     treeReader = new TreeReader(t);
     
     // Set Branch statusses
-    vector<string> sampleBranches= {"std_vector_lepton_eta","std_vector_lepton_pt","std_vector_lepton_phi","std_vector_lepton_flavour", "metPfType1","metPfType1Phi","nvtx","dmZllRecoMuon","dmZllReco" /*,"std_vector_lepton_idisoW","effTrigW"*/,"veto_EMTFBug"};
+    vector<string> sampleBranches= {"std_vector_lepton_eta","std_vector_lepton_pt","std_vector_lepton_phi","std_vector_lepton_flavour", "metPfType1","metPfType1Phi","nvtx","dmZll_vetoLep","dmZllReco" /*,"std_vector_lepton_idisoW","effTrigW"*/,"veto_EMTFBug"};
     sampleBranches.insert(sampleBranches.end(), branches.begin(), branches.end());
     
     // Set data/MC weight branches       
@@ -647,7 +647,7 @@ bool EventReader::fillNextEvent()
 //     eventContainer.setTauVeto( (*treeReader->std_vector_tau_looseIso_dbeta)[0]>0. );
 //     eventContainer.setLooseMuonVeto((*treeReader->std_vector_softMuPt)[0]>0. );
     eventContainer.setZveto(treeReader->dmZllReco < 15.);
-    eventContainer.setZvetoMuon(treeReader->dmZllRecoMuon < 15.);
+    eventContainer.setZvetoMuon(treeReader->dmZll_vetoLep < 15.);
     eventContainer.setPassEMTF(treeReader->veto_EMTFBug);
     
     // Fill weight

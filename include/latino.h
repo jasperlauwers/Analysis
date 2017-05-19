@@ -244,7 +244,7 @@ public :
    Float_t         trig_DbleEle;
    Float_t         trig_SnglEle;
    Float_t         dmZllReco;
-   Float_t         dmZllRecoMuon;
+   Float_t         dmZll_vetoLep;
    Float_t         trigger;
    Float_t         triggerFakeRate;
    Float_t         itpu;
@@ -681,7 +681,7 @@ public :
    TBranch        *b_tightmu;   //!
    TBranch        *b_triggW;   //!
    TBranch        *b_dmZllReco;   //!
-   TBranch        *b_dmZllRecoMuon;   //!
+   TBranch        *b_dmZll_vetoLep;   //!
    TBranch        *b_trig_EleMu;   //!
    TBranch        *b_trig_DbleMu;   //!
    TBranch        *b_trig_SnglMu;   //!
@@ -1355,7 +1355,7 @@ void latino::Init(TTree *tree)
    fChain->SetBranchAddress("tightmu", &tightmu, &b_tightmu);
    fChain->SetBranchAddress("triggW", &triggW, &b_triggW);
    fChain->SetBranchAddress("dmZllReco", &dmZllReco, &b_dmZllReco);
-   fChain->SetBranchAddress("dmZllRecoMuon", &dmZllRecoMuon, &b_dmZllRecoMuon);
+   fChain->SetBranchAddress("dmZll_vetoLep", &dmZll_vetoLep, &b_dmZll_vetoLep);
    fChain->SetBranchAddress("trig_EleMu", &trig_EleMu, &b_trig_EleMu);
    fChain->SetBranchAddress("trig_DbleMu", &trig_DbleMu, &b_trig_DbleMu);
    fChain->SetBranchAddress("trig_SnglMu", &trig_SnglMu, &b_trig_SnglMu);
