@@ -346,7 +346,7 @@ public :
    vector<float>   *std_vector_lepton_SIP3D;
    vector<float>   *std_vector_lepton_isTightLepton;
    vector<float>   *std_vector_muon_isTightLepton_cut_Tight80x;
-   vector<float>   *std_vector_electron_isTightLepton_cut_Tight80x;
+   vector<float>   *std_vector_electron_isTightLepton_cut_Tight80x_SS;
    vector<float>   *std_vector_lepton_ch;
    vector<float>   *std_vector_lepton_flavour;
    vector<float>   *std_vector_lepton_closejet_drlj;
@@ -788,7 +788,7 @@ public :
    TBranch        *b_std_vector_lepton_SIP3D;   //!
    TBranch        *b_std_vector_lepton_isTightLepton;   //!
    TBranch        *b_std_vector_muon_isTightLepton_cut_Tight80x;
-   TBranch        *b_std_vector_electron_isTightLepton_cut_Tight80x;
+   TBranch        *b_std_vector_electron_isTightLepton_cut_Tight80x_SS;
    TBranch        *b_std_vector_lepton_ch;   //!
    TBranch        *b_std_vector_lepton_flavour;   //!
    TBranch        *b_std_vector_lepton_closejet_drlj;   //!
@@ -1117,7 +1117,7 @@ void latino::Init(TTree *tree)
    std_vector_lepton_SIP3D = 0;
    std_vector_lepton_isTightLepton = 0;
    std_vector_muon_isTightLepton_cut_Tight80x = 0;
-   std_vector_electron_isTightLepton_cut_Tight80x = 0;
+   std_vector_electron_isTightLepton_cut_Tight80x_SS = 0;
    std_vector_lepton_ch = 0;
    std_vector_lepton_flavour = 0;
    std_vector_lepton_closejet_drlj = 0;
@@ -1462,7 +1462,7 @@ void latino::Init(TTree *tree)
    fChain->SetBranchAddress("std_vector_lepton_SIP3D", &std_vector_lepton_SIP3D, &b_std_vector_lepton_SIP3D);
    fChain->SetBranchAddress("std_vector_lepton_isTightLepton", &std_vector_lepton_isTightLepton, &b_std_vector_lepton_isTightLepton);
    fChain->SetBranchAddress("std_vector_muon_isTightLepton_cut_Tight80x", &std_vector_muon_isTightLepton_cut_Tight80x, &b_std_vector_muon_isTightLepton_cut_Tight80x);
-   fChain->SetBranchAddress("std_vector_electron_isTightLepton_cut_Tight80x", &std_vector_electron_isTightLepton_cut_Tight80x, &b_std_vector_electron_isTightLepton_cut_Tight80x);
+   fChain->SetBranchAddress("std_vector_electron_isTightLepton_cut_Tight80x_SS", &std_vector_electron_isTightLepton_cut_Tight80x_SS, &b_std_vector_electron_isTightLepton_cut_Tight80x_SS);
    fChain->SetBranchAddress("std_vector_lepton_ch", &std_vector_lepton_ch, &b_std_vector_lepton_ch);
    fChain->SetBranchAddress("std_vector_lepton_flavour", &std_vector_lepton_flavour, &b_std_vector_lepton_flavour);
    fChain->SetBranchAddress("std_vector_lepton_closejet_drlj", &std_vector_lepton_closejet_drlj, &b_std_vector_lepton_closejet_drlj);

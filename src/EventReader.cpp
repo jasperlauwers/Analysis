@@ -123,7 +123,7 @@ EventReader::EventReader(EventContainer& eventCont, const ConfigContainer& cfgCo
             if( /*iString.find("loose") != string::npos &&*/ firstLooseLepton )
             {
                 needLooseLeptons = true;
-                branches.push_back("std_vector_electron_isTightLepton_cut_Tight80x");
+                branches.push_back("std_vector_electron_isTightLepton_cut_Tight80x_SS");
                 branches.push_back("std_vector_muon_isTightLepton_cut_Tight80x");
 //                 branches.push_back("std_vector_lepton_closejet_pt");
 //                 branches.push_back("std_vector_lepton_closejet_PartonFlavour");
@@ -556,7 +556,7 @@ bool EventReader::fillNextEvent()
         for( unsigned int iLepton=0; iLepton < nLeptons; ++iLepton ) {
             if( (*treeReader->std_vector_lepton_pt)[iLepton] > 0. )
             {
-                eventContainer.looseLeptons[iLepton].set((*treeReader->std_vector_lepton_pt)[iLepton],(*treeReader->std_vector_lepton_eta)[iLepton],(*treeReader->std_vector_lepton_phi)[iLepton],(*treeReader->std_vector_lepton_flavour)[iLepton], ((*treeReader->std_vector_muon_isTightLepton_cut_Tight80x)[iLepton] || (*treeReader->std_vector_electron_isTightLepton_cut_Tight80x)[iLepton]) );
+                eventContainer.looseLeptons[iLepton].set((*treeReader->std_vector_lepton_pt)[iLepton],(*treeReader->std_vector_lepton_eta)[iLepton],(*treeReader->std_vector_lepton_phi)[iLepton],(*treeReader->std_vector_lepton_flavour)[iLepton], ((*treeReader->std_vector_muon_isTightLepton_cut_Tight80x)[iLepton] || (*treeReader->std_vector_electron_isTightLepton_cut_Tight80x_SS)[iLepton]) );
 //                 eventContainer.looseLeptons[iLepton].setClosestJetPt((*treeReader->std_vector_lepton_closejet_pt)[iLepton]);
 //                 eventContainer.looseLeptons[iLepton].setClosestJetDr((*treeReader->std_vector_lepton_closejet_drlj)[iLepton]);
 //                 eventContainer.looseLeptons[iLepton].setClosestJetPartonFlavour((*treeReader->std_vector_lepton_closejet_PartonFlavour)[iLepton]);
@@ -564,7 +564,7 @@ bool EventReader::fillNextEvent()
                 eventContainer.looseLeptons[iLepton].setTripleChargeAgreement((*treeReader->std_vector_electron_tripleChargeAgreement)[iLepton]);
                 
                 eventContainer.goodLeptons.push_back(iLepton);
-                eventContainer.leptons[iLepton].set((*treeReader->std_vector_lepton_pt)[iLepton],(*treeReader->std_vector_lepton_eta)[iLepton],(*treeReader->std_vector_lepton_phi)[iLepton],(*treeReader->std_vector_lepton_flavour)[iLepton], ((*treeReader->std_vector_muon_isTightLepton_cut_Tight80x)[iLepton] || (*treeReader->std_vector_electron_isTightLepton_cut_Tight80x)[iLepton]) );
+                eventContainer.leptons[iLepton].set((*treeReader->std_vector_lepton_pt)[iLepton],(*treeReader->std_vector_lepton_eta)[iLepton],(*treeReader->std_vector_lepton_phi)[iLepton],(*treeReader->std_vector_lepton_flavour)[iLepton], ((*treeReader->std_vector_muon_isTightLepton_cut_Tight80x)[iLepton] || (*treeReader->std_vector_electron_isTightLepton_cut_Tight80x_SS)[iLepton]) );
 //                 eventContainer.leptons[iLepton].setClosestJetPt((*treeReader->std_vector_lepton_closejet_pt)[iLepton]);
 //                 eventContainer.leptons[iLepton].setClosestJetDr((*treeReader->std_vector_lepton_closejet_drlj)[iLepton]);
 //                 eventContainer.leptons[iLepton].setClosestJetPartonFlavour((*treeReader->std_vector_lepton_closejet_PartonFlavour)[iLepton]);
