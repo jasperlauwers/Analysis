@@ -179,7 +179,7 @@ void WeightCalc::setWeight(SampleType sampleType, const string& sampleName)
             {
                 promptProbability[iLep] = p * f;
                 fakeProbability[iLep]   = p * f; 
-                promtFakeWeight *= f*(1-f);
+                promtFakeWeight *= f/(1-f);
             }
             promptProbability[iLep] /= (p - f);
             fakeProbability[iLep]   /= (p - f);
