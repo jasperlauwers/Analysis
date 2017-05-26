@@ -447,7 +447,7 @@ bool EventReader::fillNextEvent()
         }
         else 
         {
-            if( genMatching && !triggerSelection && (*treeReader->std_vector_lepton_genmatched)[0] != 1 || (*treeReader->std_vector_lepton_genmatched)[1] != 1 )
+            if( genMatching && !triggerSelection && ((*treeReader->std_vector_lepton_genmatched)[0] != 1 || (*treeReader->std_vector_lepton_genmatched)[1] != 1) )
                 skipEvent = true;
             else
                 skipEvent = false;
