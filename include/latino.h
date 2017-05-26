@@ -430,6 +430,7 @@ public :
    vector<float>   *std_vector_lepton_idisoLooseW_Up;
    vector<float>   *std_vector_lepton_idisoLooseW_Down;
    vector<float>   *std_vector_lepton_idisoLooseW_Syst;
+   vector<float>   *std_vector_lepton_genmatched;
    Float_t         mcoll;
    Float_t         mcollWW;
    Float_t         vht_pt;
@@ -872,6 +873,7 @@ public :
    TBranch        *b_std_vector_lepton_idisoLooseW_Up;   //!
    TBranch        *b_std_vector_lepton_idisoLooseW_Down;   //!
    TBranch        *b_std_vector_lepton_idisoLooseW_Syst;   //!
+   TBranch        *b_std_vector_lepton_genmatched;   //!
    TBranch        *b_mcoll;   //!
    TBranch        *b_mcollWW;   //!
    TBranch        *b_vht_pt;   //!
@@ -1134,6 +1136,7 @@ void latino::Init(TTree *tree)
    std_vector_lepton_idisoLooseW_Up = 0;
    std_vector_lepton_idisoLooseW_Down = 0;
    std_vector_lepton_idisoLooseW_Syst = 0;
+   std_vector_lepton_genmatched = 0;
    // Set branch addresses and branch pointers
    if (!tree) return;
    fChain = tree;
@@ -1546,6 +1549,7 @@ void latino::Init(TTree *tree)
    fChain->SetBranchAddress("std_vector_lepton_idisoLooseW_Up", &std_vector_lepton_idisoLooseW_Up, &b_std_vector_lepton_idisoLooseW_Up);
    fChain->SetBranchAddress("std_vector_lepton_idisoLooseW_Down", &std_vector_lepton_idisoLooseW_Down, &b_std_vector_lepton_idisoLooseW_Down);
    fChain->SetBranchAddress("std_vector_lepton_idisoLooseW_Syst", &std_vector_lepton_idisoLooseW_Syst, &b_std_vector_lepton_idisoLooseW_Syst);
+   fChain->SetBranchAddress("std_vector_lepton_genmatched", &std_vector_lepton_genmatched, &b_std_vector_lepton_genmatched);
    fChain->SetBranchAddress("mcoll", &mcoll, &b_mcoll);
    fChain->SetBranchAddress("mcollWW", &mcollWW, &b_mcollWW);
    fChain->SetBranchAddress("vht_pt", &vht_pt, &b_vht_pt);

@@ -3,7 +3,7 @@
 #include "TChain.h"
 
 EventReader::EventReader(EventContainer& eventCont, const ConfigContainer& cfgContainer)
-: eventContainer(eventCont), configContainer(cfgContainer), treeReader(nullptr), nLeptons(0), nJets(0), needJets(false), needGenJets(false), needPuppiJets(false), needGenLeptons(false), needLHELeptons(false), needElectronId(false), needTrackJets(false), needSoftMuons(false), needTaus(false), triggerSelection(false), hasNegWeight(false), isDY(false), applybPogSF(false), sampleType(SampleType::DATA), maxEventsWeight(1.) 
+: eventContainer(eventCont), configContainer(cfgContainer), treeReader(nullptr), nLeptons(0), nJets(0), needJets(false), needGenJets(false), needPuppiJets(false), needGenLeptons(false), needLHELeptons(false), needElectronId(false), needTrackJets(false), needSoftMuons(false), needTaus(false), triggerSelection(false), hasNegWeight(false), isDY(false), applybPogSF(false), genMatching(false), sampleType(SampleType::DATA), maxEventsWeight(1.) 
 { 
     bool firstGenJet = true, firstPuppiJet = true, firstJet = true, firstgenLepton = true, firstLHELepton = true, firstElectronID = true, firstTrackJet = true, firstLooseLepton=true, firstSoftMuon = true, firstTau = true;
     vector<const vector<string>*> variableNames = {&configContainer.variableContainer.variableNames, &configContainer.cutContainer.variableNames};
@@ -258,6 +258,7 @@ bool EventReader::setSample(unsigned int iSample, unsigned int iSubSample)
     if( sampleType == SampleType::DATA || sampleType == SampleType::FAKELEPTON )
     {
 //         sampleBranches.push_back("trigger"); 
+        genMatching = false;
         
         if( sampleType == SampleType::FAKELEPTON )
         {
@@ -295,6 +296,7 @@ bool EventReader::setSample(unsigned int iSample, unsigned int iSubSample)
         sampleBranches.push_back("puW");
         sampleBranches.push_back("std_vector_lepton_idisoWcut_WP_Tight80X"); 
         sampleBranches.push_back("std_vector_lepton_recoW");
+        sampleBranches.push_back("std_vector_lepton_genmatched");
         hasNegWeight = false;
         
         if(  treeReader->fChain->FindBranch("GEN_weight_SM") )
@@ -317,6 +319,11 @@ bool EventReader::setSample(unsigned int iSample, unsigned int iSubSample)
         
         if( configContainer.sampleContainer.sampleNames[iSample][iSubSample].find("WW_DoubleScattering") == string::npos )
             sampleBranches.insert(sampleBranches.end(), genBranches.begin(), genBranches.end());
+        
+        if( configContainer.sampleContainer.sampleNames[iSample][iSubSample].find("WGJJ") == string::npos && configContainer.sampleContainer.sampleNames[iSample][iSubSample].find("Zg") == string::npos )
+            genMatching = true;
+        else
+            genMatching = false;
     }
     
 //     if( configContainer.sampleContainer.sampleNames[iSample][iSubSample].find("DY") != string::npos && configContainer.sampleContainer.sampleNames[iSample][iSubSample].find("M-10") == string::npos )
@@ -438,8 +445,13 @@ bool EventReader::fillNextEvent()
                 skipEvent = !keepEvent;
             }
         }
+        else 
+        {
+            if( genMatching && !triggerSelection && !( (*treeReader->std_vector_lepton_genmatched)[0] && (*treeReader->std_vector_lepton_genmatched)[1]) )
+                skipEvent = true;
+        }
     }
-    while( skipEvent ); // Cut on trigger for data
+    while( skipEvent ); // Cut on trigger for data and non-genmatched leptons
     
     // Fill gen jets
     if( (needGenJets || isDY ) && sampleType != SampleType::DATA && sampleType != SampleType::FAKELEPTON )

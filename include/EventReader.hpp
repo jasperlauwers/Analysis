@@ -36,7 +36,7 @@ private:
     const ConfigContainer& configContainer;
     TreeReader *treeReader;
     unsigned int nLeptons, nJets;  
-    bool needJets, needGenJets, needPuppiJets, needGenLeptons, needLHELeptons, needElectronId, firstLooseLepton, needLooseLeptons, needTrackJets, needSoftMuons, needTaus, triggerSelection, hasNegWeight, isDY, applybPogSF;
+    bool needJets, needGenJets, needPuppiJets, needGenLeptons, needLHELeptons, needElectronId, firstLooseLepton, needLooseLeptons, needTrackJets, needSoftMuons, needTaus, triggerSelection, hasNegWeight, isDY, applybPogSF, genMatching;
     SampleType sampleType;
     DataType dataType;
     vector<setFunction> functionVector;
