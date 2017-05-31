@@ -296,7 +296,7 @@ bool EventReader::setSample(unsigned int iSample, unsigned int iSubSample)
         sampleBranches.push_back("puW");
         sampleBranches.push_back("std_vector_lepton_idisoWcut_WP_Tight80X"); 
         sampleBranches.push_back("std_vector_lepton_recoW");
-        sampleBranches.push_back("std_vector_lepton_genmatched");
+        sampleBranches.push_back("std_vector_lepton_promptgenmatched");
         hasNegWeight = false;
         
         if(  treeReader->fChain->FindBranch("GEN_weight_SM") )
@@ -447,7 +447,7 @@ bool EventReader::fillNextEvent()
         }
         else 
         {
-            if( genMatching && !triggerSelection && ((*treeReader->std_vector_lepton_genmatched)[0] != 1 || (*treeReader->std_vector_lepton_genmatched)[1] != 1) )
+            if( genMatching && !triggerSelection && ((*treeReader->std_vector_lepton_promptgenmatched)[0] != 1 || (*treeReader->std_vector_lepton_promptgenmatched)[1] != 1) )
                 skipEvent = true;
             else
                 skipEvent = false;
