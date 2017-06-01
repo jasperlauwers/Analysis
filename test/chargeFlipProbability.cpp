@@ -46,9 +46,10 @@ int main (int argc, char ** argv) {
             {
                 if( cfgContainer.sampleContainer.sampleNames[iSample][iSubSample].find("DY") != string::npos )
                 {
-                    TH1::SetDefaultSumw2();                    
-                    TH2F *hNum = new TH2F("charge_flip_probability", "Charge flip probability", 15, 0 , 150, 5, 0, 2.5);
-                    TH2F *hDen = new TH2F("charge_flip_den", "Charge flip den", 15, 0 , 150, 5, 0, 2.5);
+                    TH1::SetDefaultSumw2();  
+                    Double_t ptBins[5] = {20,40,60,100,200};
+                    TH2F *hNum = new TH2F("charge_flip_probability", "Charge flip probability", 4, ptBins, 5, 0, 2.5);
+                    TH2F *hDen = new TH2F("charge_flip_den", "Charge flip den", 4, ptBins, 5, 0, 2.5);
                     TH1F *hNum1D = new TH1F("charge_flip_probability_eta", "Charge flip probability eta", 5, 0, 2.5);
                     TH1F *hDen1D = new TH1F("charge_flip_den_eta", "Charge flip den eta", 5, 0, 2.5);
                     
