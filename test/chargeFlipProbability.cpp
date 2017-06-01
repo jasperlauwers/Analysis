@@ -57,35 +57,38 @@ int main (int argc, char ** argv) {
                         cleaner.doLeptonCleaning();
                         if( selecter.passCuts() )
                         {
-                            vector<size_t> genIndex = {0,0};
+                            vector<int> genIndex = {-1,-1};
                             bool notFound = false, doubleMatch = false;
                             
                             for( auto iLep : eventContainer.goodLeptons ) {
-                                for( auto iLHELep : eventContainer.goodLHELeptons ) {
-                                    if( eventContainer.leptons[iLep].dR(eventContainer.lheLeptons[iLHELep]) < 0.1 )
+                                for( auto iGenLep : eventContainer.goodGenLeptons ) {
+                                    if( eventContainer.genLeptons[iGenLep].pt() < 10. )
+                                        continue;
+                                    if( eventContainer.leptons[iLep].dR(eventContainer.genLeptons[iGenLep]) < 0.1 )
                                     {
-                                        if( genIndex[iLep] > 0 )
+                                        if( genIndex[iLep] > -1 )
                                             doubleMatch = true;
                                             
-                                        genIndex[iLep] = iLHELep;
+                                        genIndex[iLep] = iGenLep;
                                     }
-                                    notFound = true;
                                 }
+                                if( genIndex[iLep] < 0 )
+                                    notFound = true;
                             }
                             
                             if( notFound || doubleMatch || genIndex[0] == genIndex[1] )
                                 continue;
-                            
+                                                    
                             for( auto iLep : eventContainer.goodLeptons ) {
-                                if( eventContainer.leptons[iLep].charge() == eventContainer.lheLeptons[genIndex[iLep]].charge() )
-                                {
-                                    hDen->Fill(eventContainer.leptons[iLep].pt(), abs(eventContainer.leptons[iLep].eta()));
-                                    hDen1D->Fill(abs(eventContainer.leptons[iLep].eta()));
-                                }
-                                else
+                                if( eventContainer.leptons[iLep].charge() == eventContainer.genLeptons[genIndex[iLep]].charge() ) // reversed logic because of bug (-1*) in lepton charge
                                 {
                                     hNum->Fill(eventContainer.leptons[iLep].pt(), abs(eventContainer.leptons[iLep].eta()));
                                     hNum1D->Fill(abs(eventContainer.leptons[iLep].eta()));
+                                }
+                                else
+                                {
+                                    hDen->Fill(eventContainer.leptons[iLep].pt(), abs(eventContainer.leptons[iLep].eta()));
+                                    hDen1D->Fill(abs(eventContainer.leptons[iLep].eta()));
                                 }
                             }
                         }
