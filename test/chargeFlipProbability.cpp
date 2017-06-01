@@ -60,6 +60,9 @@ int main (int argc, char ** argv) {
                             vector<int> genIndex = {-1,-1};
                             bool notFound = false, doubleMatch = false;
                             
+                            if( eventContainer.genLeptons[2].pt() > 10. )
+                                continue;
+                            
                             for( auto iLep : eventContainer.goodLeptons ) {
                                 for( auto iGenLep : eventContainer.goodGenLeptons ) {
                                     if( eventContainer.genLeptons[iGenLep].pt() < 10. )
