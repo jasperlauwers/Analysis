@@ -64,6 +64,8 @@ int main (int argc, char ** argv) {
                                 continue;
                             
                             for( auto iLep : eventContainer.goodLeptons ) {
+                                if( eventContainer.leptons[iLep].pt() < 10. )
+                                    continue;
                                 for( auto iGenLep : eventContainer.goodGenLeptons ) {
                                     if( eventContainer.genLeptons[iGenLep].pt() < 10. )
                                         continue;
@@ -83,6 +85,8 @@ int main (int argc, char ** argv) {
                                 continue;
                                                     
                             for( auto iLep : eventContainer.goodLeptons ) {
+                                if( eventContainer.leptons[iLep].pt() < 10. )
+                                    continue;
                                 if( eventContainer.leptons[iLep].charge() == eventContainer.genLeptons[genIndex[iLep]].charge() ) // reversed logic because of bug (-1*) in lepton charge
                                 {
                                     hNum->Fill(eventContainer.leptons[iLep].pt(), abs(eventContainer.leptons[iLep].eta()));
