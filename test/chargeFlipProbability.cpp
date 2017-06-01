@@ -5,6 +5,7 @@
 #include "EventCleaner.hpp"
 #include "EventSelecter.hpp"
 #include "TH2F.h"
+#include "TFile.h"
 
 int main (int argc, char ** argv) {
     
@@ -34,7 +35,7 @@ int main (int argc, char ** argv) {
 
     EventContainer eventContainer;
     EventReader reader(eventContainer, cfgContainer);
-//     EventCleaner cleaner(eventContainer);
+    EventCleaner cleaner(eventContainer);
     EventSelecter selecter(eventContainer, cfgContainer.cutContainer);
 
     for( unsigned int iSample = 0; iSample < cfgContainer.sampleContainer.reducedNames.size(); ++iSample) 
@@ -45,9 +46,7 @@ int main (int argc, char ** argv) {
             {
                 if( cfgContainer.sampleContainer.sampleNames[iSample][iSubSample].find("DY") != string::npos )
                 {
-                    TH1::SetDefaultSumw2();
-                    TFile *f = new TFile("
-                    
+                    TH1::SetDefaultSumw2();                    
                     TH2F *hNum = new TH2F("charge_flip_probability", "Charge flip probability", 15, 0 , 150, 5, 0, 2.5);
                     TH2F *hDen = new TH2F("charge_flip_den", "Charge flip den", 15, 0 , 150, 5, 0, 2.5);
                     TH1F *hNum1D = new TH1F("charge_flip_probability_eta", "Charge flip probability eta", 5, 0, 2.5);
@@ -55,6 +54,7 @@ int main (int argc, char ** argv) {
                     
                     while( reader.fillNextEvent() )
                     {
+                        cleaner.doLeptonCleaning();
                         if( selecter.passCuts() )
                         {
                             vector<size_t> genIndex = {0,0};
@@ -62,7 +62,7 @@ int main (int argc, char ** argv) {
                             
                             for( auto iLep : eventContainer.goodLeptons ) {
                                 for( auto iLHELep : eventContainer.goodLHELeptons ) {
-                                    if( eventContainer.leptons[iLep].dR(eventContainer.lheLeptons[iLHELep]) ) < 0.1
+                                    if( eventContainer.leptons[iLep].dR(eventContainer.lheLeptons[iLHELep]) < 0.1 )
                                     {
                                         if( genIndex[iLep] > 0 )
                                             doubleMatch = true;
@@ -77,9 +77,9 @@ int main (int argc, char ** argv) {
                                 continue;
                             
                             for( auto iLep : eventContainer.goodLeptons ) {
-                                if( eventContainer.leptons[iLep].charge == eventContainer.lheLeptons[genIndex[iLep]].charge )
+                                if( eventContainer.leptons[iLep].charge() == eventContainer.lheLeptons[genIndex[iLep]].charge() )
                                 {
-                                    hDenom->Fill(eventContainer.leptons[iLep].pt(), abs(eventContainer.leptons[iLep].eta()));
+                                    hDen->Fill(eventContainer.leptons[iLep].pt(), abs(eventContainer.leptons[iLep].eta()));
                                     hDen1D->Fill(abs(eventContainer.leptons[iLep].eta()));
                                 }
                                 else
@@ -90,13 +90,13 @@ int main (int argc, char ** argv) {
                             }
                         }
                     }
-                    hNum->Divide(hDenom);
+                    hNum->Divide(hDen);
                     hNum1D->Divide(hDen1D);
                     
                     system(("mkdir -p " + cfgContainer.outputDir).c_str());   
                     TFile* f = new TFile((cfgContainer.outputDir + "chFlip.root").c_str(),"RECREATE");
                     hNum->Write();
-                    hNum1D->Write()
+                    hNum1D->Write();
                     f->Close();
                 }
             }
