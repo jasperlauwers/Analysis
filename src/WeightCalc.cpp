@@ -107,8 +107,12 @@ void WeightCalc::initDYWeight(const EventReader& reader)
 //     maxVal = 3.9;
     
     // lepton eta weight
-    TFile* f = new TFile("DYWeight/DY_SSoverOS_2Dweight_2jet_MCsubtr_Feb2017.root","READ");
-    hDYshapeWeight = (TH2D*) f->Get("data_leptonabseta2D_weight"); //contains shape + normalization
+//     TFile* f = new TFile("DYWeight/DY_SSoverOS_2Dweight_2jet_MCsubtr_Feb2017.root","READ");
+//     hDYshapeWeight = (TH2D*) f->Get("data_leptonabseta2D_weight"); //contains shape + normalization
+    
+    // gen matched weight
+    TFile* f = new TFile("DYWeight/charge_flip_probability.root","READ");
+    hDYshapeWeight = (TH2D*) f->Get("charge_flip_probability"); //contains shape + normalization
 }
 
 void WeightCalc::setWeight(SampleType sampleType, const string& sampleName) 
@@ -227,7 +231,11 @@ void WeightCalc::setWeight(SampleType sampleType, const string& sampleName)
 //             weight *= hDYshapeWeight->GetBinContent(hDYshapeWeight->FindBin(min(eventContainer.detajj(), maxVal)));
         if( eventContainer.channel() == 1 ) 
         {
-            weight *= hDYshapeWeight->GetBinContent(hDYshapeWeight->FindBin( eventContainer.leptonabseta(0), eventContainer.leptonabseta(1))); 
+//             weight *= hDYshapeWeight->GetBinContent(hDYshapeWeight->FindBin( eventContainer.leptonabseta(0), eventContainer.leptonabseta(1))); 
+//             eventContainer.setWeight(weight); 
+            
+            weight *= ( hDYshapeWeight->GetBinContent(hDYshapeWeight->FindBin( eventContainer.leptonpt(0), eventContainer.leptonabseta(0))) 
+            + hDYshapeWeight->GetBinContent(hDYshapeWeight->FindBin( eventContainer.leptonpt(1), eventContainer.leptonabseta(1))) ); 
             eventContainer.setWeight(weight); 
         }
     }
