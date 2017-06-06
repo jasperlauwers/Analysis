@@ -53,53 +53,90 @@ int main (int argc, char ** argv) {
 //                     TH1F *hNum1D = new TH1F("charge_flip_probability_eta", "Charge flip probability eta", 5, 0, 2.5);
 //                     TH1F *hDen1D = new TH1F("charge_flip_den_eta", "Charge flip den eta", 5, 0, 2.5);
                     
-                    int matched=0, unmatched=0;
+                    int matched=0, ptMatched=0, etaMatched=0, unmatched=0, total=0, sameGenJet=0;
                     
                     while( reader.fillNextEvent() )
                     {
                         cleaner.doLeptonCleaning();
                         if( selecter.passCuts() )
                         {
-                            vector<int> genIndex = {-1,-1};
+                            vector<int> genIndex(10,-1);
+                            int eventMatched=0;
                             bool notFound = false, doubleMatch = false;
+                            float minEta=10, maxEta=-10;
+                            int minEtaIndex=-1, maxEtaIndex=-1;
 
                             int counter=0;
                             for( auto iJet : eventContainer.goodJets ) {
-                                if( ++counter > 2 )
+//                                 if( ++counter > 20 )
+//                                     break;
+                                if( eventContainer.jets[iJet].pt() < 30 )
                                     break;
+                                
+                                if( eventContainer.jets[iJet].eta() < minEta )
+                                {
+                                    minEta = eventContainer.jets[iJet].eta();
+                                    minEtaIndex = iJet;
+                                }
+                                if( eventContainer.jets[iJet].eta() > maxEta )
+                                {
+                                    maxEta = eventContainer.jets[iJet].eta();
+                                    maxEtaIndex = iJet;
+                                }
 
+//                                 cout << "jet " << iJet << endl;
                                 for( auto iGenJet : eventContainer.goodGenJets ) {
+//                                     cout << "gen jet " << iGenJet << endl;
+//                                     cout << eventContainer.jets[iJet].pt() << " \t" <<eventContainer.jets[iJet].eta() << "\t" << eventContainer.jets[iJet].phi() << endl;
+//                                     cout << eventContainer.genJets[iGenJet].pt() << " \t" <<eventContainer.genJets[iGenJet].eta() << "\t" << eventContainer.genJets[iGenJet].phi() << endl;
 
-                                    if( eventContainer.jets[iJet].dR(eventContainer.genJets[iGenJet]) < 0.3 )
+                                    if( eventContainer.jets[iJet].dR(eventContainer.genJets[iGenJet]) < 0.6 )
                                     {
+//                                         cout << "jet matched" << endl;
                                         if( genIndex[iJet] > -1 )
                                         {
                                             doubleMatch = true;
-                                            cout << "Double match found" << endl;
+//                                             cout << "Double match found" << endl;
                                         }
+                                        else
+                                          eventMatched++;
                                             
                                         genIndex[iJet] = iGenJet;
                                     }
                                 }
-                                if( genIndex[iJet] < 0 )
-                                    notFound = true;
                             }
                             
-                            if( doubleMatch || genIndex[0] == genIndex[1] )
+                            if( genIndex[0] < 0 || genIndex[1] < 0 )
+                                notFound = true;
+                            
+                            if( doubleMatch || (genIndex[0] == genIndex[1] && genIndex[0] > -1) )
                             {
-                                cout << "double match or matched to same genjet" << endl;
-                                continue;
+//                                 cout << "double match or matched to same genjet " << genIndex[0] << " " <<  genIndex[1] << endl;
+                                sameGenJet++;
+//                                 continue;
                             }                               
                             
                             if( notFound )
                                 unmatched++;
                             else
+                                ptMatched++;
+                            
+                            if( eventMatched > 1 )
                                 matched++;
+                            
+//                             cout << minEtaIndex << " " << maxEtaIndex << " " << genIndex[minEtaIndex] << " " << genIndex[maxEtaIndex]  << endl;
+                            if( notFound && genIndex[minEtaIndex] > -1 && genIndex[maxEtaIndex] > -1 && (genIndex[minEtaIndex] != genIndex[maxEtaIndex]) )
+                                etaMatched++;
+                            
+                            total++;
                         }
+//                         cout << endl;
 
                     }
                     
-                    cout << "Matched: " << matched << " Unmatched: " << unmatched << "\nefficiency: " << ((double)matched)/(unmatched+matched) << endl;
+                    cout << "pt matched: " << ptMatched-sameGenJet << " Unmatched: " << unmatched << "\nSame gen jet: " << sameGenJet << "\nefficiency: " << ((double)(ptMatched-sameGenJet))/total << endl;
+                    cout << "Matched: " << matched << " Unmatched: " << unmatched << "\nSame gen jet: " << sameGenJet << "\nefficiency: " << ((double)matched)/total << endl;
+                    cout << "eta matched: " << etaMatched << " Unmatched: " << unmatched << "\nSame gen jet: " << sameGenJet << "\nefficiency: " << ((double)etaMatched)/total << endl;
                 }
             }
         }
