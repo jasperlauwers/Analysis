@@ -220,7 +220,7 @@ void WeightCalc::setWeight(SampleType sampleType, const string& sampleName)
     }
     
     // DY   
-    if( applyDYWeight && (sampleName.find("DY") != string::npos || sampleName.find("TTTo2L2Nu") != string::npos) /*&& sampleName.find("M-10") == string::npos*/ )
+    if( applyDYWeight && (sampleName.find("DY") != string::npos || sampleName.find("TTTo2L2Nu") != string::npos || sampleName.find("ST_tW") != string::npos  || sampleName.find("GluGluWWTo2L2Nu") != string::npos|| sampleName.find("WWTo2L2Nu.root") != string::npos) /*&& sampleName.find("M-10") == string::npos*/ )
     {    
         float weight = eventContainer.weight();
         
@@ -229,14 +229,20 @@ void WeightCalc::setWeight(SampleType sampleType, const string& sampleName)
         
 //         if( sampleName.find("DYJetsToLL_M-50_") == string::npos )
 //             weight *= hDYshapeWeight->GetBinContent(hDYshapeWeight->FindBin(min(eventContainer.detajj(), maxVal)));
-        if( eventContainer.channel() == 1 ) 
-        {
+//         if( eventContainer.channel() == 1 ) 
+//         {
 //             weight *= hDYshapeWeight->GetBinContent(hDYshapeWeight->FindBin( eventContainer.leptonabseta(0), eventContainer.leptonabseta(1))); 
 //             eventContainer.setWeight(weight); 
-            
-            weight *= ( hDYshapeWeight->GetBinContent(hDYshapeWeight->FindBin( eventContainer.leptonpt(0), eventContainer.leptonabseta(0))) 
-            + hDYshapeWeight->GetBinContent(hDYshapeWeight->FindBin( eventContainer.leptonpt(1), eventContainer.leptonabseta(1))) ); 
-            eventContainer.setWeight(weight); 
+        float chargeMisIdFactor = 0;
+        for( auto iLep : eventContainer.goodLeptons )
+        {      
+//      cout << "Lept pt: " << eventContainer.looseleptonpt(iLep) << ", abs(eta): " << eventContainer.looseleptonabseta(iLep) << endl;
+            if( eventContainer.leptons[iLep].isElectron() )
+            { 
+                chargeMisIdFactor += ( hDYshapeWeight->GetBinContent(hDYshapeWeight->FindBin( eventContainer.leptons[iLep].pt(), abs(eventContainer.leptons[iLep].eta()) )) );
+            }
         }
+        if( chargeMisIdFactor > 0 )
+            eventContainer.setWeight(weight*chargeMisIdFactor); 
     }
 }

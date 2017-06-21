@@ -1085,11 +1085,11 @@ float EventContainer::electronisolation(unsigned int i) const
 }
 
 // Event number
-float EventContainer::eventNo() const
+unsigned int EventContainer::eventNo() const
 {
     return _eventNo;
 }
-void EventContainer::setEventNo(float eventNo)
+void EventContainer::setEventNo(unsigned int eventNo)
 {
     _eventNo = eventNo;
 }

@@ -152,8 +152,8 @@ public:
     float electronisolation(unsigned int) const;
     
     // Event number
-    float eventNo() const;
-    void setEventNo(float); 
+    unsigned int eventNo() const;
+    void setEventNo(unsigned int); 
     
     // New vetos
     void setTauVeto(bool);
