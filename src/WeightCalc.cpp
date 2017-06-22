@@ -113,6 +113,7 @@ void WeightCalc::initDYWeight(const EventReader& reader)
     // gen matched weight
     TFile* f = new TFile("DYWeight/charge_flip_probability.root","READ");
     hDYshapeWeight = (TH2D*) f->Get("charge_flip_probability"); //contains shape + normalization
+    maxPtChargeHist = hDYshapeWeight->GetXaxis()->GetBinCenter(hDYshapeWeight->GetNbinsX());
 }
 
 void WeightCalc::setWeight(SampleType sampleType, const string& sampleName) 
@@ -239,7 +240,10 @@ void WeightCalc::setWeight(SampleType sampleType, const string& sampleName)
 //      cout << "Lept pt: " << eventContainer.looseleptonpt(iLep) << ", abs(eta): " << eventContainer.looseleptonabseta(iLep) << endl;
             if( eventContainer.leptons[iLep].isElectron() )
             { 
-                chargeMisIdFactor += ( hDYshapeWeight->GetBinContent(hDYshapeWeight->FindBin( eventContainer.leptons[iLep].pt(), abs(eventContainer.leptons[iLep].eta()) )) );
+                float pt = eventContainer.leptons[iLep].pt();
+                if( pt > maxPtChargeHist ) 
+                   pt = maxPtChargeHist;
+                chargeMisIdFactor += ( hDYshapeWeight->GetBinContent(hDYshapeWeight->FindBin( pt, abs(eventContainer.leptons[iLep].eta()) )) );
             }
         }
         if( chargeMisIdFactor > 0 )
