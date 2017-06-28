@@ -2,7 +2,10 @@
 #include "WeightCalc.hpp"
 
 WeightCalc::WeightCalc(EventContainer& evContainer, bool latinoFakes)
-: eventContainer(evContainer), applyDYWeight(false), applyFakeWeight(false), useElectronCorrectedPt(false), useMuonCorrectedPt(false), useTwoMuonFR(false), useTwoElectronFR(false), latinoFakes(latinoFakes) { }
+: eventContainer(evContainer), applyDYWeight(false), applyFakeWeight(false), useElectronCorrectedPt(false), useMuonCorrectedPt(false), useTwoMuonFR(false), useTwoElectronFR(false), latinoFakes(latinoFakes), trileptonFakes(false) { }
+
+WeightCalc::WeightCalc(EventContainer& evContainer, bool latinoFakes, bool trileptonFakes)
+: eventContainer(evContainer), applyDYWeight(false), applyFakeWeight(false), useElectronCorrectedPt(false), useMuonCorrectedPt(false), useTwoMuonFR(false), useTwoElectronFR(false), latinoFakes(latinoFakes), trileptonFakes(trileptonFakes) { }
 
 WeightCalc::~WeightCalc() 
 {
@@ -199,9 +202,14 @@ void WeightCalc::setWeight(SampleType sampleType, const string& sampleName)
         {
             PF *= -1.;
             FP *= -1.;
-            if( nTight == 0 )
+            
+            unsigned int totLep = 2;
+            if( trileptonFakes )
+                totLep = 3;
+                
+            if( nTight == totLep-2 )
                 promtFakeWeight *= -1;
-            if( nTight == 2 )
+            if( nTight == totLep || nTight < totLep-2 )
                 promtFakeWeight = 0;
         }
         

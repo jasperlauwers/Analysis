@@ -137,6 +137,17 @@ ConfigHandler::ConfigHandler(const string& fileName, ConfigContainer& cContainer
             cfgContainer.latinoFakes = true;
         }
         
+        // TrileptonFakes
+        try
+        {
+            cfgContainer.trileptonFakes = cfg.lookup("TrileptonFakes");
+        }
+        catch(const SettingNotFoundException &nfex) 
+        {
+            cout << "TrileptonFakes setting not found. Using default: false" << endl;
+            cfgContainer.trileptonFakes = false;
+        }
+        
         ////////// Plot Settings ////////// 
         // MaxEvents
         try

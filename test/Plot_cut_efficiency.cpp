@@ -37,7 +37,7 @@ int main (int argc, char ** argv) {
     EventCleaner cleaner( eventContainer );
     EventSelecter selecter(eventContainer, cfgContainer.cutContainer);
     CutPlotter plotter(eventContainer, cfgContainer);
-    WeightCalc weightCalc(eventContainer, cfgContainer.latinoFakes);
+    WeightCalc weightCalc(eventContainer, cfgContainer.latinoFakes, cfgContainer.trileptonFakes);
 
     
     int totTT = 0, totTL = 0, totLL =0, totSingle = 0;
