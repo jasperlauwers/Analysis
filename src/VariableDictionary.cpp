@@ -791,6 +791,13 @@ void VariableDictionary::stringToFunction(const vector<string>& variableNames, v
                 eventFunctions.push_back( bind(&EventContainer::dmll, &eventContainer, 91) );
             ComparisonTypes.push_back( ComparisonType::ABS_GREATER_THAN );
         }
+        else if( iSubString.find("lowmllveto") != string::npos ) 
+        {
+            string::size_type varPosition = iSubString.find("lowmllveto");
+            iSubString.erase(varPosition, 10);
+            eventFunctions.push_back( bind(&EventContainer::dmllminpt, &eventContainer, 0, getFloat(iSubString, iString)) );
+            ComparisonTypes.push_back( ComparisonType::ABS_GREATER_THAN );
+        }
         else if( iSubString.find("zsel") != string::npos ) 
         {
             string::size_type varPosition = iSubString.find("zsel");
