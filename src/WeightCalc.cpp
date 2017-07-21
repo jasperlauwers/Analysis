@@ -130,11 +130,15 @@ void WeightCalc::setWeight(SampleType sampleType, const string& sampleName)
             throw 1;
         }
         
+        unsigned int totLep = 2;
+        if( trileptonFakes )
+            totLep = 3;
+        
         float fakeWeight, promtFakeWeight = 1;
         float p, f/*, pE, fE*/;
         unsigned int nTight = 0;
-        float promptProbability[2], fakeProbability[2];
-        for( unsigned int iLep=0; iLep < 2; ++iLep ) 
+        float promptProbability[3], fakeProbability[3];
+        for( unsigned int iLep=0; iLep < totLep; ++iLep ) 
         {        
 //      cout << "Lept pt: " << eventContainer.looseleptonpt(iLep) << ", abs(eta): " << eventContainer.looseleptonabseta(iLep) << endl;
             if( eventContainer.looseLeptons[iLep].isElectron() )
@@ -202,10 +206,6 @@ void WeightCalc::setWeight(SampleType sampleType, const string& sampleName)
         {
             PF *= -1.;
             FP *= -1.;
-            
-            unsigned int totLep = 2;
-            if( trileptonFakes )
-                totLep = 3;
                 
             if( nTight == totLep-2 )
                 promtFakeWeight *= -1;

@@ -7,7 +7,7 @@
 Double_t func(Double_t *x, Double_t *par) {
     Double_t etal1 = x[0];
     Double_t etal2 = x[1];
-    return par[int(2*etal1)] + par[int(2*etal2)];
+    return (par[int(2*etal1)] + par[int(2*etal2)])/(1+par[int(2*etal1)] * par[int(2*etal2)]);
 }
 
 void fitChargeFlip() 
