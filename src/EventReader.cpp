@@ -250,7 +250,7 @@ bool EventReader::setSample(unsigned int iSample, unsigned int iSubSample)
     treeReader = new TreeReader(t);
     
     // Set Branch statusses
-    vector<string> sampleBranches= {"std_vector_lepton_eta","std_vector_lepton_pt","std_vector_lepton_phi","std_vector_lepton_flavour", "metPfType1","metPfType1Phi","nvtx","dmZll_vetoLep","dmZllReco" /*,"std_vector_lepton_idisoW","effTrigW"*/,"veto_EMTFBug"};
+    vector<string> sampleBranches= {"std_vector_lepton_eta","std_vector_lepton_pt","std_vector_lepton_phi","std_vector_lepton_flavour", "metPfType1","metPfType1Phi","nvtx","dmZll_vetoLep","dmZllReco" /*,"std_vector_lepton_idisoW","effTrigW"*/,"veto_EMTFBug","std_vector_trigger_special"};
     sampleBranches.insert(sampleBranches.end(), branches.begin(), branches.end());
     
     // Set data/MC weight branches       
@@ -444,6 +444,11 @@ bool EventReader::fillNextEvent()
 
                 skipEvent = !keepEvent;
             }
+            
+            if( (*treeReader->std_vector_trigger_special)[0]*(*treeReader->std_vector_trigger_special)[1]*(*treeReader->std_vector_trigger_special)[2]*(*treeReader->std_vector_trigger_special)[3]*(*treeReader->std_vector_trigger_special)[5]        
+                * ((*treeReader->std_vector_trigger_special)[4]*!(*treeReader->std_vector_trigger_special)[6]*!(*treeReader->std_vector_trigger_special)[7]*(*treeReader->std_vector_trigger_special)[8]*(*treeReader->std_vector_trigger_special)[9]) == 0 )
+                skipEvent = true;
+            
         }
         else 
         {
@@ -451,6 +456,11 @@ bool EventReader::fillNextEvent()
                 skipEvent = true;
             else
                 skipEvent = false;
+            
+            if( (*treeReader->std_vector_trigger_special)[0]*(*treeReader->std_vector_trigger_special)[1]*(*treeReader->std_vector_trigger_special)[2]*(*treeReader->std_vector_trigger_special)[3]*(*treeReader->std_vector_trigger_special)[5]        
+                * (((*treeReader->std_vector_trigger_special)[8]==-2. * ((*treeReader->std_vector_trigger_special)[6]*(*treeReader->std_vector_trigger_special)[7])) || (! ((*treeReader->std_vector_trigger_special)[8]==-2.)*((*treeReader->std_vector_trigger_special)[8]*(*treeReader->std_vector_trigger_special)[9])) ) == 0 )
+                skipEvent = true;
+                
         }
     }
     while( skipEvent ); // Cut on trigger for data and non-genmatched leptons
