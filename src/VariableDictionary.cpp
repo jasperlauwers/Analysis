@@ -780,6 +780,14 @@ void VariableDictionary::stringToFunction(const vector<string>& variableNames, v
             else
                 ComparisonTypes.push_back( ComparisonType::GREATER_THAN );
         }
+        else if( iSubString == "mee"  ) 
+        {
+            eventFunctions.push_back( bind(&EventContainer::dmee, &eventContainer, 0) );
+            if( maxFlag )
+                ComparisonTypes.push_back( ComparisonType::SMALLER_THAN );
+            else
+                ComparisonTypes.push_back( ComparisonType::GREATER_THAN );
+        }
         else if( iSubString.find("zveto") != string::npos ) 
         {
             string::size_type varPosition = iSubString.find("zveto");
