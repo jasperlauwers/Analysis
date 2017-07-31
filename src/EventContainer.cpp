@@ -620,8 +620,13 @@ float EventContainer::dmll(float subtractMass) const
 }
 float EventContainer::dmee(float subtractMass) const
 {    
-    if( goodLeptons.size() > 1 && leptons[goodLeptons[0]].isElectron() && leptons[goodLeptons[1]].isElectron())
-        return leptons[goodLeptons[0]].mpp(leptons[goodLeptons[1]]) - subtractMass;
+    if( goodLeptons.size() > 1 )
+    {
+        if( leptons[goodLeptons[0]].isElectron() && leptons[goodLeptons[1]].isElectron() )
+            return leptons[goodLeptons[0]].mpp(leptons[goodLeptons[1]]) - subtractMass;
+        else
+            return 9999.9;
+    }
     else
         return -9999.9;
 }
