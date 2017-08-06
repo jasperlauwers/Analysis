@@ -90,7 +90,8 @@ void BasePlotter::writeStacked(string filename, const HistogramContainer& histCo
             hStack.push_back(temp);
             string legendEntry = histContainer.reducedNames[iSample];
             replace(legendEntry.begin(), legendEntry.end(), '_', ' ');
-            leg->AddEntry(temp,legendEntry.c_str(),"f");
+            if( legendEntry.size() > 1 )
+                leg->AddEntry(temp,legendEntry.c_str(),"f");
         }
     }
     
