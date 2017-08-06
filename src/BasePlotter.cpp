@@ -420,7 +420,7 @@ void BasePlotter::writeEfficiency(const HistogramContainer& numeratorContainer, 
             hEff[iSample]->SetLineWidth(2);
             leg->AddEntry(hEff[iSample],legendEntry.c_str(),"lp");
         }
-        else
+        else if( legendEntry[0] != ' ' )
         {
             hEff[iSample]->SetFillStyle(1001);
             leg->AddEntry(hEff[iSample],legendEntry.c_str(),"f");
@@ -470,7 +470,7 @@ void BasePlotter::setCanvasAttributes( unsigned int nSamples, TLegend*& leg, vec
     latexVector.push_back(TLTitle);
     
     char LumiText[50];
-    sprintf (LumiText , "#sqrt{s} = %1.0f TeV, L = %4.2f fb^{-1}", 13.0 , configContainer.luminosity/1000.);
+    sprintf (LumiText , "#sqrt{s} = %1.0f TeV, L = %4.1f fb^{-1}", 13.0 , configContainer.luminosity/1000.);
     TLatex* Lumi = new TLatex(.92,.81,LumiText);
     Lumi->SetTextSize(.03);
     Lumi->SetTextAlign(32);
