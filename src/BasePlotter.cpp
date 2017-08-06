@@ -420,7 +420,7 @@ void BasePlotter::writeEfficiency(const HistogramContainer& numeratorContainer, 
             hEff[iSample]->SetLineWidth(2);
             leg->AddEntry(hEff[iSample],legendEntry.c_str(),"lp");
         }
-        else if( legendEntry.size > 1 )
+        else if( legendEntry.size() > 1 )
         {
             hEff[iSample]->SetFillStyle(1001);
             leg->AddEntry(hEff[iSample],legendEntry.c_str(),"f");
